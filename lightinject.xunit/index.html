@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+	<title>xUnit - LightInject</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../nuget.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">LightInject</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li class="active">
+    <a href="./">xUnit</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li >
+                        <a rel="next" href="..">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li class="disabled">
+                        <a rel="prev" >
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#lightinjectxunit">LightInject.xUnit</a></li>
+        
+            <li><a href="#installing">Installing</a></li>
+        
+            <li><a href="#injecting-services">Injecting services</a></li>
+        
+            <li><a href="#configuration">Configuration</a></li>
+        
+            <li><a href="#scoping-xunit-192">Scoping (xUnit &lt;= 1.9.2)</a></li>
+        
+            <li><a href="#scoping-xunit-200">Scoping (xUnit &gt;= 2.0.0)</a></li>
+        
+    
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="lightinjectxunit">LightInject.xUnit</h1>
+<p><strong>LightInject.xUnit</strong> provides an integration that enables dependency injection in <a href="https://github.com/xunit/xunit">xUnit</a> test methods.</p>
+<h2 id="installing">Installing</h2>
+<p><strong>LightInject.xUnit</strong> provides two distribution models via NuGet</p>
+<h3 id="binary">Binary</h3>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package LightInject.xUnit </code>
+   </p>
+</div>
+
+<p>This adds a reference to the <strong>LightInject.Xunit.dll</strong> in the target project.</p>
+<h3 id="source">Source</h3>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package LightInject.xUnit.Source </code>
+   </p>
+</div>
+
+<p>This will install a single file, <strong>LightInject.Xunit.cs</strong> in the target project.</p>
+<h2 id="injecting-services">Injecting services</h2>
+<p>Services from <strong>LightInject</strong> are injected into methods that are decorated with the <strong>InjectData</strong> attribute. </p>
+<pre><code>[Theory, InjectData]                
+public void TestMethod(IFoo foo)
+{
+    Assert.NotNull(foo);
+}
+</code></pre>
+<h2 id="configuration">Configuration</h2>
+<p><strong>LightInject</strong> will look for an <strong>ICompositionRoot</strong> implementation in the same assembly as the requested service. If it is found, it will be executed and the container gets configured through that composition root.   </p>
+<p>If such an implementation does not exists or that we for some other reason need to configure the container, we can do this by simply implementing a static method in the test class with the following signature.</p>
+<pre><code>public static void Configure(IServiceContainer container)
+{
+    container.Register&lt;IFoo, Foo&gt;();            
+}
+</code></pre>
+<p>This method is executed regardless of other composition roots and allows customized configuration of the container before the test is executed.  </p>
+<h2 id="scoping-xunit-192">Scoping (xUnit &lt;= 1.9.2)</h2>
+<p>Services registered with the <strong>PerScopeLifetime</strong> or <strong>PerRequestLifetime</strong> needs to be resolved within an active <strong>Scope</strong> to ensure that any services that implements <strong>IDisposable</strong> are properly disposed.  </p>
+<p>By decorating the test method with the <strong>ScopedTheory</strong> attribute, a new <strong>Scope</strong> will be started when the test method starts and it will end when the test method ends.   </p>
+<pre><code>[ScopedTheory, InjectData]
+public void MethodWithScopedArgument(IFoo foo)
+{
+    Assert.NotNull(foo);
+}
+</code></pre>
+<h2 id="scoping-xunit-200">Scoping (xUnit &gt;= 2.0.0)</h2>
+<p>Services registered with the <strong>PerScopeLifetime</strong> or <strong>PerRequestLifetime</strong> needs to be resolved within an active <strong>Scope</strong> to ensure that any services that implements <strong>IDisposable</strong> are properly disposed.  </p>
+<p>By decorating the test method with the <strong>Scoped</strong> attribute, a new <strong>Scope</strong> will be started when the test method starts and it will end when the test method ends.   </p>
+<pre><code>[Theory, Scoped, InjectData]
+public void MethodWithScopedArgument(IFoo foo)
+{
+    Assert.NotNull(foo);
+}
+</code></pre></div>
+            
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

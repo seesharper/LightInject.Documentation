@@ -1,0 +1,59 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Welcome to MkDocs\n\n\nFor full documentation visit \nmkdocs.org\n.\n\n\nCommands\n\n\n\n\nmkdocs new [dir-name]\n - Create a new project.\n\n\nmkdocs serve\n - Start the live-reloading docs server.\n\n\nmkdocs build\n - Build the documentation site.\n\n\nmkdocs help\n - Print this help message.\n\n\n\n\nProject layout\n\n\nmkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    ...       # Other markdown pages, images and other files.", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#welcome-to-mkdocs", 
+            "text": "For full documentation visit  mkdocs.org .", 
+            "title": "Welcome to MkDocs"
+        }, 
+        {
+            "location": "/#commands", 
+            "text": "mkdocs new [dir-name]  - Create a new project.  mkdocs serve  - Start the live-reloading docs server.  mkdocs build  - Build the documentation site.  mkdocs help  - Print this help message.", 
+            "title": "Commands"
+        }, 
+        {
+            "location": "/#project-layout", 
+            "text": "mkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    ...       # Other markdown pages, images and other files.", 
+            "title": "Project layout"
+        }, 
+        {
+            "location": "/lightinject.xunit/", 
+            "text": "LightInject.xUnit\n\n\nLightInject.xUnit\n provides an integration that enables dependency injection in \nxUnit\n test methods.\n\n\nInstalling\n\n\nLightInject.xUnit\n provides two distribution models via NuGet\n\n\nBinary\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.xUnit \n\n   \n\n\n\n\n\nThis adds a reference to the \nLightInject.Xunit.dll\n in the target project.\n\n\nSource\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.xUnit.Source \n\n   \n\n\n\n\n\nThis will install a single file, \nLightInject.Xunit.cs\n in the target project.\n\n\nInjecting services\n\n\nServices from \nLightInject\n are injected into methods that are decorated with the \nInjectData\n attribute. \n\n\n[Theory, InjectData]                \npublic void TestMethod(IFoo foo)\n{\n    Assert.NotNull(foo);\n}\n\n\n\nConfiguration\n\n\nLightInject\n will look for an \nICompositionRoot\n implementation in the same assembly as the requested service. If it is found, it will be executed and the container gets configured through that composition root.   \n\n\nIf such an implementation does not exists or that we for some other reason need to configure the container, we can do this by simply implementing a static method in the test class with the following signature.\n\n\npublic static void Configure(IServiceContainer container)\n{\n    container.Register\nIFoo, Foo\n();            \n}\n\n\n\nThis method is executed regardless of other composition roots and allows customized configuration of the container before the test is executed.  \n\n\nScoping (xUnit \n= 1.9.2)\n\n\nServices registered with the \nPerScopeLifetime\n or \nPerRequestLifetime\n needs to be resolved within an active \nScope\n to ensure that any services that implements \nIDisposable\n are properly disposed.  \n\n\nBy decorating the test method with the \nScopedTheory\n attribute, a new \nScope\n will be started when the test method starts and it will end when the test method ends.   \n\n\n[ScopedTheory, InjectData]\npublic void MethodWithScopedArgument(IFoo foo)\n{\n    Assert.NotNull(foo);\n}\n\n\n\nScoping (xUnit \n= 2.0.0)\n\n\nServices registered with the \nPerScopeLifetime\n or \nPerRequestLifetime\n needs to be resolved within an active \nScope\n to ensure that any services that implements \nIDisposable\n are properly disposed.  \n\n\nBy decorating the test method with the \nScoped\n attribute, a new \nScope\n will be started when the test method starts and it will end when the test method ends.   \n\n\n[Theory, Scoped, InjectData]\npublic void MethodWithScopedArgument(IFoo foo)\n{\n    Assert.NotNull(foo);\n}", 
+            "title": "xUnit"
+        }, 
+        {
+            "location": "/lightinject.xunit/#lightinjectxunit", 
+            "text": "LightInject.xUnit  provides an integration that enables dependency injection in  xUnit  test methods.", 
+            "title": "LightInject.xUnit"
+        }, 
+        {
+            "location": "/lightinject.xunit/#installing", 
+            "text": "LightInject.xUnit  provides two distribution models via NuGet  Binary  \n    \n          PM  Install-Package LightInject.xUnit  \n      This adds a reference to the  LightInject.Xunit.dll  in the target project.  Source  \n    \n          PM  Install-Package LightInject.xUnit.Source  \n      This will install a single file,  LightInject.Xunit.cs  in the target project.", 
+            "title": "Installing"
+        }, 
+        {
+            "location": "/lightinject.xunit/#injecting-services", 
+            "text": "Services from  LightInject  are injected into methods that are decorated with the  InjectData  attribute.   [Theory, InjectData]                \npublic void TestMethod(IFoo foo)\n{\n    Assert.NotNull(foo);\n}", 
+            "title": "Injecting services"
+        }, 
+        {
+            "location": "/lightinject.xunit/#configuration", 
+            "text": "LightInject  will look for an  ICompositionRoot  implementation in the same assembly as the requested service. If it is found, it will be executed and the container gets configured through that composition root.     If such an implementation does not exists or that we for some other reason need to configure the container, we can do this by simply implementing a static method in the test class with the following signature.  public static void Configure(IServiceContainer container)\n{\n    container.Register IFoo, Foo ();            \n}  This method is executed regardless of other composition roots and allows customized configuration of the container before the test is executed.", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/lightinject.xunit/#scoping-xunit-192", 
+            "text": "Services registered with the  PerScopeLifetime  or  PerRequestLifetime  needs to be resolved within an active  Scope  to ensure that any services that implements  IDisposable  are properly disposed.    By decorating the test method with the  ScopedTheory  attribute, a new  Scope  will be started when the test method starts and it will end when the test method ends.     [ScopedTheory, InjectData]\npublic void MethodWithScopedArgument(IFoo foo)\n{\n    Assert.NotNull(foo);\n}", 
+            "title": "Scoping (xUnit &lt;= 1.9.2)"
+        }, 
+        {
+            "location": "/lightinject.xunit/#scoping-xunit-200", 
+            "text": "Services registered with the  PerScopeLifetime  or  PerRequestLifetime  needs to be resolved within an active  Scope  to ensure that any services that implements  IDisposable  are properly disposed.    By decorating the test method with the  Scoped  attribute, a new  Scope  will be started when the test method starts and it will end when the test method ends.     [Theory, Scoped, InjectData]\npublic void MethodWithScopedArgument(IFoo foo)\n{\n    Assert.NotNull(foo);\n}", 
+            "title": "Scoping (xUnit &gt;= 2.0.0)"
+        }
+    ]
+}
