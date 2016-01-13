@@ -1,1 +1,6 @@
-site_name: My Docs
+site_name: LightInject
+
+pages:
+- Home: index.md
+- Integrations:
+    - xUnit: lightinject.xunit.md 
