@@ -1,0 +1,24 @@
+environment:
+  access_token:
+    secure: LIOGMrY9EclC6324JJm3JbStvRPxm7l4aHI2ioaJAEDPFE2o16YFk2UUqXg1CwmS
+version: 1.0.{build}
+install:
+- cmd: 
+build_script:
+- cmd: >-
+    set PATH=C:\Python27\scripts;%PATH%
+
+    pip install mkdocs
+
+    python prebuild.py
+
+    mkdocs build --clean
+
+   
+test: off
+on_success:
+  - git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+  - git config --global user.email "bernhard.richter@gmail.com"
+  - git config --global user.name "Bernhard Richter"
+  - mkdocs gh-deploy -v
