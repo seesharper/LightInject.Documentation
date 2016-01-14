@@ -3,4 +3,6 @@ site_name: LightInject
 pages:
 - Home: index.md
 - Integrations:
-    - xUnit: lightinject.xunit.md 
+    - xUnit: xunit.md 
+    - AutoFactory: autofactory.md
+ 
