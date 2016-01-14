@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+	<title>Interception - LightInject</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../nuget.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">LightInject</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Extensions <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li class="active">
+    <a href="./">Interception</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../autofactory/">AutoFactory</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../xunit/">xUnit</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li >
+                        <a rel="next" href="..">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../autofactory/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#interception">Interception</a></li>
+        
+            <li><a href="#installing">Installing</a></li>
+        
+            <li><a href="#interceptors">Interceptors</a></li>
+        
+            <li><a href="#single-interceptor">Single Interceptor</a></li>
+        
+            <li><a href="#dependencies">Dependencies</a></li>
+        
+            <li><a href="#multiple-interceptors">Multiple Interceptors</a></li>
+        
+            <li><a href="#method-selectors">Method Selectors</a></li>
+        
+            <li><a href="#chaining-interceptors">Chaining Interceptors</a></li>
+        
+            <li><a href="#implementing-additional-interfaces">Implementing additional interfaces</a></li>
+        
+            <li><a href="#iproxy">IProxy</a></li>
+        
+            <li><a href="#this">This</a></li>
+        
+            <li><a href="#class-proxies">Class Proxies</a></li>
+        
+    
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="interception">Interception</h1>
+<p><strong>LightInject</strong> supports <a href="http://en.wikipedia.org/wiki/Aspect-oriented_programming">Aspect Oriented Programming</a> through proxy-based method interceptors. </p>
+<h2 id="installing">Installing</h2>
+<p><strong>LightInject.Interception</strong> provides two distribution models via NuGet</p>
+<h3 id="binary">Binary</h3>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package LightInject.Interception </code>
+   </p>
+</div>
+
+<p>This adds a reference to the LightInject.Interception.dll in the target project.</p>
+<h3 id="source">Source</h3>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package LightInject.Interception.Source </code>
+   </p>
+</div>
+
+<p>This will install a single file (LightInject.Interception.cs) into the current project.</p>
+<h2 id="interceptors">Interceptors</h2>
+<p>An interceptor sits between the call site and the target instance and intercepts method calls.</p>
+<pre><code>public class SampleInterceptor : IInterceptor
+{
+    public object Invoke(IInvocationInfo invocationInfo)
+    {
+        // Perform logic before invoking the target method
+        var returnValue = invocationInfo.Proceed();
+        // Perform logic after invoking the target method
+        return returnValue;           
+    }        
+}
+</code></pre>
+
+<p>The <strong>IInvocationInfo</strong> instance passed into the <strong>Invoke</strong> method contains information about the method being intercepted.</p>
+<p>The <strong>Proceed</strong> method calls down the chain of interceptors and ultimately the actual target instance.   </p>
+<h2 id="single-interceptor">Single Interceptor</h2>
+<p>This example shows how to configure the service container with a single interceptor to handle all method calls.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; new SampleInterceptor());
+
+var instance = container.GetInstance&lt;IFoo&gt;();
+</code></pre>
+<p>The instance returned is a proxy object that forwards method calls to the <strong>SampleInterceptor</strong> class.</p>
+<p>The first parameter of the <strong>Intercept</strong> method is a selector function used to select the services that should have this interceptor applied.       <br />
+The second parameter is a function delegate that used to create an <strong>IInterceptor</strong> instance. </p>
+<p><strong>Note:</strong> <em>Proxy types are lazy in the sense that they will not create the target instance or any interceptors until the first method call is made.</em> </p>
+<h2 id="dependencies">Dependencies</h2>
+<p>Interceptors might also have dependencies and by resolving the interceptor through the container, those dependencies can be injected into the interceptor itself. </p>
+<pre><code>public class SampleInterceptor : IInterceptor
+{
+    private IBar bar;
+
+    public SampleInterceptor(IBar bar) 
+    {
+        this.bar = bar;    
+    }
+
+    public object Invoke(IInvocationInfo invocationInfo)
+
+        // Perform logic using the injected dependency before invoking the target method             
+        return invovationInfo.Proceed();                      
+        // Perform logic using the injected dependency after invoking the target method
+    }        
+}
+</code></pre>
+<p>The following example shows how to configure the container so that the <strong>SampleInterceptor</strong> instance is resolved through the container.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;()
+container.Register&lt;IBar, Bar&gt;();
+container.Register&lt;IInterceptor, SampleInterceptor&gt;();
+container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; sf.GetInstance&lt;IInterceptor&gt;());
+</code></pre>
+<p><strong>Note:</strong> <em>When injecting depndencies into an interceptor we must make sure that the injected dependency is NOT intercepted by the same interceptor as this would cause a <strong>StackOverFlowException</strong>.</em>  </p>
+<h2 id="multiple-interceptors">Multiple Interceptors</h2>
+<p>Interceptors can be set up to handle a lot of cross cutting concerns such as logging, caching, null check and so on.
+According to the <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsibility Principle</a>, we can separate the combined logic into a set of interceptor that each only does "one" thing.</p>
+<p>We can do this by using another overload of the <strong>Intercept</strong> method that allows us to set up a <strong>ProxyDefinition</strong> instance that gives us more control over the proxy type that is being created.</p>
+<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf,pd) =&gt;  DefineProxyType(pd));
+
+private void DefineProxyType(ProxyDefinition proxyDefinition)
+{
+    proxyDefinition.Implement(new FirstInterceptor());
+    proxyDefinition.Implement(new SecondInterceptor());
+}
+</code></pre>
+<p><strong>Note:</strong> <em>The interceptors are invoked in the same order as they are registered with the <strong>Implement</strong> method.</em></p>
+<h2 id="method-selectors">Method Selectors</h2>
+<p>Method selectors are used to select the methods that should be intercepted by an interceptor.</p>
+<p>The following example shows how to set up the container so that only calls method <strong>A</strong> is passed to the interceptor.</p>
+<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
+
+private void DefineProxyType(ProxyDefinition proxyDefinition)
+{
+    proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.Name == "SomeMethodName");       
+}
+</code></pre>
+<p>Methods that does not match the method selector predicate will NOT be intercepted and method calls will be passed directly down to the target instance.  </p>
+<p>If we omit the method selector, <strong>LightInject</strong> will intercept all methods from the target type and any additional interface, except methods that are inherited from <a href="http://msdn.microsoft.com/en-us/library/system.object.aspx">System.Object</a>.    </p>
+<ul>
+<li>Equals(Object)</li>
+<li>GetHashCode</li>
+<li>GetType</li>
+<li>ToString</li>
+</ul>
+<p>If we choose to use a method selector, these methods will also be intercepted if they match the predicate in the method selector.</p>
+<pre><code>proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.IsDeclaredBy&lt;object&gt;());
+</code></pre>
+<p>We can also use a method selector with the <strong>Intercept</strong> method that allows easy interception of any method without implementing an <strong>IInterceptor</strong>.</p>
+<pre><code>container.Intercept(m =&gt; m.Name == "SomeMethodName", invocationInfo =&gt; invocationInfo.Proceed());
+</code></pre>
+<h3 id="extension-methods">Extension Methods</h3>
+<p>LightInject provides a set of extension method that simplifies method selector predicates.</p>
+<ul>
+<li>IsPropertySetter - Returns <strong>true</strong> if the method represents a property setter, otherwise <strong>false</strong>. </li>
+<li>IsPropertyGetter - Returns <strong>true</strong> if the method represents a property getter, otherwise <strong>false</strong>.</li>
+<li>GetProperty - Returns the property for which the target method either represents the property getter or the property setter.</li>
+</ul>
+<h2 id="chaining-interceptors">Chaining Interceptors</h2>
+<p>As already seen in the example with multiple interceptors,  we can chain interceptors together. We can also combine this with method selectors that will affect the call sequence from the call site down to the actual target instance.</p>
+<p>Consider an interface with three methods.</p>
+<pre><code>public interface IFoo 
+{
+    void A();
+    void B();
+    void C();
+}
+</code></pre>
+<p>The following example shows how we can control the call sequence for each method.</p>
+<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
+
+private void DefineProxyType(ProxyDefinition proxyDefinition)
+{
+    proxyDefinition.Implement(() =&gt; new FirstInterceptor(), m =&gt; m.Name == "A");
+    proxyDefinition.Implement(() =&gt; new SecondInterceptor(), m =&gt; m.Name == "B");   
+    proxyDefinition.Implement(() =&gt; new ThirdInterceptor(), m =&gt; m.Name == "A" || m.Name == "B" || m.Name == "C");
+}
+</code></pre>
+<p><strong>Method A call sequence</strong></p>
+<p>FirstInterceptor -&gt; ThirdInterceptor -&gt; Target </p>
+<p><strong>Method B call sequence</strong></p>
+<p>SecondInterceptor -&gt; ThirdInterceptor -&gt; Target</p>
+<p><strong>Method C call sequence</strong></p>
+<p>ThirdInterceptor -&gt; Target</p>
+<h2 id="implementing-additional-interfaces">Implementing additional interfaces</h2>
+<p>Another powerful feature of proxy objects is the ability to implement additional interfaces that is not implemented by the target type.</p>
+<p>The <strong>Intercept</strong> method has an overload that lets us specify a set of interfaces to be implemented by the proxy type.</p>
+<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), new []{ typeof(IBar) }, (sf, pd) =&gt;  DefineProxyType(pd));
+
+private void DefineProxyType(ProxyDefinition proxyDefinition)
+{
+    proxyDefinition.Implement(() =&gt; new BarInterceptor(), m =&gt; m.IsDeclaredBy&lt;IBar&gt;());        
+}
+</code></pre>
+<p>When implementing additional interfaces we must make sure that all methods are intercepted by either one or a combined set of interceptors. This is because we are now dealing with methods that does not exist in the target type and we must do all implementation through interceptors.  </p>
+<h2 id="iproxy">IProxy</h2>
+<pre><code>/// &lt;summary&gt;
+/// Implemented by all proxy types.
+/// &lt;/summary&gt;
+public interface IProxy
+{
+    /// &lt;summary&gt;
+    /// Gets the proxy target.
+    /// &lt;/summary&gt;
+    object Target { get; }
+}
+</code></pre>
+<p>We can get to the underlying target instance through the <strong>IProxy</strong> interface</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; new SampleInterceptor());
+
+var instance = container.GetInstance&lt;IFoo&gt;();
+var actualTarget = ((IProxy)instance).Target;
+</code></pre>
+<h2 id="this">This</h2>
+<p>One of the things to be aware of when working with proxy based interception is that it all relies on method calls being made through the proxy.
+Method calls that are made directly to the target instance will NOT be intercepted. </p>
+<pre><code>public interface IFoo
+{
+    void A();
+}
+
+public class Foo : IFoo
+{
+    public void A() {}
+
+    private void B()
+    {
+        //Calls the target (this) directly and interceptors are not invoked.
+        this.A();
+    }
+}
+</code></pre>
+<p>Another scenario is when the proxy instance itself is leaking its target.</p>
+<pre><code>public interface IFoo
+{
+    IFoo A();
+}
+
+public class Foo
+{
+    public IFoo A()
+    {
+        return this;
+    }
+}
+</code></pre>
+<p><strong>LightInject</strong> will take care of this scenario and detect that we are about to return <strong>this</strong> from a method and replace the return value with the proxy instance instead. </p>
+<p>Other scenarios such as event handlers or passing "this" to another method is NOT taken care of by <strong>LightInject</strong> as it is not possible without modifying the code in the target type itself. </p>
+<h2 id="class-proxies">Class Proxies</h2>
+<p>Starting from version 1.0.0.4, <strong>LightInject.Interception</strong> can be used to intercept classes with virtual members.</p>
+<pre><code>public class Foo
+{
+    public virtual void A()
+    {
+    }
+}
+</code></pre>
+<p>Any member that is marked as virtual can be intercepted.    </p>
+<pre><code>var container = new ServiceContainer();
+container.Register&lt;Foo&gt;();
+container.Intercept(sr =&gt; sr.ServiceType == typeof(Foo), factory =&gt; new SampleInterceptor());
+</code></pre>
+<p>Class proxies are implemented internally by subclassing the target type and overriding virtual members to support interception.  </p></div>
+            
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
