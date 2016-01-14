@@ -8,5 +8,5 @@ def download(url, file):
 download('https://raw.githubusercontent.com/seesharper/LightInject/master/readme.md', 'docs/index.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.xUnit/master/readme.md', 'docs/xunit.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.AutoFactory/master/readme.md', 'docs/autofactory.md')
-
+download('https://raw.githubusercontent.com/seesharper/LightInject.Interception/master/readme.md', 'docs/interception.md')
 
