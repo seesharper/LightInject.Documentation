@@ -2,7 +2,10 @@ site_name: LightInject
 
 pages:
 - Home: index.md
+- Extensions:
+    - Interception: interception.md
+    - AutoFactory: autofactory.md
 - Integrations:
     - xUnit: xunit.md 
-    - AutoFactory: autofactory.md
+    
  
