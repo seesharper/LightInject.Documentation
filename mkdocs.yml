@@ -5,6 +5,7 @@ pages:
 - Extensions:
     - Interception: interception.md
     - AutoFactory: autofactory.md
+    - Annotation: annotation.md
 - Integrations:
     - xUnit: xunit.md 
     
