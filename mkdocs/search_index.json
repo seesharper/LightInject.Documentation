@@ -209,6 +209,21 @@
             "location": "/xunit/#scoping-xunit-200", 
             "text": "Services registered with the  PerScopeLifetime  or  PerRequestLifetime  needs to be resolved within an active  Scope  to ensure that any services that implements  IDisposable  are properly disposed.    By decorating the test method with the  Scoped  attribute, a new  Scope  will be started when the test method starts and it will end when the test method ends.     [Theory, Scoped, InjectData]\npublic void MethodWithScopedArgument(IFoo foo)\n{\n    Assert.NotNull(foo);\n}", 
             "title": "Scoping (xUnit &gt;= 2.0.0)"
+        }, 
+        {
+            "location": "/web/", 
+            "text": "Web\n\n\nEnables \nLightInject\n to be used in a web application and provides support for \nPerWebRequest\n scoped service instances.\n\n\nInstalling\n\n\nLightInject.Web\n provides two distribution models via NuGet\n\n\nBinary\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Web \n\n   \n\n\n\n\n\nThis adds a reference to the LightInject.Web.dll in the target project.\n\n\nSource\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Web.Source \n\n   \n\n\n\n\n\nThis will install a single file (LightInject.Web.cs) into the current project.\n\n\nThe following example shows how to enable \nLightInject\n in the \nApplication_Start\n event.\n\n\nprotected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.EnablePerWebRequestScope();                   \n    container.Register\nIFoo, Foo\n(new PerScopeLifetime());      \n}\n\n\n\nA service    registered with \nPerScopeLifetime\n is scoped per web request and is disposed at the end of the request if it implements \nIDisposable\n.", 
+            "title": "Web"
+        }, 
+        {
+            "location": "/web/#web", 
+            "text": "Enables  LightInject  to be used in a web application and provides support for  PerWebRequest  scoped service instances.", 
+            "title": "Web"
+        }, 
+        {
+            "location": "/web/#installing", 
+            "text": "LightInject.Web  provides two distribution models via NuGet  Binary  \n    \n          PM  Install-Package LightInject.Web  \n      This adds a reference to the LightInject.Web.dll in the target project.  Source  \n    \n          PM  Install-Package LightInject.Web.Source  \n      This will install a single file (LightInject.Web.cs) into the current project.  The following example shows how to enable  LightInject  in the  Application_Start  event.  protected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.EnablePerWebRequestScope();                   \n    container.Register IFoo, Foo (new PerScopeLifetime());      \n}  A service    registered with  PerScopeLifetime  is scoped per web request and is disposed at the end of the request if it implements  IDisposable .", 
+            "title": "Installing"
         }
     ]
 }

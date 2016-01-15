@@ -39,6 +39,12 @@
      <changefreq>daily</changefreq>
     </url>
         
+    <url>
+     <loc>None/web/</loc>
+     <lastmod>2016-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
     
 
 </urlset>
