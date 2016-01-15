@@ -8,5 +8,6 @@ pages:
     - Annotation: annotation.md
 - Integrations:
     - xUnit: xunit.md 
+    - Web: web.md
     
  
