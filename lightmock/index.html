@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Web - LightInject</title>
+	<title>LightMock - LightInject</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -87,7 +87,7 @@
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -98,8 +98,8 @@
 
                         
                             
-<li class="active">
-    <a href="./">Web</a>
+<li >
+    <a href="../web/">Web</a>
 </li>
 
                         
@@ -108,13 +108,13 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Side Project <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
                             
-<li >
-    <a href="../lightmock/">LightMock</a>
+<li class="active">
+    <a href="./">LightMock</a>
 </li>
 
                         
@@ -133,12 +133,12 @@
                 </li>
                 
                     <li >
-                        <a rel="next" href="../xunit/">
+                        <a rel="next" href="../web/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
-                    <li >
-                        <a rel="prev" href="../lightmock/">
+                    <li class="disabled">
+                        <a rel="prev" >
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -154,44 +154,130 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#web">Web</a></li>
+        <li class="main active"><a href="#lightmock">LightMock</a></li>
         
             <li><a href="#installing">Installing</a></li>
+        
+            <li><a href="#creating-a-mock-object">Creating a mock object</a></li>
+        
+            <li><a href="#assertions">Assertions</a></li>
+        
+            <li><a href="#arrangements">Arrangements</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="web">Web</h1>
-<p>Enables <strong>LightInject</strong> to be used in a web application and provides support for <strong>PerWebRequest</strong> scoped service instances.</p>
+<h1 id="lightmock">LightMock</h1>
+<p><strong>LightMock</strong> is a simple mocking library that can be used on platforms that does not allow dynamic code generation.    </p>
 <h2 id="installing">Installing</h2>
-<p><strong>LightInject.Web</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
 <div class="nuget-badge" >
    <p>
-         <code>PM&gt; Install-Package LightInject.Web </code>
+         <code>PM&gt; Install-Package LightMock </code>
    </p>
 </div>
 
-<p>This adds a reference to the LightInject.Web.dll in the target project.</p>
-<h3 id="source">Source</h3>
-<div class="nuget-badge" >
-   <p>
-         <code>PM&gt; Install-Package LightInject.Web.Source </code>
-   </p>
-</div>
-
-<p>This will install a single file (LightInject.Web.cs) into the current project.</p>
-<p>The following example shows how to enable <strong>LightInject</strong> in the <strong>Application_Start</strong> event.</p>
-<pre><code>protected void Application_Start()
+<p>This adds a reference to the <strong>LightMock</strong> in the target project.</p>
+<p>The <strong>LightMock</strong> library is a a portable class library that makes it possible to use this across all platforms including iOS and Android.</p>
+<h2 id="creating-a-mock-object">Creating a mock object</h2>
+<p>Even though the mock objects are created manually, they can be reused in many scenarios.</p>
+<p>As an an example we will use this simple interface.</p>
+<pre><code>public interface IFoo
 {
-    var container = new ServiceContainer();
-    container.EnablePerWebRequestScope();                   
-    container.Register&lt;IFoo, Foo&gt;(new PerScopeLifetime());      
+    void Execute(string value);
+    string Execute();        
 }
 </code></pre>
-<p>A service    registered with <strong>PerScopeLifetime</strong> is scoped per web request and is disposed at the end of the request if it implements <strong>IDisposable</strong>.</p></div>
+<p>The mock object implementing this interface looks like this</p>
+<pre><code>public class FooMock : IFoo
+{
+    private readonly IInvocationContext&lt;IFoo&gt; context;
+
+    public FooMock(IInvocationContext&lt;IFoo&gt; context)
+    {
+        this.context = context;
+    }
+
+    public void Execute(string value)
+    {
+        context.Invoke(f =&gt; f.Execute(value));
+    }
+
+    public string Execute()
+    {
+        return context.Invoke(f =&gt; f.Execute());
+    }        
+}
+</code></pre>
+<blockquote>
+<p>Note: Only mocked methods needs to be implemented. Other methods that does not get invoked during testing can just throw a NotImplementedException.</p>
+</blockquote>
+<h2 id="assertions">Assertions</h2>
+<p>The <em>Assert</em> method is used to verify that the given method has been executed the expected number of times using the expected arguments.   </p>
+<pre><code>//Arrange
+var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+
+//Act
+fooMock.Execute("SomeValue");
+
+//Assert
+mockContext.Assert(f =&gt; f.Execute("SomeValue"));
+</code></pre>
+<blockquote>
+<p>Note: Not specifying the expected number of invocations, means at least once.</p>
+</blockquote>
+<p>If we don't care about the actual argument value, we can use a special class called <em>The</em>.</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+
+fooMock.Execute("SomeValue");
+
+mockContext.Assert(f =&gt; f.Execute(The&lt;string&gt;.IsAnyValue), Invoked.Once);
+</code></pre>
+<p>We call also use this class to perform custom verification.</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+
+fooMock.Execute("SomeValue");
+
+mockContext.Assert(f =&gt; f.Execute(The&lt;string&gt;.Is(s =&gt; s.StartsWith("Some"))), Invoked.Once);
+</code></pre>
+<h2 id="arrangements">Arrangements</h2>
+<p>We can use arrangements to add behavior to the mock object.</p>
+<p>For instance we can set up the mock object to return a value.</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+mockContext.Arrange(f =&gt; f.Execute()).Returns("SomeValue");
+
+var result = fooMock.Execute();
+
+Assert.AreEqual("SomeValue", result);
+</code></pre>
+<p>Throw an exception</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+mockContext.Arrange(f =&gt; f.Execute("SomeValue")).Throws&lt;InvalidOperationException&gt;();
+fooMock.Execute("SomeValue");
+</code></pre>
+<p>Throw an exception using a exception factory.</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+mockContext.Arrange(f =&gt; f.Execute("SomeValue")).Throws(() =&gt; new InvalidOperationException());
+fooMock.Execute("SomeValue");
+</code></pre>
+<p>Execute a callback</p>
+<pre><code>var mockContext = new MockContext&lt;IFoo&gt;();
+var fooMock = new FooMock(mockContext);
+string callBackResult = null;
+mockContext.Arrange(f =&gt; f.Execute(The&lt;string&gt;.IsAnyValue))
+    .Callback&lt;string&gt;(s =&gt; callBackResult = s);
+
+fooMock.Execute("SomeValue");
+
+Assert.AreEqual("SomeValue", callBackResult);
+</code></pre></div>
             
         </div>
 
