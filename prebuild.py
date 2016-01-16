@@ -11,4 +11,4 @@ download('https://raw.githubusercontent.com/seesharper/LightInject.AutoFactory/m
 download('https://raw.githubusercontent.com/seesharper/LightInject.Annotation/master/readme.md', 'docs/annotation.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Interception/master/readme.md', 'docs/interception.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Web/master/readme.md', 'docs/web.md')
-
+download('https://raw.githubusercontent.com/seesharper/LightMock/master/readme.md', 'docs/lightmock.md')
