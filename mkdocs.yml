@@ -9,6 +9,6 @@ pages:
 - Integrations:
     - xUnit: xunit.md 
     - Web: web.md
-- Side Project:
+- Side Projects:
     - LightMock : lightmock.md   
  
