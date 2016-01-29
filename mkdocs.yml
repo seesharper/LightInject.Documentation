@@ -9,6 +9,7 @@ pages:
 - Integrations:
     - xUnit: xunit.md 
     - Web: web.md
+    - Microsoft DependencyInjection : microsoft.dependencyinjection.md
 - Side Projects:
     - LightMock : lightmock.md   
  
