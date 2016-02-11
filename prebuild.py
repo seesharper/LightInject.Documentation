@@ -13,5 +13,5 @@ download('https://raw.githubusercontent.com/seesharper/LightInject.Interception/
 download('https://raw.githubusercontent.com/seesharper/LightInject.Web/master/readme.md', 'docs/web.md')
 download('https://raw.githubusercontent.com/seesharper/LightMock/master/readme.md', 'docs/lightmock.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Microsoft.DependencyInjection/master/readme.md', 'docs/microsoft.dependencyinjection.md')
-
+download('https://raw.githubusercontent.com/seesharper/Blog.WebApiRequestLogging/master/readme.md', 'docs/webapirequestlogging.md')
 
