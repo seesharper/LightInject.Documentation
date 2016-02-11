@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+	<title>Web Api Request Logging - LightInject</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../nuget.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">LightInject</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Extensions <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../interception/">Interception</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../autofactory/">AutoFactory</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../annotation/">Annotation</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../xunit/">xUnit</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../web/">Web</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../microsoft.dependencyinjection/">Microsoft DependencyInjection</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li class="active">
+    <a href="./">Web Api Request Logging</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Side Projects <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../lightmock/">LightMock</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li >
+                        <a rel="next" href="../microsoft.dependencyinjection/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../lightmock/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#web-api-request-logging">Web Api Request Logging</a></li>
+        
+            <li><a href="#logging">Logging</a></li>
+        
+            <li><a href="#composition-root">Composition root</a></li>
+        
+            <li><a href="#controllers">Controllers</a></li>
+        
+            <li><a href="#request-logging">Request logging</a></li>
+        
+            <li><a href="#request-context">Request Context</a></li>
+        
+            <li><a href="#decorators">Decorators</a></li>
+        
+    
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="web-api-request-logging">Web Api Request Logging</h1>
+<p>This post is going to show you how to use <strong>LightInject</strong> to enable logging in a <strong>Web Api</strong> application. We are going to look into how to preserve contextual information associated with the incoming request so that this information can be used for logging purposes. All this goodness is going to end up in a simple <a href="https://github.com/seesharper/Blog.WebApiRequestLogging">console application</a> that shows how all the pieces fit together.</p>
+<h2 id="logging">Logging</h2>
+<p>Since logging is a cross cutting concern and is to be found scattered all around in our application, it makes sense to create an abstraction so that we don't create a direct dependency on a particular logging framework. This abstraction is something that we should own rather than relying on third part abstraction such as <a href="https://github.com/net-commons/common-logging">Common Logging</a>. Believe me, that is going to cause us nothing but pain as we would have to deal with different versions of a third party abstraction. Own you own abstraction!</p>
+<p>We start of with a simple interface that is going to be used for logging.</p>
+<pre><code>public interface ILog
+{      
+    void Info(string message);
+
+    void Debug(string message);
+
+    void Error(string message, Exception exception = null);
+}
+</code></pre>
+
+<p>This is the interface that we will be injection into controllers, services or any other class that requires logging.</p>
+<p>The actual implementation of this interface looks like this</p>
+<pre><code>public class Log : ILog
+{
+    private readonly Action&lt;string&gt; logDebug;
+    private readonly Action&lt;string, Exception&gt; logError;
+    private readonly Action&lt;string&gt; logInfo;
+
+    public Log(Action&lt;string&gt; logInfo, Action&lt;string&gt; logDebug, Action&lt;string, Exception&gt; logError)
+    {
+        this.logInfo = logInfo;
+        this.logDebug = logDebug;
+        this.logError = logError;
+    }
+
+    public void Info(string message)
+    {
+        logInfo(message);
+    }
+
+    public void Debug(string message)
+    {
+        logDebug(message);
+    }
+
+    public void Error(string message, Exception exception = null)
+    {
+        logError(message, exception);
+    }
+}
+</code></pre>
+
+<p>The <strong>Log</strong> class is not tied to a specific logging framework and it just takes a set of action delegates that represents the three logging levels supported by our abstraction.</p>
+<p>To help us create a <strong>Log</strong> instance, we have this nice little interface.</p>
+<pre><code>public interface ILogFactory
+{
+    ILog GetLogger(Type type);
+}
+</code></pre>
+
+<p>And since we are going to be using <strong>Log4Net</strong> in this sample application, we have an implementation called <strong>Log4NetLogFactory</strong>.</p>
+<pre><code>public class Log4NetLogFactory : ILogFactory
+{
+    public Log4NetLogFactory()
+    {
+        XmlConfigurator.Configure();           
+    }
+
+    public ILog GetLogger(Type type)
+    {            
+        var logger = LogManager.GetLogger(type);            
+        return new Log(logger.Info, logger.Debug, logger.Error);
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: This is the ONLY place where we actually reference Log4Net.</p>
+</blockquote>
+<h2 id="composition-root">Composition root</h2>
+<p>This application has two composition roots (<strong>ICompositionRoot</strong>), one that registers the core services (<strong>CompositionRoot</strong> )and one that registers services related to <strong>Web Api</strong> (<strong>WebApiCompositionRoot</strong>). </p>
+<pre><code>public class CompositionRoot : ICompositionRoot
+{
+    public void Compose(IServiceRegistry serviceRegistry)
+    {            
+        serviceRegistry.Register&lt;ILogFactory, Log4NetLogFactory&gt;(new PerContainerLifetime());
+        serviceRegistry.Register&lt;Type, ILog&gt;((factory, type) =&gt; factory.GetInstance&lt;ILogFactory&gt;().GetLogger(type));
+        serviceRegistry.RegisterConstructorDependency(
+            (factory, info) =&gt; factory.GetInstance&lt;Type, ILog&gt;(info.Member.DeclaringType));            
+    }
+}
+</code></pre>
+
+<p>The first service that we register is the <strong>ILogFactory</strong> that is responsible for creating an <strong>ILog</strong> instance based on a given type.</p>
+<p>Next, we register the <strong>ILog</strong> service with a factory delegate that calls into the already registered <strong>ILogFactory</strong> service</p>
+<p>Finally we tell the container using the <strong>RegisterConstructorDependency</strong> method that whenever it sees an <strong>ILog</strong> constructor dependency, it should provide an <strong>ILog</strong> instance based on the actual class that uses it. </p>
+<pre><code>public class WebApiCompositionRoot : ICompositionRoot
+{
+    public void Compose(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterFrom&lt;CompositionRoot&gt;();
+        serviceRegistry.RegisterApiControllers();
+    }
+}
+</code></pre>
+
+<p>The <strong>WebApiCompositionRoot</strong> registers core services in addition services related to <strong>Web Api</strong> which in this case means the controllers. </p>
+<h2 id="controllers">Controllers</h2>
+<p>This application has just one controller named <strong>PingController</strong> that is simply going to return the text "pong".</p>
+<pre><code>public class PingController : ApiController
+{
+    private readonly ILog log;
+
+    public PingController(ILog log)
+    {
+        this.log = log;
+    }
+
+    public async Task&lt;IHttpActionResult&gt; Get()
+    {
+        log.Info(&quot;Ping start&quot;);        
+        var result =  Ok(&quot;Pong&quot;);
+        log.Info(&quot;Ping end&quot;);
+        return result;
+    }
+}
+</code></pre>
+
+<p>As we can see we are injecting an <strong>ILog</strong> instance into the controller.</p>
+<p>The <strong>Startup</strong> class for this application looks like this</p>
+<pre><code>public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {
+        var configuration = new HttpConfiguration();
+        ConfigureHttpRoutes(configuration);
+        ConfigureMediaFormatter(configuration);
+
+        var container = new ServiceContainer();
+        container.RegisterFrom&lt;WebApiCompositionRoot&gt;();            
+        container.EnableWebApi(configuration);           
+
+        app.UseWebApi(configuration);
+    }
+
+    private static void ConfigureMediaFormatter(HttpConfiguration configuration)
+    {
+        configuration.Formatters.Clear();
+        configuration.Formatters.Add(new JsonMediaTypeFormatter());
+    }
+
+    private static void ConfigureHttpRoutes(HttpConfiguration config)
+    {
+        config.Routes.MapHttpRoute(
+            name: &quot;API Default&quot;,
+            routeTemplate: &quot;api/{controller}/{id}&quot;,
+            defaults: new { id = RouteParameter.Optional });
+    }
+}
+</code></pre>
+
+<p>We can see all this in action just by running the application and hitting the service.</p>
+<pre><code>http://localhost:8080/api/ping
+</code></pre>
+
+<p>That should yield the following output in the console</p>
+<pre><code>2016-02-11 09:14:28.489 [INFO] 13 WebApiRequestLogging.PingController: Ping start
+2016-02-11 09:14:28.603 [INFO] 6 WebApiRequestLogging.PingController: Ping end
+</code></pre>
+
+<p>The <strong>Log4Net</strong> conversion pattern is like this (app.config)</p>
+<pre><code>&lt;conversionPattern value=&quot;%date{yyyy-MM-dd HH:mm:ss.fff} [%level] %thread %logger: %message%newline&quot; /&gt;
+</code></pre>
+
+<h2 id="request-logging">Request logging</h2>
+<p>Sometimes it might be useful to log each request and maybe also the duration of the request.
+We start off with a simple class (<strong>OwinMiddleware</strong>) that logs the duration of the request.</p>
+<pre><code>public class RequestLoggingMiddleware : OwinMiddleware
+{
+    private readonly ILog log;
+
+
+    public RequestLoggingMiddleware(OwinMiddleware next, ILog log) : base(next)
+    {
+        this.log = log;
+    }
+
+    public override async Task Invoke(IOwinContext context)
+    {            
+        await Measure(context).ConfigureAwait(false);;            
+    }
+
+    private async Task Measure(IOwinContext context)
+    {
+        var stopWath = Stopwatch.StartNew();
+        await Next.Invoke(context).ConfigureAwait(false);
+        stopWath.Stop();
+        log.Info($&quot;Request {context.Request.Uri.PathAndQuery} took {stopWath.ElapsedMilliseconds} ms&quot;);
+    }
+}
+</code></pre>
+
+<p>In addition to this we need to add this new middleware to the <strong>Owin</strong> pipeline by adding this line to the <strong>Startup</strong> class.</p>
+<pre><code>app.Use&lt;RequestLoggingMiddleware&gt;(container.GetInstance&lt;Type, ILog&gt;(typeof (RequestLogDecorator)));
+</code></pre>
+
+<blockquote>
+<p>Note: The reason for using an <strong>OwinMiddleware</strong> instead of a <strong>DelegatingHandler</strong> is that the <strong>OwinMiddleware</strong> is not tied to <strong>Web Api</strong> in any way and can also be used in other frameworks that build upon the <strong>Owin</strong> stack.</p>
+</blockquote>
+<p>Console output should now be</p>
+<pre><code>2016-02-11 13:07:48.466 [INFO] 11 WebApiRequestLogging.RequestLoggingMiddleware: Request /api/ping took 4 ms
+</code></pre>
+
+<h2 id="request-context">Request Context</h2>
+<p>In some situations it is useful to be able to associate all log entries with the current web request. This can be used for analyzing the log later in tools such as <strong>Splunk</strong> making it possible to see all log entries tied to any given request.</p>
+<p>We could make the <strong>IOwinContext</strong> available in the container so that it could be injected into any class that requires information about the current request. This would however mean that these classes would have to know about the <strong>IOwinContext</strong> which might not be the best solution. </p>
+<p>So let's start off simple by creating a class to hold the request identifier.</p>
+<pre><code>public class RequestContext
+{
+    public RequestContext(string id)
+    {
+        Id = id;
+    }
+
+    public string Id { get; } 
+}
+</code></pre>
+
+<p>Next we create another middleware class to set the request identifier.</p>
+<pre><code>public class RequestContextMiddleware : OwinMiddleware
+{
+    private static readonly AsyncLocal&lt;RequestContext&gt; RequestContextStorage = new AsyncLocal&lt;RequestContext&gt;();
+
+    public RequestContextMiddleware(OwinMiddleware next) : base(next)
+    {
+    }
+
+    public override async Task Invoke(IOwinContext context)
+    {
+        RequestContextStorage.Value = new RequestContext(Guid.NewGuid().ToString());
+        await Next.Invoke(context);
+    }
+
+    public static RequestContext CurrentRequest =&gt; RequestContextStorage.Value;
+}
+</code></pre>
+
+<p>The actual <strong>RequestContext</strong> uses the <strong>AsyncLocal&lt;T&gt;</strong> class to ensure that the context flows across await points.</p>
+<blockquote>
+<p>The <strong>AsyncLocal&lt;T&gt;</strong> class is sort of the async version of <strong>ThreadLocal&lt;T&gt;</strong>. You should NEVER rely on any kind of storage that is tied to a specific thread in an async environment.</p>
+</blockquote>
+<p>Then we need to add the  <strong>RequestContextMiddleware</strong> to the <strong>Owin</strong> pipeline.</p>
+<pre><code> app.Use&lt;RequestContextMiddleware&gt;();
+</code></pre>
+
+<p>We now have way to access the current <strong>RequestContext</strong> through the <strong>CurrentRequest</strong> property. Sweet.</p>
+<p>The only thing missing now is to register a function delegate that represent getting the current <strong>RequestContext</strong>.</p>
+<pre><code>serviceRegistry.Register&lt;Func&lt;RequestContext&gt;&gt;(factory =&gt; (() =&gt; RequestContextMiddleware.CurrentRequest), new PerContainerLifetime());
+</code></pre>
+
+<p>The reason for injection a function delegate rather than just the <strong>RequestContext</strong> is that it might be used in services such as singletons that outlives the scope of a web request. By injecting the delegate that in turn gives us the <strong>RequestContext</strong>, we can be sure that it is valid.</p>
+<h2 id="decorators">Decorators</h2>
+<p>The requirement here is that if we are logging outside the context of a web request, such as in a unit test, we should just log without the request identifier, but if we log inside a web request (production or integration tests), we should add the request identifier to the message being logged. This is a perfect example of where we can apply the <strong>Decorator Pattern</strong>. This allows us to add new functionality to a service without touching the original implementation. Did I hear "open-closed principle", anyone?</p>
+<pre><code>public class RequestLogDecorator : ILog
+{
+    private readonly ILog log;
+    private readonly Func&lt;RequestContext&gt; getRequestContext;
+
+    public RequestLogDecorator(ILog log, Func&lt;RequestContext&gt; getRequestContext)
+    {
+        this.log = log;
+        this.getRequestInfo = getRequestInfo;
+    }
+
+    public void Info(string message)
+    {
+        log.Info($&quot;Request id: {getRequestContext().Id} {message}&quot;);
+    }
+
+    public void Debug(string message)
+    {
+        log.Debug($&quot;Request id: {getRequestContext().Id} {message}&quot;);
+    }
+
+    public void Error(string message, Exception exception = null)
+    {
+        log.Error($&quot;Request id: {getRequestContext().Id} {message}&quot;, exception);
+    }
+}
+</code></pre>
+
+<p>The decorator simply wraps the original <strong>ILog</strong> instance and applies the request identifier now returned from the <strong>getRequestContext</strong> delegate.  Don't you just love the new string interpolation features? </p>
+<blockquote>
+<p>Note: If you are new to the decorator pattern, you can think of it as a <a href="https://en.wikipedia.org/wiki/Matryoshka_doll">Russian Doll</a> where inside there is an exact identical doll wrapped by an outer doll.</p>
+</blockquote>
+<p>Decorators are first-class citizens in <strong>LightInject</strong> and applying a decorator is just a one-liner in the <strong>WepApiCompositionRoot</strong> class.</p>
+<pre><code>serviceRegistry.Decorate&lt;ILog, RequestLogDecorator&gt;();
+</code></pre>
+
+<p>Since we only apply the decorator in the <strong>WepApiCompositionRoot</strong> class it will only be used in the context of a web request.</p>
+<p>To "ensure" that we don't always log on the same thread, we modify the <strong>PingController</strong> to inlude a delay.</p>
+<pre><code>public async Task&lt;IHttpActionResult&gt; Get()
+{
+    log.Info(&quot;Ping start&quot;);
+
+    //ConfigureAwait(false) to say that we don't care about synchronization context.
+    await Task.Delay(100).ConfigureAwait(false);
+
+    // We are probably on another thread here
+    var result =  Ok(&quot;Pong&quot;);
+    log.Info(&quot;Ping end&quot;);
+    return result;
+}
+</code></pre>
+
+<p>Running the application and hitting the service should now yield the following output in the console</p>
+<pre><code>2016-02-11 20:40:30.994 [INFO] 12 WebApiRequestLogging.PingController: Request id: 91444099-72ad-488f-99d6-ab201f20531e Ping start
+2016-02-11 20:40:31.111 [INFO] 6 WebApiRequestLogging.PingController: Request id: 91444099-72ad-488f-99d6-ab201f20531e Ping end
+2016-02-11 20:40:31.205 [INFO] 6 WebApiRequestLogging.RequestLogDecorator: Request id: 91444099-72ad-488f-99d6-ab201f20531e Request /api/ping took 463 ms
+</code></pre>
+
+<p>As we can see that even if we started and ended the request on two different threads, we still have the same request identifier.</p>
+<p>Happy logging!!</p></div>
+            
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script>var base_url = '..';</script>
+        <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+        <script src="../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
