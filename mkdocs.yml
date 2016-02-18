@@ -12,6 +12,7 @@ pages:
     - Microsoft DependencyInjection : microsoft.dependencyinjection.md
 - Examples:
     - Web Api Request Logging: webapirequestlogging.md    
+    - Transactions and Testing: transactions.md
 - Side Projects:
     - LightMock : lightmock.md   
  
