@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>xUnit - LightInject</title>
+	<title>Web Api - LightInject</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
@@ -92,8 +92,8 @@
                         <ul class="dropdown-menu">
                         
                             
-<li class="active">
-    <a href="./">xUnit</a>
+<li >
+    <a href="../xunit/">xUnit</a>
 </li>
 
                         
@@ -104,8 +104,8 @@
 
                         
                             
-<li >
-    <a href="../webapi/">Web Api</a>
+<li class="active">
+    <a href="./">Web Api</a>
 </li>
 
                         
@@ -166,12 +166,12 @@
                 </li>
                 
                     <li >
-                        <a rel="next" href="../annotation/">
+                        <a rel="next" href="../web/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../web/">
+                        <a rel="prev" href="../microsoft.dependencyinjection/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -187,76 +187,208 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#lightinjectxunit">LightInject.xUnit</a></li>
+        <li class="main active"><a href="#web-api">Web API</a></li>
         
             <li><a href="#installing">Installing</a></li>
         
-            <li><a href="#injecting-services">Injecting services</a></li>
+            <li><a href="#initializing">Initializing</a></li>
         
-            <li><a href="#configuration">Configuration</a></li>
+            <li><a href="#filterattribute">FilterAttribute</a></li>
         
-            <li><a href="#scoping-xunit-192">Scoping (xUnit &lt;= 1.9.2)</a></li>
-        
-            <li><a href="#scoping-xunit-200">Scoping (xUnit &gt;= 2.0.0)</a></li>
+            <li><a href="#owin-selfhosting">Owin Selfhosting</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="lightinjectxunit">LightInject.xUnit</h1>
-<p><strong>LightInject.xUnit</strong> provides an integration that enables dependency injection in <a href="https://github.com/xunit/xunit">xUnit</a> test methods.</p>
+<h1 id="web-api">Web API</h1>
+<p><strong>LightInject.WebApi</strong> provides an integration that enables dependency injection in Web API applications.</p>
 <h2 id="installing">Installing</h2>
-<p><strong>LightInject.xUnit</strong> provides two distribution models via NuGet</p>
+<p><strong>LightInject.WebApi</strong> provides two distribution models via NuGet</p>
 <h3 id="binary">Binary</h3>
 <div class="nuget-badge" >
    <p>
-         <code>PM&gt; Install-Package LightInject.xUnit </code>
+         <code>PM&gt; Install-Package LightInject.WebApi </code>
    </p>
 </div>
 
-<p>This adds a reference to the <strong>LightInject.Xunit.dll</strong> in the target project.</p>
+<p>This adds a reference to the <strong>LightInject.WebApi.dll</strong> in the target project.</p>
 <h3 id="source">Source</h3>
 <div class="nuget-badge" >
    <p>
-         <code>PM&gt; Install-Package LightInject.xUnit.Source </code>
+         <code>PM&gt; Install-Package LightInject.WebApi.Source </code>
    </p>
 </div>
 
-<p>This will install a single file, <strong>LightInject.Xunit.cs</strong> in the target project.</p>
-<h2 id="injecting-services">Injecting services</h2>
-<p>Services from <strong>LightInject</strong> are injected into methods that are decorated with the <strong>InjectData</strong> attribute. </p>
-<pre><code>[Theory, InjectData]                
-public void TestMethod(IFoo foo)
+<p>This will install a single file, <strong>LightInject.WebApi.cs</strong> in the target project.</p>
+<h2 id="initializing">Initializing</h2>
+<pre><code>protected void Application_Start()
 {
-    Assert.NotNull(foo);
+    var container = new ServiceContainer();
+    container.RegisterApiControllers();        
+    //register other services
+    container.EnablePerWebRequestScope();
+    container.EnableWebApi(GlobalConfiguration.Configuration)              
 }
 </code></pre>
-<h2 id="configuration">Configuration</h2>
-<p><strong>LightInject</strong> will look for an <strong>ICompositionRoot</strong> implementation in the same assembly as the requested service. If it is found, it will be executed and the container gets configured through that composition root.   </p>
-<p>If such an implementation does not exists or that we for some other reason need to configure the container, we can do this by simply implementing a static method in the test class with the following signature.</p>
-<pre><code>public static void Configure(IServiceContainer container)
+<blockquote>
+<p><strong>Note:</strong> EnablePerWebRequestScope is only required for hosting within ASP.Net </p>
+</blockquote>
+<h2 id="filterattribute">FilterAttribute</h2>
+<p>Although filter attributes are instantiated by the MFC infrastructure, <strong>LightInject</strong> is still able to inject dependencies into properties.</p>
+<pre><code>public class FooFilterAttribute : ActionFilterAttribute
 {
-    container.Register&lt;IFoo, Foo&gt;();            
+    public IFoo Foo { get; set; }
 }
 </code></pre>
-<p>This method is executed regardless of other composition roots and allows customized configuration of the container before the test is executed.  </p>
-<h2 id="scoping-xunit-192">Scoping (xUnit &lt;= 1.9.2)</h2>
-<p>Services registered with the <strong>PerScopeLifetime</strong> or <strong>PerRequestLifetime</strong> needs to be resolved within an active <strong>Scope</strong> to ensure that any services that implements <strong>IDisposable</strong> are properly disposed.  </p>
-<p>By decorating the test method with the <strong>ScopedTheory</strong> attribute, a new <strong>Scope</strong> will be started when the test method starts and it will end when the test method ends.   </p>
-<pre><code>[ScopedTheory, InjectData]
-public void MethodWithScopedArgument(IFoo foo)
+<h2 id="owin-selfhosting">Owin Selfhosting</h2>
+<p>This example shows how to do Web API self hosting using OWIN.</p>
+<h3 id="step-1">Step 1</h3>
+<p>Create a standard console application and run the following command from the package manager console.</p>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package Microsoft.AspNet.WebApi.OwinSelfHost </code>
+   </p>
+</div>
+
+<h3 id="step-2">Step 2</h3>
+<p>Add a OWIN startup class.</p>
+<pre><code>public class Startup
 {
-    Assert.NotNull(foo);
+    public void Configuration(IAppBuilder app)
+    {                        
+        // Configure Web API for self-host. 
+        var config = new HttpConfiguration();          
+        config.Routes.MapHttpRoute(
+            name: "DefaultApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = RouteParameter.Optional });
+
+        app.UseWebApi(config); 
+    }
 }
 </code></pre>
-<h2 id="scoping-xunit-200">Scoping (xUnit &gt;= 2.0.0)</h2>
-<p>Services registered with the <strong>PerScopeLifetime</strong> or <strong>PerRequestLifetime</strong> needs to be resolved within an active <strong>Scope</strong> to ensure that any services that implements <strong>IDisposable</strong> are properly disposed.  </p>
-<p>By decorating the test method with the <strong>Scoped</strong> attribute, a new <strong>Scope</strong> will be started when the test method starts and it will end when the test method ends.   </p>
-<pre><code>[Theory, Scoped, InjectData]
-public void MethodWithScopedArgument(IFoo foo)
+<h3 id="step-3">Step 3</h3>
+<p>Add a controller</p>
+<pre><code>public class ValuesController : ApiController
+{        
+    public IEnumerable&lt;string&gt; Get()
+    {
+        return new string[] { "value1", "value2" };
+    }        
+}
+</code></pre>
+<h3 id="step-4">Step 4</h3>
+<p>Modify the <em>Main</em> method to start the OWIN host.</p>
+<pre><code>class Program
 {
-    Assert.NotNull(foo);
+    static void Main(string[] args)
+    {            
+        // Start OWIN host 
+        using (WebApp.Start&lt;Startup&gt;("http://localhost:9000/"))
+        {
+            Console.ReadLine(); 
+        }
+
+        Console.ReadLine(); 
+    }
+}
+</code></pre>
+<p>Press <strong>F5</strong> to run the application and browse to <a href="http://localhost:9000/api/values">http://localhost:9000/api/values</a>.</p>
+<h3 id="step-5">Step 5</h3>
+<div class="nuget-badge" >
+   <p>
+         <code>PM&gt; Install-Package LightInject.WebApi </code>
+   </p>
+</div>
+
+<p>Modify the <em>Startup</em> class to enable LightInject to be used as the dependency resolver.</p>
+<pre><code>public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {                        
+        // Configure Web API for self-host. 
+        var config = new HttpConfiguration();
+        var container = new ServiceContainer();
+        container.RegisterApiControllers();
+        container.EnableWebApi(config);
+        config.Routes.MapHttpRoute(
+            name: "DefaultApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = RouteParameter.Optional });
+
+        app.UseWebApi(config); 
+    }
+}
+</code></pre>
+<blockquote>
+<p>Note: LightInject.Web can be uninstalled as it is not used in the self host scenario. </p>
+</blockquote>
+<h3 id="scoping">Scoping</h3>
+<p>Scopes are handled by Web API itself and services registered with the PerScopeLifetime or PerRequestLifetime are disposed when the web request ends.</p>
+<h3 id="httprequestmessage">HttpRequestMessage</h3>
+<p>The current <em>HttpRequestMessage</em> is available to us in the controllers as it is exposed through the <em>Request</em> property.
+To make the <em>HttpRequestMessage</em> available to other services we need to make some minor changes</p>
+<blockquote>
+<p>The following code will be included as part of the next version of LightInject.WebApi.</p>
+</blockquote>
+<p>The first thing we need is a handler that can keep track of the current <em>HttpRequestMessage</em>.</p>
+<pre><code>internal class HttpRequestMessageHandler : DelegatingHandler
+{
+    private LogicalThreadStorage&lt;HttpRequestMessageStorage&gt; messageStorage =
+        new LogicalThreadStorage&lt;HttpRequestMessageStorage&gt;(() =&gt; new HttpRequestMessageStorage());
+
+    protected override Task&lt;HttpResponseMessage&gt; SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        messageStorage.Value.Message = request;            
+        return base.SendAsync(request, cancellationToken);
+    }
+
+    public HttpRequestMessage GetCurrentMessage()
+    {
+        return messageStorage.Value.Message;
+    }
+}
+</code></pre>
+<p>The <em>HttpRequestMessageStorage</em> class is simply a "holder" class for the actual <em>HttpRequestMessage</em>.</p>
+<pre><code>public class HttpRequestMessageStorage
+{
+    public HttpRequestMessage Message { get; set; }
+}
+</code></pre>
+<p>Next we modify the Startup class to support injection of a <em>Func&lt;HttpRequestMessage&gt;</em>.</p>
+<pre><code>public class Startup
+{
+    public void Configuration(IAppBuilder app)
+    {                                                
+        // Configure Web API for self-host. 
+        var config = new HttpConfiguration();
+        var container = new ServiceContainer();
+        container.RegisterApiControllers();
+        container.EnableWebApi(config);
+        container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();
+        var handler = new HttpRequestMessageHandler();
+        config.MessageHandlers.Insert(0, handler);
+        container.Register&lt;Func&lt;HttpRequestMessage&gt;&gt;(factory =&gt; () =&gt; handler.GetCurrentMessage());
+
+        config.Routes.MapHttpRoute(
+            name: "DefaultApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = RouteParameter.Optional });
+
+        app.UseWebApi(config); 
+    }
+}
+</code></pre>
+<p>Now, if we need access to the current <em>HttpRequestMessage</em>, we can just inject a function delegate.</p>
+<pre><code>public class Foo
+{
+    public Foo(Func&lt;HttpRequestMessage&gt; getCurrentRequestMessage)
+    {
+        var currentMessage = getCurrentRequestMessage();
+    }
+
 }
 </code></pre></div>
             

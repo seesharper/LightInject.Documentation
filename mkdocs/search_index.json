@@ -436,6 +436,81 @@
             "title": "Source"
         }, 
         {
+            "location": "/webapi/", 
+            "text": "Web API\n\n\nLightInject.WebApi\n provides an integration that enables dependency injection in Web API applications.\n\n\nInstalling\n\n\nLightInject.WebApi\n provides two distribution models via NuGet\n\n\nBinary\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.WebApi \n\n   \n\n\n\n\n\nThis adds a reference to the \nLightInject.WebApi.dll\n in the target project.\n\n\nSource\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.WebApi.Source \n\n   \n\n\n\n\n\nThis will install a single file, \nLightInject.WebApi.cs\n in the target project.\n\n\nInitializing\n\n\nprotected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.RegisterApiControllers();        \n    //register other services\n    container.EnablePerWebRequestScope();\n    container.EnableWebApi(GlobalConfiguration.Configuration)              \n}\n\n\n\n\n\nNote:\n EnablePerWebRequestScope is only required for hosting within ASP.Net \n\n\n\n\nFilterAttribute\n\n\nAlthough filter attributes are instantiated by the MFC infrastructure, \nLightInject\n is still able to inject dependencies into properties.\n\n\npublic class FooFilterAttribute : ActionFilterAttribute\n{\n    public IFoo Foo { get; set; }\n}\n\n\n\nOwin Selfhosting\n\n\nThis example shows how to do Web API self hosting using OWIN.\n\n\nStep 1\n\n\nCreate a standard console application and run the following command from the package manager console.\n\n\n\n   \n\n         \nPM\n Install-Package Microsoft.AspNet.WebApi.OwinSelfHost \n\n   \n\n\n\n\n\nStep 2\n\n\nAdd a OWIN startup class.\n\n\npublic class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                        \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();          \n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}\n\n\n\nStep 3\n\n\nAdd a controller\n\n\npublic class ValuesController : ApiController\n{        \n    public IEnumerable\nstring\n Get()\n    {\n        return new string[] { \"value1\", \"value2\" };\n    }        \n}\n\n\n\nStep 4\n\n\nModify the \nMain\n method to start the OWIN host.\n\n\nclass Program\n{\n    static void Main(string[] args)\n    {            \n        // Start OWIN host \n        using (WebApp.Start\nStartup\n(\"http://localhost:9000/\"))\n        {\n            Console.ReadLine(); \n        }\n\n        Console.ReadLine(); \n    }\n}\n\n\n\nPress \nF5\n to run the application and browse to \nhttp://localhost:9000/api/values\n.\n\n\nStep 5\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.WebApi \n\n   \n\n\n\n\n\nModify the \nStartup\n class to enable LightInject to be used as the dependency resolver.\n\n\npublic class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                        \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();\n        var container = new ServiceContainer();\n        container.RegisterApiControllers();\n        container.EnableWebApi(config);\n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}\n\n\n\n\n\nNote: LightInject.Web can be uninstalled as it is not used in the self host scenario. \n\n\n\n\nScoping\n\n\nScopes are handled by Web API itself and services registered with the PerScopeLifetime or PerRequestLifetime are disposed when the web request ends.\n\n\nHttpRequestMessage\n\n\nThe current \nHttpRequestMessage\n is available to us in the controllers as it is exposed through the \nRequest\n property.\nTo make the \nHttpRequestMessage\n available to other services we need to make some minor changes\n\n\n\n\nThe following code will be included as part of the next version of LightInject.WebApi.\n\n\n\n\nThe first thing we need is a handler that can keep track of the current \nHttpRequestMessage\n.\n\n\ninternal class HttpRequestMessageHandler : DelegatingHandler\n{\n    private LogicalThreadStorage\nHttpRequestMessageStorage\n messageStorage =\n        new LogicalThreadStorage\nHttpRequestMessageStorage\n(() =\n new HttpRequestMessageStorage());\n\n    protected override Task\nHttpResponseMessage\n SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n    {\n        messageStorage.Value.Message = request;            \n        return base.SendAsync(request, cancellationToken);\n    }\n\n    public HttpRequestMessage GetCurrentMessage()\n    {\n        return messageStorage.Value.Message;\n    }\n}\n\n\n\nThe \nHttpRequestMessageStorage\n class is simply a \"holder\" class for the actual \nHttpRequestMessage\n.\n\n\npublic class HttpRequestMessageStorage\n{\n    public HttpRequestMessage Message { get; set; }\n}\n\n\n\nNext we modify the Startup class to support injection of a \nFunc\nHttpRequestMessage\n.\n\n\npublic class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                                                \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();\n        var container = new ServiceContainer();\n        container.RegisterApiControllers();\n        container.EnableWebApi(config);\n        container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();\n        var handler = new HttpRequestMessageHandler();\n        config.MessageHandlers.Insert(0, handler);\n        container.Register\nFunc\nHttpRequestMessage\n(factory =\n () =\n handler.GetCurrentMessage());\n\n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}\n\n\n\nNow, if we need access to the current \nHttpRequestMessage\n, we can just inject a function delegate.\n\n\npublic class Foo\n{\n    public Foo(Func\nHttpRequestMessage\n getCurrentRequestMessage)\n    {\n        var currentMessage = getCurrentRequestMessage();\n    }\n\n}", 
+            "title": "Web Api"
+        }, 
+        {
+            "location": "/webapi/#web-api", 
+            "text": "LightInject.WebApi  provides an integration that enables dependency injection in Web API applications.", 
+            "title": "Web API"
+        }, 
+        {
+            "location": "/webapi/#installing", 
+            "text": "LightInject.WebApi  provides two distribution models via NuGet", 
+            "title": "Installing"
+        }, 
+        {
+            "location": "/webapi/#binary", 
+            "text": "PM  Install-Package LightInject.WebApi  \n      This adds a reference to the  LightInject.WebApi.dll  in the target project.", 
+            "title": "Binary"
+        }, 
+        {
+            "location": "/webapi/#source", 
+            "text": "PM  Install-Package LightInject.WebApi.Source  \n      This will install a single file,  LightInject.WebApi.cs  in the target project.", 
+            "title": "Source"
+        }, 
+        {
+            "location": "/webapi/#initializing", 
+            "text": "protected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.RegisterApiControllers();        \n    //register other services\n    container.EnablePerWebRequestScope();\n    container.EnableWebApi(GlobalConfiguration.Configuration)              \n}   Note:  EnablePerWebRequestScope is only required for hosting within ASP.Net", 
+            "title": "Initializing"
+        }, 
+        {
+            "location": "/webapi/#filterattribute", 
+            "text": "Although filter attributes are instantiated by the MFC infrastructure,  LightInject  is still able to inject dependencies into properties.  public class FooFilterAttribute : ActionFilterAttribute\n{\n    public IFoo Foo { get; set; }\n}", 
+            "title": "FilterAttribute"
+        }, 
+        {
+            "location": "/webapi/#owin-selfhosting", 
+            "text": "This example shows how to do Web API self hosting using OWIN.", 
+            "title": "Owin Selfhosting"
+        }, 
+        {
+            "location": "/webapi/#step-1", 
+            "text": "Create a standard console application and run the following command from the package manager console.  \n    \n          PM  Install-Package Microsoft.AspNet.WebApi.OwinSelfHost", 
+            "title": "Step 1"
+        }, 
+        {
+            "location": "/webapi/#step-2", 
+            "text": "Add a OWIN startup class.  public class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                        \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();          \n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}", 
+            "title": "Step 2"
+        }, 
+        {
+            "location": "/webapi/#step-3", 
+            "text": "Add a controller  public class ValuesController : ApiController\n{        \n    public IEnumerable string  Get()\n    {\n        return new string[] { \"value1\", \"value2\" };\n    }        \n}", 
+            "title": "Step 3"
+        }, 
+        {
+            "location": "/webapi/#step-4", 
+            "text": "Modify the  Main  method to start the OWIN host.  class Program\n{\n    static void Main(string[] args)\n    {            \n        // Start OWIN host \n        using (WebApp.Start Startup (\"http://localhost:9000/\"))\n        {\n            Console.ReadLine(); \n        }\n\n        Console.ReadLine(); \n    }\n}  Press  F5  to run the application and browse to  http://localhost:9000/api/values .", 
+            "title": "Step 4"
+        }, 
+        {
+            "location": "/webapi/#step-5", 
+            "text": "PM  Install-Package LightInject.WebApi  \n      Modify the  Startup  class to enable LightInject to be used as the dependency resolver.  public class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                        \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();\n        var container = new ServiceContainer();\n        container.RegisterApiControllers();\n        container.EnableWebApi(config);\n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}   Note: LightInject.Web can be uninstalled as it is not used in the self host scenario.", 
+            "title": "Step 5"
+        }, 
+        {
+            "location": "/webapi/#scoping", 
+            "text": "Scopes are handled by Web API itself and services registered with the PerScopeLifetime or PerRequestLifetime are disposed when the web request ends.", 
+            "title": "Scoping"
+        }, 
+        {
+            "location": "/webapi/#httprequestmessage", 
+            "text": "The current  HttpRequestMessage  is available to us in the controllers as it is exposed through the  Request  property.\nTo make the  HttpRequestMessage  available to other services we need to make some minor changes   The following code will be included as part of the next version of LightInject.WebApi.   The first thing we need is a handler that can keep track of the current  HttpRequestMessage .  internal class HttpRequestMessageHandler : DelegatingHandler\n{\n    private LogicalThreadStorage HttpRequestMessageStorage  messageStorage =\n        new LogicalThreadStorage HttpRequestMessageStorage (() =  new HttpRequestMessageStorage());\n\n    protected override Task HttpResponseMessage  SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)\n    {\n        messageStorage.Value.Message = request;            \n        return base.SendAsync(request, cancellationToken);\n    }\n\n    public HttpRequestMessage GetCurrentMessage()\n    {\n        return messageStorage.Value.Message;\n    }\n}  The  HttpRequestMessageStorage  class is simply a \"holder\" class for the actual  HttpRequestMessage .  public class HttpRequestMessageStorage\n{\n    public HttpRequestMessage Message { get; set; }\n}  Next we modify the Startup class to support injection of a  Func HttpRequestMessage .  public class Startup\n{\n    public void Configuration(IAppBuilder app)\n    {                                                \n        // Configure Web API for self-host. \n        var config = new HttpConfiguration();\n        var container = new ServiceContainer();\n        container.RegisterApiControllers();\n        container.EnableWebApi(config);\n        container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();\n        var handler = new HttpRequestMessageHandler();\n        config.MessageHandlers.Insert(0, handler);\n        container.Register Func HttpRequestMessage (factory =  () =  handler.GetCurrentMessage());\n\n        config.Routes.MapHttpRoute(\n            name: \"DefaultApi\",\n            routeTemplate: \"api/{controller}/{id}\",\n            defaults: new { id = RouteParameter.Optional });\n\n        app.UseWebApi(config); \n    }\n}  Now, if we need access to the current  HttpRequestMessage , we can just inject a function delegate.  public class Foo\n{\n    public Foo(Func HttpRequestMessage  getCurrentRequestMessage)\n    {\n        var currentMessage = getCurrentRequestMessage();\n    }\n\n}", 
+            "title": "HttpRequestMessage"
+        }, 
+        {
             "location": "/microsoft.dependencyinjection/", 
             "text": "LightInject.Microsoft.DependencyInjection\n\n\n\n\nEnables \nLightInject\n to be used as the service container in ASP.NET Core and Entity Framework 7 applications.\n\n\n\n\nNote: This package is currently in pre release and you need to add https://www.myget.org/F/aspnetvnext/api/v3/index.json to your package sources.\nThis package will only work with the ASP.NET rc2 packages available from this feed. This will all change once the rc2 is released to the official Nuget feed. \n\n\n\n\nInstalling\n\n\ndependencies\n: {\n  \nLightInject.Microsoft.DependencyInjection\n: \nversion\n\n}\n\n\n\n\nUsage\n\n\npublic class Startup\n{       \n    public IServiceProvider ConfigureServices(IServiceCollection services)\n    {\n        var container = new ServiceContainer();\n        return container.CreateServiceProvider(services);\n    }\n\n    public void Configure(IApplicationBuilder app)\n    {          \n        app.Run(async (context) =\n\n        {\n            await context.Response.WriteAsync(\nHello from LightInject\n);\n        });\n    }\n}", 
             "title": "Microsoft DependencyInjection"
