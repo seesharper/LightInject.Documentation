@@ -9,6 +9,7 @@ pages:
 - Integrations:
     - xUnit: xunit.md 
     - Web: web.md
+    - Web Api: webapi.md
     - Microsoft DependencyInjection : microsoft.dependencyinjection.md
 - Examples:
     - Web Api Request Logging: webapirequestlogging.md    
