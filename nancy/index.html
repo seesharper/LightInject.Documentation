@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>AutoFactory - LightInject</title>
+	<title>Nancy - LightInject</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
@@ -60,7 +60,7 @@
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Extensions <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -71,8 +71,8 @@
 
                         
                             
-<li class="active">
-    <a href="./">AutoFactory</a>
+<li >
+    <a href="../autofactory/">AutoFactory</a>
 </li>
 
                         
@@ -87,7 +87,7 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -110,8 +110,8 @@
 
                         
                             
-<li >
-    <a href="../nancy/">Nancy</a>
+<li class="active">
+    <a href="./">Nancy</a>
 </li>
 
                         
@@ -172,12 +172,12 @@
                 </li>
                 
                     <li >
-                        <a rel="next" href="../interception/">
+                        <a rel="next" href="../webapi/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../annotation/">
+                        <a rel="prev" href="../microsoft.dependencyinjection/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -193,116 +193,86 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#autofactory">AutoFactory</a></li>
+        <li class="main active"><a href="#nancy">Nancy</a></li>
         
             <li><a href="#installing">Installing</a></li>
         
-            <li><a href="#factory">Factory</a></li>
+            <li><a href="#dependencies">Dependencies</a></li>
         
-            <li><a href="#parameters">Parameters</a></li>
+            <li><a href="#custom-bootstrapper">Custom Bootstrapper</a></li>
         
-            <li><a href="#named-services">Named Services</a></li>
+            <li><a href="#lifetime">Lifetime</a></li>
         
-            <li><a href="#open-generics">Open Generics</a></li>
+            <li><a href="#nancycontext">NancyContext</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="autofactory">AutoFactory</h1>
-<p><a href="https://ci.appveyor.com/project/seesharper/lightinject-autofactory"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/ab1bun0764ix7t35?svg=true" /></a></p>
-<p><strong>LightInject.AutoFactory</strong> enables automatic implementation of factory interfaces.</p>
+<h1 id="nancy">Nancy</h1>
+<p><strong>LightInject.Nancy</strong> provides an integration that enables <strong>LightInject</strong> to be used as the IoC container in the Nancy web framework.</p>
 <h2 id="installing">Installing</h2>
-<p><strong>LightInject.AutoFactory</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
 <div class="nuget-badge" >
    <p>
-         <code>PM&gt; Install-Package LightInject.AutoFactory </code>
+         <code>PM&gt; Install-Package LightInject.Nancy </code>
    </p>
 </div>
 
-<p>This adds a reference to the <strong>LightInject.AutoFactory.dll</strong> in the target project.</p>
-<h3 id="source">Source</h3>
-<div class="nuget-badge" >
-   <p>
-         <code>PM&gt; Install-Package LightInject.AutoFactory.Source </code>
-   </p>
-</div>
-
-<p>This will install a single file, <strong>LightInject.AutoFactory.cs</strong> in the target project.</p>
-<h2 id="factory">Factory</h2>
-<p>The following interface represents a factory class used to resolve <strong>IFoo</strong> instances. </p>
+<p>This adds a reference to the <strong>LightInject.Nancy.dll</strong> in the target project.</p>
+<h2 id="dependencies">Dependencies</h2>
 <pre><code>public interface IFoo {}
-
 public class Foo : IFoo {}
 
-public interface IFooFactory
+public class SampleModule : NancyModule
 {
-    IFoo GetFoo();
+    public SampleModule(IFoo foo)
+    {
+        Get["/"] = parameters =&gt; "Hello World";
+    }
 }
 </code></pre>
-<p>Instead of having to manually implement the <strong>IFooFactory</strong> interface, we can just register the factory and resolve the instance through a factory that has been automatically implemented.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();    
-container.RegisterAutoFactory&lt;IFooFactory&gt;(); 
-var factory = container.GetInstance&lt;IFooFactory&gt;();
-var foo = factory.GetFoo();
-</code></pre>
-<h2 id="parameters">Parameters</h2>
-<pre><code>public interface IFoo {}
-
-public class Foo : IFoo 
+<p>Configuring additional services/dependencies is done by implementing the <strong>ICompositionRoot</strong> interface.</p>
+<pre><code>public class CompositionRoot : ICompositionRoot
 {
-    public Foo(int value) {}        
-}
-
-public interface IFooFactory
-{
-    IFoo GetFoo(int value);
+    void ICompositionRoot.Compose(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.Register&lt;IFoo, Foo&gt;();
+    }
 }
 </code></pre>
-<p>Runtime arguments can now be passed to the factory method.</p>
-<pre><code>container.Register&lt;int, IFoo&gt;((factory, value) =&gt; new Foo(value));  
-container.RegisterAutoFactory&lt;IFooFactory&gt;();
-var factory = container.GetInstance&lt;IFooFactory&gt;();
-var foo = factory.GetFoo(42);
-</code></pre>
-<h2 id="named-services">Named Services</h2>
-<pre><code>public interface IFoo {}
-
-public class Foo : IFoo {}
-
-public class AnotherFoo : IFoo {}
-
-public interface IFooFactory
+<blockquote>
+<p><em>Note: <strong>LightInject</strong> will look for an <strong>ICompositionRoot</strong> implementation in the same assembly as the requested service.</em></p>
+</blockquote>
+<h2 id="custom-bootstrapper">Custom Bootstrapper</h2>
+<p>If we need to use an existing container instance or perform some other configuration, this can be done by inheriting from the <strong>LightInjectNancyBootstrapper</strong> class. </p>
+<pre><code>public class Bootstrapper : LightInjectNancyBootstrapper
 {
-    IFoo GetFoo();
-    IFoo GetAnotherFoo();
+    protected override IServiceContainer GetServiceContainer()
+    {
+        // Alteratively provide an existing container instance.
+        return base.GetServiceContainer();
+    }
 }
 </code></pre>
-<p>The name of the factory method is used to identify named services.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();    
-container.Register&lt;IFoo, Foo&gt;("AnotherFoo");    
-container.RegisterAutoFactory&lt;IFooFactory&gt;();
-var factory = container.GetInstance&lt;IFooFactory&gt;();
-var foo = factory.GetFoo();
-var anotherFoo = factory.GetAnotherFoo();
-</code></pre>
-<h2 id="open-generics">Open Generics</h2>
-<pre><code>public interface IFoo&lt;T&gt; {}
-
-public class Foo&lt;T&gt; : IFoo&lt;T&gt; {}
-
-public interface IFooFactory
+<h2 id="lifetime">Lifetime</h2>
+<p>Services registered with the <strong>PerScopeLifetime</strong> are scoped per web request while services registered with the <strong>PerContainerLifetime</strong> are as scoped per application. </p>
+<h2 id="nancycontext">NancyContext</h2>
+<p>By injecting a <strong>Func&lt;NancyContext&gt;</strong> delegate we can get access to the <strong>NancyContext</strong> even outside of <strong>Nancy</strong> modules.</p>
+<pre><code>public class Foo 
 {
-    IFoo&lt;T&gt; GetFoo&lt;T&gt;();    
+    private readonly Func&lt;NancyContext&gt; getNancyContext;
+
+    public Foo(Func&lt;NancyContext&gt; getNancyContext)
+    {
+        this.getNancyContext = getNancyContext;
+    }
+
+    public void DoSomething()
+    {
+        var nancyContext = getNancyContext();
+    }
 }
-</code></pre>
-<p>The generic type arguments from the factory method are used to create the service instance.</p>
-<pre><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
-container.RegisterAutoFactory&lt;IFooFactory&gt;();
-var factory = container.GetInstance&lt;IFooFactory&gt;();
-var foo = factory.GetFoo&lt;int&gt;();
 </code></pre></div>
             
         </div>

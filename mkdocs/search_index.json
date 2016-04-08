@@ -511,6 +511,41 @@
             "title": "HttpRequestMessage"
         }, 
         {
+            "location": "/nancy/", 
+            "text": "Nancy\n\n\nLightInject.Nancy\n provides an integration that enables \nLightInject\n to be used as the IoC container in the Nancy web framework.\n\n\nInstalling\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Nancy \n\n   \n\n\n\n\n\nThis adds a reference to the \nLightInject.Nancy.dll\n in the target project.\n\n\nDependencies\n\n\npublic interface IFoo {}\npublic class Foo : IFoo {}\n\npublic class SampleModule : NancyModule\n{\n    public SampleModule(IFoo foo)\n    {\n        Get[\"/\"] = parameters =\n \"Hello World\";\n    }\n}\n\n\n\nConfiguring additional services/dependencies is done by implementing the \nICompositionRoot\n interface.\n\n\npublic class CompositionRoot : ICompositionRoot\n{\n    void ICompositionRoot.Compose(IServiceRegistry serviceRegistry)\n    {\n        serviceRegistry.Register\nIFoo, Foo\n();\n    }\n}\n\n\n\n\n\nNote: \nLightInject\n will look for an \nICompositionRoot\n implementation in the same assembly as the requested service.\n\n\n\n\nCustom Bootstrapper\n\n\nIf we need to use an existing container instance or perform some other configuration, this can be done by inheriting from the \nLightInjectNancyBootstrapper\n class. \n\n\npublic class Bootstrapper : LightInjectNancyBootstrapper\n{\n    protected override IServiceContainer GetServiceContainer()\n    {\n        // Alteratively provide an existing container instance.\n        return base.GetServiceContainer();\n    }\n}\n\n\n\nLifetime\n\n\nServices registered with the \nPerScopeLifetime\n are scoped per web request while services registered with the \nPerContainerLifetime\n are as scoped per application. \n\n\nNancyContext\n\n\nBy injecting a \nFunc\nNancyContext\n delegate we can get access to the \nNancyContext\n even outside of \nNancy\n modules.\n\n\npublic class Foo \n{\n    private readonly Func\nNancyContext\n getNancyContext;\n\n    public Foo(Func\nNancyContext\n getNancyContext)\n    {\n        this.getNancyContext = getNancyContext;\n    }\n\n    public void DoSomething()\n    {\n        var nancyContext = getNancyContext();\n    }\n}", 
+            "title": "Nancy"
+        }, 
+        {
+            "location": "/nancy/#nancy", 
+            "text": "LightInject.Nancy  provides an integration that enables  LightInject  to be used as the IoC container in the Nancy web framework.", 
+            "title": "Nancy"
+        }, 
+        {
+            "location": "/nancy/#installing", 
+            "text": "PM  Install-Package LightInject.Nancy  \n      This adds a reference to the  LightInject.Nancy.dll  in the target project.", 
+            "title": "Installing"
+        }, 
+        {
+            "location": "/nancy/#dependencies", 
+            "text": "public interface IFoo {}\npublic class Foo : IFoo {}\n\npublic class SampleModule : NancyModule\n{\n    public SampleModule(IFoo foo)\n    {\n        Get[\"/\"] = parameters =  \"Hello World\";\n    }\n}  Configuring additional services/dependencies is done by implementing the  ICompositionRoot  interface.  public class CompositionRoot : ICompositionRoot\n{\n    void ICompositionRoot.Compose(IServiceRegistry serviceRegistry)\n    {\n        serviceRegistry.Register IFoo, Foo ();\n    }\n}   Note:  LightInject  will look for an  ICompositionRoot  implementation in the same assembly as the requested service.", 
+            "title": "Dependencies"
+        }, 
+        {
+            "location": "/nancy/#custom-bootstrapper", 
+            "text": "If we need to use an existing container instance or perform some other configuration, this can be done by inheriting from the  LightInjectNancyBootstrapper  class.   public class Bootstrapper : LightInjectNancyBootstrapper\n{\n    protected override IServiceContainer GetServiceContainer()\n    {\n        // Alteratively provide an existing container instance.\n        return base.GetServiceContainer();\n    }\n}", 
+            "title": "Custom Bootstrapper"
+        }, 
+        {
+            "location": "/nancy/#lifetime", 
+            "text": "Services registered with the  PerScopeLifetime  are scoped per web request while services registered with the  PerContainerLifetime  are as scoped per application.", 
+            "title": "Lifetime"
+        }, 
+        {
+            "location": "/nancy/#nancycontext", 
+            "text": "By injecting a  Func NancyContext  delegate we can get access to the  NancyContext  even outside of  Nancy  modules.  public class Foo \n{\n    private readonly Func NancyContext  getNancyContext;\n\n    public Foo(Func NancyContext  getNancyContext)\n    {\n        this.getNancyContext = getNancyContext;\n    }\n\n    public void DoSomething()\n    {\n        var nancyContext = getNancyContext();\n    }\n}", 
+            "title": "NancyContext"
+        }, 
+        {
             "location": "/microsoft.dependencyinjection/", 
             "text": "LightInject.Microsoft.DependencyInjection\n\n\n\n\nEnables \nLightInject\n to be used as the service container in ASP.NET Core and Entity Framework 7 applications.\n\n\n\n\nNote: This package is currently in pre release and you need to add https://www.myget.org/F/aspnetvnext/api/v3/index.json to your package sources.\nThis package will only work with the ASP.NET rc2 packages available from this feed. This will all change once the rc2 is released to the official Nuget feed. \n\n\n\n\nInstalling\n\n\ndependencies\n: {\n  \nLightInject.Microsoft.DependencyInjection\n: \nversion\n\n}\n\n\n\n\nUsage\n\n\npublic class Startup\n{       \n    public IServiceProvider ConfigureServices(IServiceCollection services)\n    {\n        var container = new ServiceContainer();\n        return container.CreateServiceProvider(services);\n    }\n\n    public void Configure(IApplicationBuilder app)\n    {          \n        app.Run(async (context) =\n\n        {\n            await context.Response.WriteAsync(\nHello from LightInject\n);\n        });\n    }\n}", 
             "title": "Microsoft DependencyInjection"
