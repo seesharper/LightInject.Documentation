@@ -4,7 +4,7 @@
     
     <url>
      <loc>None/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,19 +13,19 @@
         
     <url>
      <loc>None/interception/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/autofactory/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/annotation/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -35,31 +35,37 @@
         
     <url>
      <loc>None/xunit/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/web/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/wcf/</loc>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/webapi/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/nancy/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/microsoft.dependencyinjection/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -69,13 +75,13 @@
         
     <url>
      <loc>None/webapirequestlogging/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>None/transactions/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -85,7 +91,17 @@
         
     <url>
      <loc>None/lightmock/</loc>
-     <lastmod>2016-04-08</lastmod>
+     <lastmod>2016-04-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>None/licence/</loc>
+     <lastmod>2016-04-23</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
