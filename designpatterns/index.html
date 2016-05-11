@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Annotation - LightInject</title>
+	<title>Patterns - LightInject</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
@@ -60,13 +60,13 @@
                 
                 
                 
-                    <li >
-                        <a href="../designpatterns/">Patterns</a>
+                    <li class="active">
+                        <a href="./">Patterns</a>
                     </li>
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Extensions <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -83,8 +83,8 @@
 
                         
                             
-<li class="active">
-    <a href="./">Annotation</a>
+<li >
+    <a href="../annotation/">Annotation</a>
 </li>
 
                         
@@ -199,12 +199,12 @@
                 </li>
                 
                     <li >
-                        <a rel="next" href="../autofactory/">
+                        <a rel="next" href="..">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../xunit/">
+                        <a rel="prev" href="../interception/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -220,80 +220,146 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#annotation">Annotation</a></li>
+        <li class="main active"><a href="#design-patterns">Design Patterns</a></li>
         
-            <li><a href="#property-injection">Property Injection</a></li>
+            <li><a href="#decorator-pattern">Decorator Pattern</a></li>
         
-            <li><a href="#constructor-injection">Constructor Injection</a></li>
+            <li><a href="#lazy-decorators">Lazy Decorators</a></li>
+        
+            <li><a href="#composite-pattern">Composite Pattern</a></li>
         
     
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="annotation">Annotation</h1>
-<p><strong>LightInject</strong> supports annotation of properties and constructor parameters through an extension LightInject. </p>
-<div class="nuget-badge" >
-   <p>
-         <code>PM&gt; Install-Package LightInject.Annotation </code>
-   </p>
-</div>
+<h1 id="design-patterns">Design Patterns</h1>
+<p>LightInject has built-in support for the Decorator pattern and the Composite pattern.</p>
+<h2 id="decorator-pattern">Decorator Pattern</h2>
+<p>A decorator is a class that implements the same interface as the type it is decorating and takes the target instance as a constructor argument.</p>
+<pre><code>public class FooDecorator : IFoo
+{     
+    public FooDecorator(IFoo foo)
+    {     
+    }
+}
+</code></pre>
+<p>Decorators are applied using the <strong>Decorate</strong> method.   </p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Decorate(typeof(IFoo), typeof(FooDecorator));
 
-<p>By using the <strong>InjectAttribute</strong> we can be more explicit about the services that gets injected into properties and constructor dependencies.</p>
-<p><strong>Note:</strong> <em>As opposed to all other types within <strong>LightInject</strong>, the <strong>InjectAttribute</strong> is marked with the public access modifier so that is can be used outside the assembly that contains the service container. This creates a dependency from our services to the assembly containing the attribute, but we still don't need to reference any of the specific types in <strong>LightInject</strong> making this an affordable sacrifice when it comes to services referencing container specific types.</em>  </p>
-<h3 id="property-injection">Property Injection</h3>
-<p>To enable annotated property injection, we must execute the following line before we start requesting services from the container.</p>
-<pre><code>container.EnableAnnotatedPropertyInjection();
+var instance = container.GetInstance&lt;IFoo&gt;();
+
+Assert.IsInstanceOfType(instance, typeof(FooDecorator));
 </code></pre>
-<p>The container now only try to inject dependencies for properties that is annotated with the <strong>InjectAttribute</strong>.
-The container will throw an <strong>InvalidOperationException</strong> if the annotated property dependency is unable to be resolved.</p>
-<pre><code>public class FooWithAnnotatedProperyDependency : IFoo
-{
-    [Inject]
-    public IBar Bar { get; set; }
-}
+<p>Decorators can be nested and they are applied in the same sequence as they are registered.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();            
+container.Decorate(typeof(IFoo), typeof(FooDecorator));
+container.Decorate(typeof(IFoo), typeof(AnotherFooDecorator));
+
+var instance = container.GetInstance&lt;IFoo&gt;();
+
+Assert.IsInstanceOfType(instance, typeof(AnotherFooDecorator));
 </code></pre>
-<p>Given that we have a registration for the <strong>IBar</strong> dependency, it will be injected into the <strong>Bar</strong> property.</p>
-<pre><code>container.Register&lt;IFoo, FooWithAnnotatedProperyDependency&gt;();
-container.Register&lt;IBar, Bar&gt;();
-var instance = (FooWithAnnotatedProperyDependency)container.GetInstance&lt;IFoo&gt;();
-Assert.IsNotNull(instance.Bar);
+<p>If we have multiple services implementing the same interface, we can apply the decorator to implementations matching the given predicate.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Register&lt;IFoo, AnotherFoo&gt;("AnotherFoo");
+container.Decorate(typeof(IFoo), typeof(FooDecorator), service =&gt; service.ServiceName == "AnotherFoo");
+
+var instance = container.GetInstance&lt;IFoo&gt;();
+var decoratedInstance = container.GetInstance&lt;IFoo&gt;("AnotherFoo");
+
+Assert.IsInstanceOfType(instance, typeof(Foo));
+Assert.IsInstanceOfType(decoratedInstance, typeof(FooDecorator));
 </code></pre>
-<p>If we have multiple registrations of the same interface, we can also use the <strong>InjectAttribute</strong> to specify the service to be injected. </p>
-<pre><code>public class FooWithNamedAnnotatedProperyDependency : IFoo
-{
-    [Inject("AnotherBar")]
-    public IBar Bar { get; set; }
-}
-</code></pre>
-<p>The container will inject the service that matches the specified service name.</p>
-<pre><code>container.Register&lt;IFoo, FooWithNamedAnnotatedProperyDependency&gt;();
-container.Register&lt;IBar, Bar&gt;("SomeBar");
-container.Register&lt;IBar, AnotherBar&gt;("AnotherBar"); 
-var instance = (FooWithNamedAnnotatedProperyDependency)container.GetInstance&lt;IFoo&gt;();   
-Assert.IsInstanceOfType(instance.Bar, typeof(AnotherBar));
-</code></pre>
-<h3 id="constructor-injection">Constructor Injection</h3>
-<p>To enable annotated constructor injection, we must execute the following line before we start requesting services from the container.</p>
-<pre><code>container.EnableAnnotatedConstructorInjection();
-</code></pre>
-<p><strong>LightInject</strong> does consider all constructor parameters to be required dependencies and will try to satisfy all dependencies regardless of being annotated with the <strong>InjectAttribute</strong>. We can however use the <strong>InjectAttribute </strong> to specify the named service to be injected.</p>
-<pre><code>public class FooWithNamedAnnotatedDependency : IFoo
-{
-    public FooWithNamedAnnotatedDependency([Inject(ServiceName="AnotherBar")]IBar bar)
+<p>Decorators can have their own dependencies in addition to the target instance it is decorating.</p>
+<pre><code>public class FooDecoratorWithDependency : IFoo
+{        
+    public FooDecoratorWithDependency(IFoo foo, IBar bar)
     {
+        Foo = foo;
         Bar = bar;
     }
+
+    public IFoo Foo { get; private set; }
 
     public IBar Bar { get; private set; }
 }
 </code></pre>
-<p>The container will inject the service that matches the specified service name.</p>
-<pre><code>container.Register&lt;IFoo, FooWithNamedAnnotatedDependency&gt;();
-container.Register&lt;IBar, Bar&gt;("SomeBar");
-container.Register&lt;IBar, AnotherBar&gt;("AnotherBar"); 
-var instance = (FooWithNamedAnnotatedDependency)container.GetInstance&lt;IFoo&gt;();  
-Assert.IsInstanceOfType(instance.Bar, typeof(AnotherBar));
+<p>The dependencies of the decorator can be implicitly resolved.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Register&lt;IBar, Bar&gt;();
+container.Decorate(typeof(IFoo), typeof(FooDecoratorWithDependency));
+
+var instance = (FooDecoratorWithDependency)container.GetInstance&lt;IFoo&gt;();
+
+Assert.IsInstanceOfType(instance.Foo, typeof(IFoo));
+Assert.IsInstanceOfType(instance.Bar, typeof(IBar));
+</code></pre>
+<p>By using a function factory, we can explicitly specify the depenendecies of the decorator.</p>
+<pre><code>container.Register&lt;IFoo, Foo&gt;();
+container.Register&lt;IBar, Bar&gt;();
+container.Decorate&lt;IFoo&gt;((serviceFactory, target) 
+    =&gt; new FooDecoratorWithDependency(target, serviceFactory.GetInstance&lt;IBar&gt;()));
+
+var instance = (FooDecoratorWithDependency)container.GetInstance&lt;IFoo&gt;();
+
+Assert.IsInstanceOfType(instance.Foo, typeof(IFoo));
+Assert.IsInstanceOfType(instance.Bar, typeof(IBar));
+</code></pre>
+<p><strong>Note:</strong> <em>The target instance is available through the function delegate so that we can pass it to the constructor of the decorator.</em></p>
+<p>Decorators can also be applied to open generic types.</p>
+<pre><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
+container.Decorate(typeof(IFoo&lt;&gt;), typeof(FooDecorator&lt;&gt;));
+
+var instance = container.GetInstance&lt;IFoo&lt;int&gt;&gt;();
+
+Assert.IsInstanceOfType(instance, typeof(FooDecorator&lt;int&gt;));
+</code></pre>
+<h2 id="lazy-decorators">Lazy Decorators</h2>
+<p>A lazy decorator is a decorator that creates its target only when and if one of its methods are invoked.</p>
+<pre><code>public class LazyFooDecorator : IFoo
+{
+    private Lazy&lt;IFoo&gt; lazyFoo;
+    public LazyFooDecorator(Lazy&lt;IFoo&gt; lazyFoo)
+    {
+        this.lazyFoo = lazyFoo;
+    }
+
+    public void Execute()
+    {
+        lazyFoo.Value.Execute;
+    }
+}
+</code></pre>
+<p>This decorator then postpones the creation of the target <strong>IFoo</strong> instance until the Execute method is invoked.</p>
+<p>Since <strong>LightInject</strong> has native support for <strong>Lazy&lt;T&gt;</strong> this becomes very easy to configure.</p>
+<pre><code>container.Register(typeof(IFoo), typeof(Foo));
+container.Decorate(typeof(IFoo), typeof(LazyFooDecorator));
+
+var instance = container.GetInstance&lt;IFoo&gt;();
+
+Assert.IsInstanceOfType(instance, typeof(LazyFooDecorator));
+</code></pre>
+<h2 id="composite-pattern">Composite Pattern</h2>
+<p>The <a href="http://en.wikipedia.org/wiki/Composite_pattern">composite pattern</a> is a simple pattern that lets a class implement an interface and then delegates invocation of methods to a set other classes implementing the same interface. </p>
+<pre><code>public class FooWithEnumerableIFooDependency : IFoo
+{
+    public IEnumerable&lt;IFoo&gt; FooList { get; private set; }
+
+    public FooWithEnumerableIFooDependency(IEnumerable&lt;IFoo&gt; fooList)
+    {
+        FooList = fooList;
+    }
+}
+</code></pre>
+<p>While this looks like a recursive dependency, <strong>LightInject</strong> detects this and removes the  <strong>FooWithEnumerableIFooDependency</strong> from the IEnumerable&lt;IFoo&gt; beeing injected.    </p>
+<pre><code>container.Register(typeof(IFoo), typeof(Foo), "Foo");
+container.Register(typeof(IFoo), typeof(AnotherFoo), "AnotherFoo");
+container.Register(typeof(IFoo), typeof(FooWithEnumerableIFooDependency));            
+var instance = (FooWithEnumerableIFooDependency)container.GetInstance&lt;IFoo&gt;();
+Assert.IsInstanceOfType(instance.FooList.First(), typeof(Foo));
+Assert.IsInstanceOfType(instance.FooList.Last(), typeof(AnotherFoo));
 </code></pre></div>
             
         </div>
