@@ -10,6 +10,7 @@ pages:
 - Integrations:
     - xUnit: xunit.md 
     - Web: web.md
+    - Mvc: mvc.md
     - WCF: wcf.md
     - Web Api: webapi.md
     - Nancy: nancy.md
