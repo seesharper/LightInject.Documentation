@@ -461,6 +461,46 @@
             "title": "Source"
         }, 
         {
+            "location": "/mvc/", 
+            "text": "MVC\n\n\nLightInject.Mvc\n provides an integration that enables dependency injection in ASP.NET MVC applications. \n\n\nInstalling\n\n\nLightInject.Mvc\n provides two distribution models via NuGet\n\n\nBinary\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Mvc \n\n   \n\n\n\n\n\nThis adds a reference to the LightInject.Mvc.dll in the target project.\n\n\nSource\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Mvc.Source \n\n   \n\n\n\n\n\nThis will install a single file (LightInject.Mvc.cs) into the current project.\n\n\nInitializing\n\n\nprotected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.RegisterControllers();        \n    //register other services\n\n    container.EnableMvc()              \n}\n\n\n\nServices\n\n\nAll services that implements IDisposable,  must be registered with the \nPerScopeLifetime\n to ensure that they are properly disposed when the web request ends.\n\n\ncontainer.Register\nIFoo, Foo\n(new PerScopeLifetime());\n\n\n\nControllers are also disposable services and \nLightInject\n provides the \nRegisterControllers\n method that registers all controllers from a given assembly with the \nPerRequestLifetime\n. \n\n\ncontainer.RegisterControllers(typeof(MyMvcApplication).Assembly);\n\n\n\nFilterAttribute\n\n\nAlthough filter attributes are instantiated by the MFC infrastructure, \nLightInject\n is still able to inject dependencies into properties.\n\n\npublic class FooFilterAttribute : ActionFilterAttribute\n{\n    public IFoo Foo { get; set; }\n}", 
+            "title": "Mvc"
+        }, 
+        {
+            "location": "/mvc/#mvc", 
+            "text": "LightInject.Mvc  provides an integration that enables dependency injection in ASP.NET MVC applications.", 
+            "title": "MVC"
+        }, 
+        {
+            "location": "/mvc/#installing", 
+            "text": "LightInject.Mvc  provides two distribution models via NuGet", 
+            "title": "Installing"
+        }, 
+        {
+            "location": "/mvc/#binary", 
+            "text": "PM  Install-Package LightInject.Mvc  \n      This adds a reference to the LightInject.Mvc.dll in the target project.", 
+            "title": "Binary"
+        }, 
+        {
+            "location": "/mvc/#source", 
+            "text": "PM  Install-Package LightInject.Mvc.Source  \n      This will install a single file (LightInject.Mvc.cs) into the current project.", 
+            "title": "Source"
+        }, 
+        {
+            "location": "/mvc/#initializing", 
+            "text": "protected void Application_Start()\n{\n    var container = new ServiceContainer();\n    container.RegisterControllers();        \n    //register other services\n\n    container.EnableMvc()              \n}", 
+            "title": "Initializing"
+        }, 
+        {
+            "location": "/mvc/#services", 
+            "text": "All services that implements IDisposable,  must be registered with the  PerScopeLifetime  to ensure that they are properly disposed when the web request ends.  container.Register IFoo, Foo (new PerScopeLifetime());  Controllers are also disposable services and  LightInject  provides the  RegisterControllers  method that registers all controllers from a given assembly with the  PerRequestLifetime .   container.RegisterControllers(typeof(MyMvcApplication).Assembly);", 
+            "title": "Services"
+        }, 
+        {
+            "location": "/mvc/#filterattribute", 
+            "text": "Although filter attributes are instantiated by the MFC infrastructure,  LightInject  is still able to inject dependencies into properties.  public class FooFilterAttribute : ActionFilterAttribute\n{\n    public IFoo Foo { get; set; }\n}", 
+            "title": "FilterAttribute"
+        }, 
+        {
             "location": "/wcf/", 
             "text": "WCF\n\n\nLightInject.Wcf\n provides an integration that enables dependency injection in WCF applications. \n\n\nInstalling\n\n\n\n   \n\n         \nPM\n Install-Package LightInject.Wcf \n\n   \n\n\n\n\n\nThis adds a reference to the \nLightInject.Wcf.dll\n in the target project.\n\n\nGetting started\n\n\nLightInject.Wcf\n aims to provide a zero config approach to developing \nWCF\n services in addition to support both constructor and property injection for \nWCF\n service implementations. \n\n\nThe easiest way to create a new WCF application is to start with a new empty web application and then install the \nLightInject.Wcf\n package.\n\n\nOur first service might look something like this:\n\n\n[ServiceContract]\npublic interface IService\n{\n    [OperationContract]\n    int GetValue(int value);\n}\n\npublic class Service : IService\n{\n    public int GetValue(int value)\n    {\n        return value;\n    }\n}\n\n\n\nThe only thing we need to do is to create an ICompositionRoot implementation that registers our services and potentially its dependencies.\n\n\npublic class CompositionRoot : ICompositionRoot\n{\n    public void Compose(IServiceRegistry serviceRegistry)\n    {\n        serviceRegistry.Register\nIService, Service\n();\n    }\n}\n\n\n\nThat's it. No XML config, no .svc files, just press F5 to run the application.\n\n\nGiven that our service is defined in the \nSampleWcfApplication\n namespace, the service will be available at \n\n\nhttp://localhost:xxxxx/SampleWcfApplication.IService.svc\n\n\n\nNamed Services\n\n\nIf we want to identify our service by something else than the full type name of the service interface, we need to register the service using a name. \n\n\npublic class CompositionRoot : ICompositionRoot\n{\n    public void Compose(IServiceRegistry serviceRegistry)\n    {\n        serviceRegistry.Register\nIService, Service\n(\"MyService\");\n    }\n}\n\n\n\nNow we need one additional class to bootstrap the container so that the service is registered with the correct name before the service is invoked.\n\n\n[assembly: System.Web.PreApplicationStartMethod(typeof(SampleWcfApplication.Startup), \"Initialize\")]\nnamespace SampleWcfApplication\n{\n    using LightInject;\n    using LightInject.Wcf;\n\n    public class Startup\n    {\n        public static void Initialize()\n        {\n            var container = new ServiceContainer();\n            container.RegisterFrom\nCompositionRoot\n();\n            LightInjectServiceHostFactory.Container = container;\n        }\n    }\n}\n\n\n\nBehaviors\n\n\nWhile it still is possible to configure endpoint and service behaviors using XML, \nLightInject.Wcf\n allows for \nIEndpointBehavior\n and \nIServiceBehavior\n implementations to be registered with the container so that they can be applied to the service.\n\n\npublic class SampleServiceBehavior : IServiceBehavior\n{\n    public void Validate(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)\n    {            \n    }\n\n    public void AddBindingParameters(\n        ServiceDescription serviceDescription,\n        ServiceHostBase serviceHostBase,\n        Collection\nServiceEndpoint\n endpoints,\n        BindingParameterCollection bindingParameters)\n    {            \n    }\n\n    public void ApplyDispatchBehavior(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)\n    {           \n    }\n}\n\npublic class SampleEndpointBehavior : IEndpointBehavior\n{\n    public void Validate(ServiceEndpoint endpoint)\n    {            \n    }\n\n    public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)\n    {\n    }\n\n    public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)\n    {\n    }\n\n    public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)\n    {\n    }\n}\n\n\n\nIn order to configure these endpoints we can simply register them with the container.\n\n\npublic class CompositionRoot : ICompositionRoot\n{\n    public void Compose(IServiceRegistry serviceRegistry)\n    {\n        serviceRegistry.Register\nIService, Service\n();\n        serviceRegistry.Register\nIServiceBehavior, SampleServiceBehavior\n();\n        serviceRegistry.Register\nIEndpointBehavior, SampleEndpointBehavior\n();\n    }\n}", 
             "title": "WCF"
@@ -782,8 +822,13 @@
         }, 
         {
             "location": "/licence/", 
-            "text": "", 
+            "text": "The MIT License (MIT)\n\n\nCopyright (c) 2014 bernhard.richter@gmail.com\n\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.", 
             "title": "Licence"
+        }, 
+        {
+            "location": "/licence/#the-mit-license-mit", 
+            "text": "Copyright (c) 2014 bernhard.richter@gmail.com  Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.", 
+            "title": "The MIT License (MIT)"
         }
     ]
 }

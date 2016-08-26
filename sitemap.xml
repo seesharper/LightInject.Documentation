@@ -54,6 +54,12 @@
     </url>
         
     <url>
+     <loc>None/mvc/</loc>
+     <lastmod>2016-08-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
      <loc>None/wcf/</loc>
      <lastmod>2016-08-26</lastmod>
      <changefreq>daily</changefreq>
