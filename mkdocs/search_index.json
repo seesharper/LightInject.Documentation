@@ -642,12 +642,12 @@
         }, 
         {
             "location": "/microsoft.dependencyinjection/", 
-            "text": "LightInject.Microsoft.DependencyInjection\n\n\n\n\n\n\n\n\nChangelog\n\n\nEnables \nLightInject\n to be used as the service container in ASP.NET Core and Entity Framework 7 applications.\n\n\nInstalling\n\n\ndependencies\n: {\n  \nLightInject.Microsoft.DependencyInjection\n: \nversion\n\n}\n\n\n\n\nUsage\n\n\npublic class Startup\n{       \n    public IServiceProvider ConfigureServices(IServiceCollection services)\n    {\n        var container = new ServiceContainer();\n        return container.CreateServiceProvider(services);\n    }\n\n    public void Configure(IApplicationBuilder app)\n    {          \n        app.Run(async (context) =\n\n        {\n            await context.Response.WriteAsync(\nHello from LightInject\n);\n        });\n    }\n}", 
+            "text": "LightInject.Microsoft.DependencyInjection\n\n\n\n\n\n\n\n\nEnables \nLightInject\n to be used as the service container in ASP.NET Core and Entity Framework 7 applications.\n\n\nInstalling\n\n\ndependencies\n: {\n  \nLightInject.Microsoft.DependencyInjection\n: \nversion\n\n}\n\n\n\n\nUsage\n\n\npublic class Startup\n{       \n    public IServiceProvider ConfigureServices(IServiceCollection services)\n    {\n        var container = new ServiceContainer();\n        return container.CreateServiceProvider(services);\n    }\n\n    public void Configure(IApplicationBuilder app)\n    {          \n        app.Run(async (context) =\n\n        {\n            await context.Response.WriteAsync(\nHello from LightInject\n);\n        });\n    }\n}", 
             "title": "Microsoft DependencyInjection"
         }, 
         {
             "location": "/microsoft.dependencyinjection/#lightinjectmicrosoftdependencyinjection", 
-            "text": "Changelog  Enables  LightInject  to be used as the service container in ASP.NET Core and Entity Framework 7 applications.", 
+            "text": "Enables  LightInject  to be used as the service container in ASP.NET Core and Entity Framework 7 applications.", 
             "title": "LightInject.Microsoft.DependencyInjection"
         }, 
         {
