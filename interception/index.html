@@ -232,6 +232,8 @@
         
             <li><a href="#interceptors">Interceptors</a></li>
         
+            <li><a href="#asynchronous-interceptors">Asynchronous Interceptors</a></li>
+        
             <li><a href="#single-interceptor">Single Interceptor</a></li>
         
             <li><a href="#dependencies">Dependencies</a></li>
@@ -291,6 +293,43 @@
 
 <p>The <strong>IInvocationInfo</strong> instance passed into the <strong>Invoke</strong> method contains information about the method being intercepted.</p>
 <p>The <strong>Proceed</strong> method calls down the chain of interceptors and ultimately the actual target instance.   </p>
+<h2 id="asynchronous-interceptors">Asynchronous Interceptors</h2>
+<p>When intercepting asynchronous methods we need to be able to await the target method.
+This can be done by inheriting from the abstract <strong>AsyncInterceptor</strong> class that does the heavy lifting with invoking the asynchronous wrapper methods.</p>
+<pre><code>public class SampleAsyncInterceptor : AsyncInterceptor
+{
+    public override object Invoke(IInvocationInfo invocationInfo)
+    {
+        // Invoked for all intercepted methods, 
+        // both synchronous and asynchronous.
+        // Before method invocation            
+        var value = base.Invoke(invocationInfo);            
+        // After method invocation
+        return value;
+    }
+
+    protected override async Task InvokeAsync(IInvocationInfo invocationInfo)
+    {
+        // Invoked for methods that return Task
+        // Before method invocation
+        await base.InvokeAsync(invocationInfo);
+        // After method invocation
+    }
+
+    protected override async Task&lt;T&gt; InvokeAsync&lt;T&gt;(IInvocationInfo invocationInfo)
+    {
+        // Invoked for methods that returns Task&lt;T&gt;
+        // Before method invocation
+        var value = await base.InvokeAsync&lt;T&gt;(invocationInfo);
+        // After method invocation
+        return value;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>Note: Do not call invocationInfo.Proceed() directly when inheriting from the <strong>AsyncInterceptor</strong> class. </p>
+</blockquote>
 <h2 id="single-interceptor">Single Interceptor</h2>
 <p>This example shows how to configure the service container with a single interceptor to handle all method calls.</p>
 <pre><code>container.Register&lt;IFoo, Foo&gt;();
