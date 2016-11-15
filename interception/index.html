@@ -8,22 +8,21 @@
         
         
         <link rel="shortcut icon" href="../img/favicon.ico">
-
-	<title>Interception - LightInject</title>
-
+        <title>Interception - LightInject</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="../css/highlight.css">
         <link href="../nuget.css" rel="stylesheet">
-
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
-
-        
+	
+	<script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script> 
     </head>
 
     <body>
@@ -33,7 +32,6 @@
 
         <!-- Collapsed navigation -->
         <div class="navbar-header">
-            
             <!-- Expander button -->
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -41,161 +39,105 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            
-
-            <!-- Main title -->
             <a class="navbar-brand" href="..">LightInject</a>
         </div>
 
         <!-- Expanded navigation -->
         <div class="navbar-collapse collapse">
-            
                 <!-- Main navigation -->
                 <ul class="nav navbar-nav">
-                
-                
                     <li >
                         <a href="..">Home</a>
                     </li>
-                
-                
-                
                     <li >
                         <a href="../designpatterns/">Patterns</a>
                     </li>
-                
-                
-                
                     <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Extensions <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                        
                             
 <li class="active">
     <a href="./">Interception</a>
 </li>
-
-                        
                             
 <li >
     <a href="../autofactory/">AutoFactory</a>
 </li>
-
-                        
                             
 <li >
     <a href="../annotation/">Annotation</a>
 </li>
-
-                        
                         </ul>
                     </li>
-                
-                
-                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                        
                             
 <li >
     <a href="../xunit/">xUnit</a>
 </li>
-
-                        
                             
 <li >
     <a href="../web/">Web</a>
 </li>
-
-                        
                             
 <li >
     <a href="../mvc/">Mvc</a>
 </li>
-
-                        
                             
 <li >
     <a href="../wcf/">WCF</a>
 </li>
-
-                        
                             
 <li >
     <a href="../webapi/">Web Api</a>
 </li>
-
-                        
+                            
+<li >
+    <a href="../signalr/">SignalR</a>
+</li>
                             
 <li >
     <a href="../nancy/">Nancy</a>
 </li>
-
-                        
                             
 <li >
     <a href="../microsoft.dependencyinjection/">Microsoft DependencyInjection</a>
 </li>
-
-                        
                         </ul>
                     </li>
-                
-                
-                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                        
                             
 <li >
     <a href="../webapirequestlogging/">Web Api Request Logging</a>
 </li>
-
-                        
                             
 <li >
     <a href="../transactions/">Transactions and Testing</a>
 </li>
-
-                        
                         </ul>
                     </li>
-                
-                
-                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Side Projects <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                        
                             
 <li >
     <a href="../lightmock/">LightMock</a>
 </li>
-
-                        
                         </ul>
                     </li>
-                
-                
-                
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                        
                             
 <li >
     <a href="../licence/">Licence</a>
 </li>
-
-                        
                         </ul>
                     </li>
-                
-                
                 </ul>
-            
 
             <ul class="nav navbar-nav navbar-right">
                 <li>
@@ -203,7 +145,6 @@
                         <i class="fa fa-search"></i> Search
                     </a>
                 </li>
-                
                     <li >
                         <a rel="next" href="../designpatterns/">
                             <i class="fa fa-arrow-left"></i> Previous
@@ -214,45 +155,32 @@
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
-                
-                
+                    <li>
+                        <a href="https://github.com/seesharper/lightinject">
+                                <i class="fa fa-github"></i>GitHub
+                        </a>
+                    </li>
             </ul>
         </div>
     </div>
 </div>
 
         <div class="container">
-            
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-    
         <li class="main active"><a href="#interception">Interception</a></li>
-        
             <li><a href="#installing">Installing</a></li>
-        
             <li><a href="#interceptors">Interceptors</a></li>
-        
             <li><a href="#asynchronous-interceptors">Asynchronous Interceptors</a></li>
-        
             <li><a href="#single-interceptor">Single Interceptor</a></li>
-        
             <li><a href="#dependencies">Dependencies</a></li>
-        
             <li><a href="#multiple-interceptors">Multiple Interceptors</a></li>
-        
             <li><a href="#method-selectors">Method Selectors</a></li>
-        
             <li><a href="#chaining-interceptors">Chaining Interceptors</a></li>
-        
             <li><a href="#implementing-additional-interfaces">Implementing additional interfaces</a></li>
-        
             <li><a href="#iproxy">IProxy</a></li>
-        
             <li><a href="#this">This</a></li>
-        
             <li><a href="#class-proxies">Class Proxies</a></li>
-        
-    
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -295,22 +223,17 @@
 <p>The <strong>Proceed</strong> method calls down the chain of interceptors and ultimately the actual target instance.   </p>
 <h2 id="asynchronous-interceptors">Asynchronous Interceptors</h2>
 <p>When intercepting asynchronous methods we need to be able to await the target method.
-This can be done by inheriting from the abstract <strong>AsyncInterceptor</strong> class that does the heavy lifting with invoking the asynchronous wrapper methods.</p>
-<pre><code>public class SampleAsyncInterceptor : AsyncInterceptor
-{
-    public override object Invoke(IInvocationInfo invocationInfo)
+This can be done by inheriting from the abstract <strong>AsyncInterceptor</strong> class that does the heavy lifting with invoking the asynchronous wrapper methods.
+The <strong>AsyncInterceptor</strong> class is a decorator that wraps around another <strong>IInterceptor</strong>. </p>
+<pre><code class="csharp">public class SampleAsyncInterceptor : AsyncInterceptor
+{    
+    public SampleAsyncInterceptor(IInterceptor targetInterceptor) : base(targetInterceptor)
     {
-        // Invoked for all intercepted methods, 
-        // both synchronous and asynchronous.
-        // Before method invocation            
-        var value = base.Invoke(invocationInfo);            
-        // After method invocation
-        return value;
     }
 
     protected override async Task InvokeAsync(IInvocationInfo invocationInfo)
     {
-        // Invoked for methods that return Task
+        InterceptedTaskMethod = true;
         // Before method invocation
         await base.InvokeAsync(invocationInfo);
         // After method invocation
@@ -318,10 +241,10 @@ This can be done by inheriting from the abstract <strong>AsyncInterceptor</stron
 
     protected override async Task&lt;T&gt; InvokeAsync&lt;T&gt;(IInvocationInfo invocationInfo)
     {
-        // Invoked for methods that returns Task&lt;T&gt;
+        InterceptedTaskOfTMethod = true;
         // Before method invocation
         var value = await base.InvokeAsync&lt;T&gt;(invocationInfo);
-        // After method invocation
+        // After method invocation           
         return value;
     }
 }
@@ -329,6 +252,20 @@ This can be done by inheriting from the abstract <strong>AsyncInterceptor</stron
 
 <blockquote>
 <p>Note: Do not call invocationInfo.Proceed() directly when inheriting from the <strong>AsyncInterceptor</strong> class. </p>
+</blockquote>
+<p>We can now create a new instance of the <strong>SampleAsyncInterceptor</strong> class like this:</p>
+<pre><code class="csharp">var asyncInterceptor = new SampleAsyncInterceptor(new SampleInterceptor());
+</code></pre>
+
+<p>Another option is to register our <strong>IInterceptor</strong> with the container and use the <strong>Decorate</strong> method 
+to apply the <strong>SampleAsyncInterceptor</strong> as a decorator.</p>
+<pre><code class="csharp">container.Register&lt;IInterceptor, SampleInterceptor&gt;();
+container.Decorate&lt;IInterceptor, SampleAsyncInterceptor&gt;();
+container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), factory =&gt; factory.GetInstance&lt;IInterceptor&gt;()); 
+</code></pre>
+
+<blockquote>
+<p>Note: Only synchronous methods are passed down to the decorated <strong>IInterceptor</strong> </p>
 </blockquote>
 <h2 id="single-interceptor">Single Interceptor</h2>
 <p>This example shows how to configure the service container with a single interceptor to handle all method calls.</p>
@@ -517,46 +454,38 @@ container.Register&lt;Foo&gt;();
 container.Intercept(sr =&gt; sr.ServiceType == typeof(Foo), factory =&gt; new SampleInterceptor());
 </code></pre>
 <p>Class proxies are implemented internally by subclassing the target type and overriding virtual members to support interception.  </p></div>
-            
         </div>
 
         <footer class="col-md-12">
             <hr>
-            
             <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-
-        <script src="../js/jquery-1.10.2.min.js"></script>
-        <script src="../js/bootstrap-3.0.3.min.js"></script>
-        <script src="../js/highlight.pack.js"></script>
         <script>var base_url = '..';</script>
         <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
-        <script src="../js/base.js"></script>
-
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+        <script src="../js/base.js"></script><div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
                     </div>
-                    <div class="modal-body">
-                        <p>
-                            From here you can search these documents. Enter
-                            your search terms below.
-                        </p>
-                        <form role="form">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
-                            </div>
-                        </form>
-                        <div id="mkdocs-search-results"></div>
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
+    </div>
+</div>
 
     </body>
 </html>

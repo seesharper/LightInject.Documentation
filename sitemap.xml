@@ -3,16 +3,16 @@
 
     
     <url>
-     <loc>None/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
 
     
     <url>
-     <loc>None/designpatterns/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/designpatterns/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,66 +20,20 @@
     
         
     <url>
-     <loc>None/interception/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/interception/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/autofactory/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/autofactory/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/annotation/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    
-
-    
-        
-    <url>
-     <loc>None/xunit/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/web/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/mvc/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/wcf/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/webapi/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/nancy/</loc>
-     <lastmod>2016-09-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
-     <loc>None/microsoft.dependencyinjection/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/annotation/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -88,14 +42,50 @@
     
         
     <url>
-     <loc>None/webapirequestlogging/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/xunit/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>None/transactions/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/web/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/mvc/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/wcf/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/webapi/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/signalr/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/nancy/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/microsoft.dependencyinjection/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -104,8 +94,14 @@
     
         
     <url>
-     <loc>None/lightmock/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/webapirequestlogging/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/transactions/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -114,8 +110,18 @@
     
         
     <url>
-     <loc>None/licence/</loc>
-     <lastmod>2016-09-19</lastmod>
+     <loc>/lightmock/</loc>
+     <lastmod>2016-11-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>/licence/</loc>
+     <lastmod>2016-11-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
