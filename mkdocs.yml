@@ -1,5 +1,5 @@
 site_name: LightInject
-
+repo_url: https://github.com/seesharper/lightinject
 pages:
 - Home: index.md
 - Patterns : designpatterns.md
@@ -13,7 +13,8 @@ pages:
     - Mvc: mvc.md
     - WCF: wcf.md
     - Web Api: webapi.md
-    - Nancy: nancy.md
+    - SignalR : signalr.md
+    - Nancy: nancy.md     
     - Microsoft DependencyInjection : microsoft.dependencyinjection.md    
 - Examples:
     - Web Api Request Logging: webapirequestlogging.md    

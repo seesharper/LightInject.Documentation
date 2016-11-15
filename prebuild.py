@@ -13,6 +13,7 @@ download('https://raw.githubusercontent.com/seesharper/LightInject.AutoFactory/m
 download('https://raw.githubusercontent.com/seesharper/LightInject.Annotation/master/readme.md', 'docs/annotation.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Interception/master/readme.md', 'docs/interception.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.WebApi/master/readme.md', 'docs/webapi.md')
+download('https://raw.githubusercontent.com/seesharper/LightInject.SignalR/master/readme.md', 'docs/signalr.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Nancy/master/readme.md', 'docs/nancy.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Web/master/readme.md', 'docs/web.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Wcf/master/readme.md', 'docs/wcf.md')
