@@ -171,6 +171,7 @@
         <li class="main active"><a href="#lightinjectmicrosoftdependencyinjection">LightInject.Microsoft.DependencyInjection</a></li>
             <li><a href="#installing">Installing</a></li>
             <li><a href="#usage">Usage</a></li>
+            <li><a href="#controllers">Controllers</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -203,7 +204,11 @@
         });
     }
 }
+</code></pre>
 
+<h2 id="controllers">Controllers</h2>
+<p>By default, controllers are not actually created by <em>LightInject</em>. They are created by the ASP.NET infrastructure and uses LightInject to resolve its dependencies. To enable LightInject to create the controller instances, we need to add the following line.</p>
+<pre><code class="csharp">services.AddMvc().AddControllersAsServices();
 </code></pre></div>
         </div>
 
