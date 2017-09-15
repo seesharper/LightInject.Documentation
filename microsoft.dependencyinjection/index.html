@@ -172,6 +172,7 @@
             <li><a href="#installing">Installing</a></li>
             <li><a href="#usage">Usage</a></li>
             <li><a href="#controllers">Controllers</a></li>
+            <li><a href="#net-core-20">.Net Core 2.0</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
@@ -209,6 +210,17 @@
 <h2 id="controllers">Controllers</h2>
 <p>By default, controllers are not actually created by <em>LightInject</em>. They are created by the ASP.NET infrastructure and uses LightInject to resolve its dependencies. To enable LightInject to create the controller instances, we need to add the following line.</p>
 <pre><code class="csharp">services.AddMvc().AddControllersAsServices();
+</code></pre>
+
+<h2 id="net-core-20">.Net Core 2.0</h2>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>&gt;= LightInject 5.1.0</li>
+<li>&gt;= LightInject.Microsoft.DependencyInjection 2.0.3</li>
+</ul>
+<p>In addition we need to turn of propertyinjection</p>
+<pre><code class="c#">var containerOptions = new ContainerOptions { EnablePropertyInjection = false } 
+var container = new ServiceContainer(containerOptions);
 </code></pre></div>
         </div>
 

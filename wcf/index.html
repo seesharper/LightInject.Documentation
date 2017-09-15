@@ -192,6 +192,9 @@
 <p>This adds a reference to the <strong>LightInject.Wcf.dll</strong> in the target project.</p>
 <h2 id="getting-started">Getting started</h2>
 <p><strong>LightInject.Wcf</strong> aims to provide a zero config approach to developing <strong>WCF</strong> services in addition to support both constructor and property injection for <strong>WCF</strong> service implementations. </p>
+<blockquote>
+<p>Note: If a Web site is precompiled for deployment, content provided by a <a href="https://msdn.microsoft.com/en-us/library/system.web.hosting.virtualpathprovider(v=vs.110).aspx">VirtualPathProvider</a> instance is not compiled, and no VirtualPathProviderinstances are used by the precompiled site.</p>
+</blockquote>
 <p>The easiest way to create a new WCF application is to start with a new empty web application and then install the <strong>LightInject.Wcf</strong> package.</p>
 <p>Our first service might look something like this:</p>
 <pre><code>[ServiceContract]
