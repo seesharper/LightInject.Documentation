@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>WCF - LightInject</title>
+        <title>AspNetCore unit testing - LightInject</title>
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.5.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
@@ -69,7 +69,7 @@
 </li>
                         </ul>
                     </li>
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Integrations <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             
@@ -85,8 +85,8 @@
     <a href="../mvc/">Mvc</a>
 </li>
                             
-<li class="active">
-    <a href="./">WCF</a>
+<li >
+    <a href="../wcf/">WCF</a>
 </li>
                             
 <li >
@@ -106,7 +106,7 @@
 </li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             
@@ -118,8 +118,8 @@
     <a href="../transactions/">Transactions and Testing</a>
 </li>
                             
-<li >
-    <a href="../aspnetcoreunittesting/">AspNetCore unit testing</a>
+<li class="active">
+    <a href="./">AspNetCore unit testing</a>
 </li>
                         </ul>
                     </li>
@@ -150,12 +150,12 @@
                     </a>
                 </li>
                     <li >
-                        <a rel="next" href="../mvc/">
+                        <a rel="next" href="../transactions/">
                             <i class="fa fa-arrow-left"></i> Previous
                         </a>
                     </li>
                     <li >
-                        <a rel="prev" href="../webapi/">
+                        <a rel="prev" href="../lightmock/">
                             Next <i class="fa fa-arrow-right"></i>
                         </a>
                     </li>
@@ -172,142 +172,178 @@
         <div class="container">
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#wcf">WCF</a></li>
-            <li><a href="#installing">Installing</a></li>
-            <li><a href="#getting-started">Getting started</a></li>
-            <li><a href="#named-services">Named Services</a></li>
-            <li><a href="#behaviors">Behaviors</a></li>
+        <li class="main active"><a href="#aspnetcore-unit-testing">AspNetCore Unit Testing</a></li>
+            <li><a href="#unit-testing">Unit Testing</a></li>
+            <li><a href="#configurable-server">Configurable Server</a></li>
+            <li><a href="#mocking">Mocking</a></li>
     </ul>
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="wcf">WCF</h1>
-<p><a href="https://ci.appveyor.com/project/seesharper/lightinject-wcf"><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?maxAge=2592000" /></a>
-<a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.Wcf.svg?maxAge=2592000" /></a>
-<a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/LightInject.Wcf.svg?maxAge=2592000" /></a></p>
-<p><strong>LightInject.Wcf</strong> provides an integration that enables dependency injection in WCF applications. </p>
-<h2 id="installing">Installing</h2>
-<div class="nuget-badge" >
-   <p>
-         <code>PM&gt; Install-Package LightInject.Wcf </code>
-   </p>
-</div>
-
-<p>This adds a reference to the <strong>LightInject.Wcf.dll</strong> in the target project.</p>
-<h2 id="getting-started">Getting started</h2>
-<p><strong>LightInject.Wcf</strong> aims to provide a zero config approach to developing <strong>WCF</strong> services in addition to support both constructor and property injection for <strong>WCF</strong> service implementations. </p>
+<h1 id="aspnetcore-unit-testing">AspNetCore Unit Testing</h1>
 <blockquote>
-<p>Note: If a Web site is precompiled for deployment, content provided by a <a href="https://msdn.microsoft.com/en-us/library/system.web.hosting.virtualpathprovider(v=vs.110).aspx">VirtualPathProvider</a> instance is not compiled, and no VirtualPathProviderinstances are used by the precompiled site.</p>
+<p>Disclaimer: No Visual Studio 2017 was ever started during the writing of this post.</p>
 </blockquote>
-<p>The easiest way to create a new WCF application is to start with a new empty web application and then install the <strong>LightInject.Wcf</strong> package.</p>
-<p>Our first service might look something like this:</p>
-<pre><code>[ServiceContract]
-public interface IService
+<p>This post is going to show how to unit test controllers in AspNetCore.</p>
+<p>We are going to do everything using nothing but the dotnet cli and VS Code.</p>
+<p>Let's start off by creating a new Web API application.</p>
+<pre><code class="shell">dotnet new webapi
+</code></pre>
+
+<p>That's going to set up a minimal Web API application containing a <code>ValuesController</code></p>
+<blockquote>
+<p>To simplify the example we just return a single string value</p>
+</blockquote>
+<p>Next we are going to implement a service that we will inject into the <code>ValuesController</code></p>
+<pre><code class="c#">public interface IService
 {
-    [OperationContract]
-    int GetValue(int value);
+    string GetValue();    
 }
 
 public class Service : IService
 {
-    public int GetValue(int value)
+    public string GetValue()
     {
-        return value;
+        return &quot;Hello world&quot;;
     }
 }
 </code></pre>
-<p>The only thing we need to do is to create an ICompositionRoot implementation that registers our services and potentially its dependencies.</p>
-<pre><code>public class CompositionRoot : ICompositionRoot
-{
-    public void Compose(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register&lt;IService, Service&gt;();
-    }
-}
-</code></pre>
-<p>That's it. No XML config, no .svc files, just press F5 to run the application.</p>
-<p>Given that our service is defined in the <strong>SampleWcfApplication</strong> namespace, the service will be available at </p>
-<pre><code>http://localhost:xxxxx/SampleWcfApplication.IService.svc
-</code></pre>
-<h2 id="named-services">Named Services</h2>
-<p>If we want to identify our service by something else than the full type name of the service interface, we need to register the service using a name. </p>
-<pre><code>public class CompositionRoot : ICompositionRoot
-{
-    public void Compose(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register&lt;IService, Service&gt;("MyService");
-    }
-}
-</code></pre>
-<p>Now we need one additional class to bootstrap the container so that the service is registered with the correct name before the service is invoked.</p>
-<pre><code>[assembly: System.Web.PreApplicationStartMethod(typeof(SampleWcfApplication.Startup), "Initialize")]
-namespace SampleWcfApplication
-{
-    using LightInject;
-    using LightInject.Wcf;
 
-    public class Startup
+<p>Next step is to inject our service into the <code>ValueController</code></p>
+<pre><code class="c#">[Route(&quot;api/[controller]&quot;)]
+public class ValueController : Controller
+{
+    private readonly IService _service;
+
+    public ValueController(IService service) =&gt; _service = service;
+
+    // GET api/values
+    [HttpGet]
+    public string Get()
     {
-        public static void Initialize()
+        return _service.GetValue();
+    }        
+}
+</code></pre>
+
+<p>Finally we need to register our service in the <code>Startup</code> class.</p>
+<pre><code>public void ConfigureServices(IServiceCollection services)
+{
+    services.AddSingleton&lt;IService,Service&gt;();
+    services.AddMvc();
+}
+</code></pre>
+
+<p>We are now all set and ready for some unit testing. </p>
+<h2 id="unit-testing">Unit Testing</h2>
+<p>To test our controller we will create a test project </p>
+<pre><code class="shell">dotnet new xunit
+</code></pre>
+
+<p>We will test our controller using the <code>TestServer</code> from the <code>Microsoft.AspNetCore.TestHost</code> package</p>
+<pre><code>dotnet add package Microsoft.AspNetCore.TestHost
+</code></pre>
+
+<p>Let's create our first test</p>
+<pre><code class="c#">public class ControllerTests
+{
+    [Fact]
+    public async Task ShouldGetValue()
+    {            
+        using (var testServer = CreateTestServer())
         {
-            var container = new ServiceContainer();
-            container.RegisterFrom&lt;CompositionRoot&gt;();
-            LightInjectServiceHostFactory.Container = container;
+            var client = testServer.CreateClient();
+            var value = await client.GetStringAsync(&quot;api/value&quot;);
+            Assert.Equal(&quot;Hello world&quot;, value);
         }
     }
-}
-</code></pre>
-<h2 id="behaviors">Behaviors</h2>
-<p>While it still is possible to configure endpoint and service behaviors using XML, <strong>LightInject.Wcf</strong> allows for <strong>IEndpointBehavior</strong> and <strong>IServiceBehavior</strong> implementations to be registered with the container so that they can be applied to the service.</p>
-<pre><code>public class SampleServiceBehavior : IServiceBehavior
-{
-    public void Validate(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
-    {            
-    }
 
-    public void AddBindingParameters(
-        ServiceDescription serviceDescription,
-        ServiceHostBase serviceHostBase,
-        Collection&lt;ServiceEndpoint&gt; endpoints,
-        BindingParameterCollection bindingParameters)
-    {            
-    }
-
-    public void ApplyDispatchBehavior(ServiceDescription serviceDescription, ServiceHostBase serviceHostBase)
-    {           
-    }
-}
-
-public class SampleEndpointBehavior : IEndpointBehavior
-{
-    public void Validate(ServiceEndpoint endpoint)
-    {            
-    }
-
-    public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
+    private TestServer CreateTestServer()
     {
-    }
-
-    public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher)
-    {
-    }
-
-    public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime)
-    {
+            var builder = new WebHostBuilder()                
+            .UseStartup&lt;Startup&gt;();                                    
+        return new TestServer(builder);                
     }
 }
 </code></pre>
-<p>In order to configure these endpoints we can simply register them with the container.</p>
-<pre><code>public class CompositionRoot : ICompositionRoot
+
+<h2 id="configurable-server">Configurable Server</h2>
+<p>Let's imagine that we want to test our controller using a mock implementation of <code>IService</code>. </p>
+<p>We need to provide a way to override the default container registration before the server is started.</p>
+<p>The first step here is to add the <code>ConfigureAdditionalServices</code> method to the <code>Startup</code> class.</p>
+<pre><code class="C#">public void ConfigureServices(IServiceCollection services)
 {
-    public void Compose(IServiceRegistry serviceRegistry)
+    services.AddSingleton&lt;IService,Service&gt;();
+    services.AddMvc();
+    ConfigureAdditionalServices(services);
+}
+
+protected virtual void ConfigureAdditionalServices(IServiceCollection services)
+{
+}           
+</code></pre>
+
+<p>The <code>ConfigureAdditionalServices</code> method gets called after all other services are registered giving us a chance to modify the configuration.</p>
+<p>We can now simply inherit from the <code>Startup</code> class and make it configurable.</p>
+<pre><code class="c#">public class ConfigurableStartup : Startup
+{
+    private readonly Action&lt;IServiceCollection&gt; configureAction;
+
+    public ConfigurableStartup(IConfiguration configuration, Action&lt;IServiceCollection&gt; configureAction)
+        : base(configuration) =&gt; this.configureAction = configureAction;
+
+    protected override void ConfigureAdditionalServices(IServiceCollection services)
     {
-        serviceRegistry.Register&lt;IService, Service&gt;();
-        serviceRegistry.Register&lt;IServiceBehavior, SampleServiceBehavior&gt;();
-        serviceRegistry.Register&lt;IEndpointBehavior, SampleEndpointBehavior&gt;();
+        configureAction(services);
     }
 }
-</code></pre></div>
+</code></pre>
+
+<p>While we could mock services right here in this class, we will make it more versatile by just injecting the <code>configureAtion</code> delegate allowing this class to be used in different scenarios.</p>
+<pre><code class="c#">public class ConfigurableServer : TestServer
+{
+    public ConfigurableServer(Action&lt;IServiceCollection&gt; configureAction = null) : base(CreateBuilder(configureAction))
+    {
+    }
+
+    private static IWebHostBuilder CreateBuilder(Action&lt;IServiceCollection&gt; configureAction)
+    {
+        if (configureAction == null)
+        {
+            configureAction = (sc) =&gt; {};
+        }
+        var builder = new WebHostBuilder()
+            .ConfigureServices(sc =&gt; sc.AddSingleton&lt;Action&lt;IServiceCollection&gt;&gt;(configureAction))
+            .UseStartup&lt;ConfigurableStartup&gt;();
+        return builder;    
+    }
+}
+</code></pre>
+
+<p>Now this might need a little explanation. First we optionally pass inn the <code>configureAction</code> delegate and passes that delegate to the <code>CreateBuilder</code> method that creates the <code>IWebHostBuilder</code> instance that is again passed to the base constructor. The <code>IWebHostBuilder</code> has this <code>ConfigureServices</code> method that can be used to register services that is required by the startup class itself. In this case the <code>ConfigurableStartup</code> class takes the <code>configureAction</code> delegate as a constructor argument and we simply register the delegate as a singleton.</p>
+<h2 id="mocking">Mocking</h2>
+<p>With our new <code>ConfigurableServer</code> in place we can start to do some pretty interesting things with regards to mocking services inside our server. </p>
+<p>But first, let's install Moq</p>
+<pre><code class="shell">dotnet add package moq
+</code></pre>
+
+<p>We can now use the <code>configureAction</code> passed to the <code>ConfigurableServer</code> to replace the originally registered service.</p>
+<pre><code class="c#">public async Task ShouldGetMockValue()
+{
+    var serviceMock = new Mock&lt;IService&gt;();
+    serviceMock.Setup(m =&gt; m.GetValue()).Returns(&quot;Hello mockworld&quot;);
+    var serviceDescriptor = new ServiceDescriptor(typeof(IService), serviceMock.Object);
+
+    using (var testServer = new ConfigurableServer(sc =&gt; sc.Replace(serviceDescriptor)))
+    {
+        var client = testServer.CreateClient();
+        var value = await client.GetStringAsync(&quot;api/value&quot;);
+        Assert.Equal(&quot;Hello mockworld&quot;, value);
+    }
+}
+</code></pre>
+
+<p>Want to comment? File an issue <a href="https://github.com/seesharper/Blog.AspNetCoreUnitTesting/issues">here</a> :)</p></div>
         </div>
 
         <footer class="col-md-12">

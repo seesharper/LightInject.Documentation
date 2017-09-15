@@ -105,6 +105,12 @@
      <changefreq>daily</changefreq>
     </url>
         
+    <url>
+     <loc>/aspnetcoreunittesting/</loc>
+     <lastmod>2017-09-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
     
 
     
