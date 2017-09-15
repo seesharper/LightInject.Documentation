@@ -16,9 +16,10 @@ pages:
     - SignalR : signalr.md
     - Nancy: nancy.md     
     - Microsoft DependencyInjection : microsoft.dependencyinjection.md    
-- Examples:
+- Blog:
     - Web Api Request Logging: webapirequestlogging.md    
     - Transactions and Testing: transactions.md
+    - AspNetCore unit testing: aspnetcoreunittesting.md
 - Side Projects:
     - LightMock : lightmock.md   
 - About: 
