@@ -642,14 +642,35 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 </code></pre>
 <h2 id="assembly-scanning">Assembly Scanning</h2>
 <p>LightInject is capable of registering services by looking at the types of a given assembly.</p>
-<pre><code>container.RegisterAssembly(typeof(IFoo).Assembly)
+<pre><code class="c#">container.RegisterAssembly(typeof(IFoo).Assembly)
 </code></pre>
+
 <p>To filter out the services to be registered with the container, we can provide a predicate that makes it possible to inspect the service type and the implementing type.</p>
-<pre><code>container.RegisterAssembly(typeof(IFoo).Assembly, (serviceType, implementingType) =&gt; serviceType.NameSpace == "SomeNamespace");
+<pre><code class="c#">container.RegisterAssembly(typeof(IFoo).Assembly, (serviceType, implementingType) =&gt; serviceType.NameSpace == &quot;SomeNamespace&quot;);
 </code></pre>
+
 <p>It is also possible to scan a set assembly files based on a search pattern.</p>
-<pre><code>container.RegisterAssembly("SomeAssemblyName*.dll");
+<pre><code class="c#">container.RegisterAssembly(&quot;SomeAssemblyName*.dll&quot;);  
 </code></pre>
+
+<p>When scanning assemblies, <strong>LightInject</strong> will register services using a service name that by default is the implementing type name. This behavior can be changed by specifying a function delegate to provide the name based on the service type and the implementing type.</p>
+<pre><code class="c#">container.RegisterAssembly(typeof(IFoo).Assembly, () =&gt; new PerContainerLifetime(), (serviceType, implementingType) =&gt; serviceType.NameSpace == &quot;SomeNamespace&quot;, (serviceType, implementingType) =&gt; &quot;Provide custom service name here&quot;);
+</code></pre>
+
+<p>We can also change this behavior globally for all registrations by implementing the <strong>IServiceNameProvider</strong> interface.</p>
+<pre><code class="c#">public class CustomServiceNameProvider : IServiceNameProvider
+{
+    public string GetServiceName(Type serviceType, Type implementingType)
+    {
+        return &quot;Provide custom service name here&quot;;  
+    }
+}
+</code></pre>
+
+<p>To change the default behavior for all registrations we simply change this dependency on the container before we start scanning assemblies.</p>
+<pre><code class="c#">container.ServiceNameProvider = new CustomServiceNameProvider();
+</code></pre>
+
 <h2 id="composition-root">Composition Root</h2>
 <p>When <strong>LightInject</strong> scans an assembly it will look for an implementation of the <strong>ICompositionRoot</strong> interface.   </p>
 <pre><code>public class SampleCompositionRoot : ICompositionRoot
@@ -971,5 +992,5 @@ containerOptions.LogFactory = (type) =&gt; logEntry =&gt; Console.WriteLine(logE
 
 <!--
 MkDocs version : 0.17.2
-Build Date UTC : 2018-01-12 16:01:25
+Build Date UTC : 2018-01-13 18:12:33
 -->
