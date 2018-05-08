@@ -178,6 +178,7 @@
             <li><a href="#unresolved-services">Unresolved services</a></li>
             <li><a href="#ienumerablet">IEnumerable&lt;T&gt;</a></li>
             <li><a href="#values">Values</a></li>
+            <li><a href="#compilation">Compilation</a></li>
         <li class="main "><a href="#lifetime">Lifetime</a></li>
             <li><a href="#perscopelifetime">PerScopeLifetime</a></li>
             <li><a href="#percontainerlifetime">PerContainerLifetime</a></li>
@@ -254,11 +255,11 @@ container.Register&lt;IFoo, AnotherFoo&gt;("AnotherFoo");
 var instance = container.GetInstance&lt;IFoo&gt;("AnotherFoo");
 Assert.IsInstanceOfType(instance, typeof(AnotherFoo));
 </code></pre>
-<p>If only one named registration exists, <strong>LightInject</strong> is capable of resolving this as the default service.
-​  <br />
-    container.Register<IFoo, AnotherFoo>("AnotherFoo");
-    var instance = container.GetInstance<IFoo>();
-    Assert.IsInstanceOfType(instance, typeof(AnotherFoo));</p>
+<p>If only one named registration exists, <strong>LightInject</strong> is capable of resolving this as the default service.</p>
+<pre><code>container.Register&lt;IFoo, AnotherFoo&gt;("AnotherFoo");
+var instance = container.GetInstance&lt;IFoo&gt;();
+Assert.IsInstanceOfType(instance, typeof(AnotherFoo));
+</code></pre>
 <h3 id="unresolved-services">Unresolved services</h3>
 <p>LightInject can resolve services that are not registered with the container using the <em>RegisterFallback</em> method.</p>
 <pre><code>var container = new ServiceContainer();
@@ -345,6 +346,52 @@ Assert.Equal(&quot;A003&quot;, services[2].ServiceName);
 var value = container.GetInstance&lt;string&gt;();
 Assert.AreEqual("SomeValue, value);
 </code></pre>
+<h3 id="compilation">Compilation</h3>
+<p><strong>LightInject</strong> uses dynamic code compilation either in the form of System.Reflection.Emit or compiled expression trees. When a service is requested from the container, the code needed for creating the service instance is generated and compiled and a delegate for that code is stored for lookup later on so that we only compile it once. These delegates are stored in an AVL tree that ensures maximal performance when looking up a delegate for a given service type. If fact, looking up these delegates is what sets the top performing containers apart. Most high performance container emits approximately the same code, but the approach to storing these delegates may differ. </p>
+<p><strong>LightInject</strong> provides lock-free service lookup meaning that no locks are involved for getting a service instance after its initial generation and compilation. The only time <strong>LightInject</strong> actually creates a lock is when generating the code for a given service.  That does however mean a potential lock contention problem when many concurrent requests asks for services for the first time.</p>
+<p><strong>LightInject</strong> deals with this potential problem by providing an API for compilation typically used when an application starts.</p>
+<p>The following example shows how to compile all registered services.</p>
+<pre><code class="c#">container.Compile();
+</code></pre>
+
+<p>One thing to be aware of is that not all services are backed by its own delegate. </p>
+<p>Consider the following service:</p>
+<pre><code class="c#">public class Foo
+{
+    public Foo(Bar bar)
+    {
+        Bar = bar;
+    }
+} 
+</code></pre>
+
+<p>Registered and resolved like this:</p>
+<pre><code class="c#">container.Register&lt;Foo&gt;();
+container.Register&lt;Bar&gt;();
+var foo = container.GetInstance&lt;Foo&gt;();
+</code></pre>
+
+<p>In this case we only create a delegate for resolving <code>Foo</code> since that is the only service that is directly requested from the container. The code for creating the <code>Bar</code> instance is embedded inside the code for creating the <code>Foo</code> instance and hence there is only one delegate created.</p>
+<p>We call <code>Foo</code> a root service since it is directly requested from the container. </p>
+<p>In fact lets just have a look at the IL generated for creating the <code>Foo</code> instance. </p>
+<pre><code class="assembly">newobj Void .ctor() // Bar
+newobj Void .ctor(LightInject.SampleLibrary.IBar) //Foo
+</code></pre>
+
+<p>What happens here is that a new instance of <code>Bar</code> is created and pushed onto the stack and then we create the <code>Foo</code> instance. This is the code that the delegate for <code>Foo</code> points to. </p>
+<p>The reason for such a relatively detailed explanation is to illustrate that we don't always create a delegate for a given service and by simply doing a <code>container.Compile()</code> we might create a lot of delegates that is never actually executed.  Probably no big deal as long as we don't have tens of thousands of services, but just something to be aware of.</p>
+<p><strong>LightInject</strong> does not attempt to identify root services as that would be very difficult for various reasons.</p>
+<p>We can instead use a predicate when compiling services up front.</p>
+<pre><code class="C#">container.Compile(sr =&gt; sr.ServiceType == typeof(Foo));
+</code></pre>
+
+<h4 id="open-generics">Open Generics</h4>
+<p><strong>LightInject</strong> cannot compile open generic services since the actual generic arguments are not known at "compile" time. </p>
+<p>We can however specify the generic arguments like this:</p>
+<pre><code class="c#">container.Compile&lt;Foo&lt;int&gt;&gt;()
+</code></pre>
+
+<p><strong>LightInject</strong> will create a log entry every time a new delegate is created so that information can be used to identify root services that could be compiled up front. In addition to this, a log entry (warning) is also created when trying to compile an open generic service up front.</p>
 <h2 id="lifetime">Lifetime</h2>
 <p>The default behavior in <strong>LightInject</strong> is to treat all objects as transients unless otherwise specified.</p>
 <pre><code>container.Register&lt;IFoo,Foo&gt;();
@@ -542,12 +589,12 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 </code></pre>
 <p>This tells the container to inject a new <strong>Bar</strong> instance whenever it sees an <strong>IBar</strong> constructor dependency.</p>
 <h4 id="explicit-service-registration">Explicit service registration</h4>
-<p>Registers a service by providing explicit information about how to create the service instance and how to resolve the constructor dependencies.
-​  <br />
-    container.Register<IBar, Bar>();
-    container.Register<IFoo>(factory =&gt; new Foo(factory.GetInstance<IBar>));
-    var foo = (Foo)container.GetInstance<IFoo>();
-    Assert.IsNotNull(foo.Bar);            </p>
+<p>Registers a service by providing explicit information about how to create the service instance and how to resolve the constructor dependencies.</p>
+<pre><code>container.Register&lt;IBar, Bar&gt;();
+container.Register&lt;IFoo&gt;(factory =&gt; new Foo(factory.GetInstance&lt;IBar&gt;));
+var foo = (Foo)container.GetInstance&lt;IFoo&gt;();
+Assert.IsNotNull(foo.Bar);
+</code></pre>
 <h4 id="parameters">Parameters</h4>
 <p>Parameters are used when we want to supply one or more values when the service is resolved.</p>
 <pre><code>public class Foo : IFoo
@@ -701,11 +748,11 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 <pre><code>public interface IFoo&lt;T&gt; {};
 public class Foo&lt;T&gt; : IFoo&lt;T&gt; {};
 </code></pre>
-<p>The container creates the closed generic type based on the service request.
-​  <br />
-    container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
-    var instance = container.GetInstance(typeof(IFoo<int>));
-    Assert.IsInstanceOfType(instance, typeof(Foo<int>));</p>
+<p>The container creates the closed generic type based on the service request.</p>
+<pre><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
+var instance = container.GetInstance(typeof(IFoo&lt;int&gt;));
+Assert.IsInstanceOfType(instance, typeof(Foo&lt;int&gt;));
+</code></pre>
 <h3 id="constraints">Constraints</h3>
 <p><strong>LightInject</strong> enforces generic constrains  </p>
 <h2 id="lazyt">Lazy&lt;T&gt;</h2>
@@ -779,12 +826,12 @@ using(IFoo foo = fooFactory())
 </blockquote>
 <h2 id="typed-factories">Typed Factories</h2>
 <p>A typed factory is a class that wraps the function factory that is used to create the underlying service instance.
-As opposed to just function factories, typed factories provides better expressiveness to the consumer of the factory. <br />
-​  <br />
-    public interface IFooFactory
-    {
-        IFoo GetFoo();
-    }</p>
+As opposed to just function factories, typed factories provides better expressiveness to the consumer of the factory.   </p>
+<pre><code>public interface IFooFactory
+{
+    IFoo GetFoo();
+}
+</code></pre>
 <hr />
 <pre><code>public class FooFactory : IFooFactory
 {
@@ -991,6 +1038,6 @@ containerOptions.LogFactory = (type) =&gt; logEntry =&gt; Console.WriteLine(logE
 </html>
 
 <!--
-MkDocs version : 0.17.2
-Build Date UTC : 2018-01-13 18:12:33
+MkDocs version : 0.17.3
+Build Date UTC : 2018-05-08 12:08:42
 -->
