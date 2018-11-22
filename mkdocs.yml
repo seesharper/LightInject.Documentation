@@ -1,5 +1,6 @@
 site_name: LightInject
 repo_url: https://github.com/seesharper/lightinject
+theme: material
 pages:
 - Home: index.md
 - Patterns : designpatterns.md
@@ -8,20 +9,19 @@ pages:
     - AutoFactory: autofactory.md
     - Annotation: annotation.md
 - Integrations:
-    - xUnit: xunit.md 
+    - xUnit: xunit.md
     - Web: web.md
     - Mvc: mvc.md
     - WCF: wcf.md
     - Web Api: webapi.md
     - SignalR : signalr.md
-    - Nancy: nancy.md     
-    - Microsoft DependencyInjection : microsoft.dependencyinjection.md    
+    - Nancy: nancy.md
+    - Microsoft DependencyInjection : microsoft.dependencyinjection.md
 - Blog:
-    - Web Api Request Logging: webapirequestlogging.md    
+    - Web Api Request Logging: webapirequestlogging.md
     - Transactions and Testing: transactions.md
     - AspNetCore unit testing: aspnetcoreunittesting.md
 - Side Projects:
-    - LightMock : lightmock.md   
-- About: 
-    - Licence : licence.md             
- 
+    - LightMock : lightmock.md
+- About:
+    - Licence : licence.md

@@ -3,18 +3,20 @@ environment:
     secure: LIOGMrY9EclC6324JJm3JbStvRPxm7l4aHI2ioaJAEDPFE2o16YFk2UUqXg1CwmS
 version: 1.0.{build}
 install:
-- cmd: 
+- cmd:
 build_script:
 - cmd: >-
     set PATH=C:\Python27\scripts;%PATH%
 
     pip install mkdocs
 
+    pip install mkdocs-material
+
     python prebuild.py
 
     mkdocs build --clean
 
-   
+
 test: off
 on_success:
   - git config --global credential.helper store
