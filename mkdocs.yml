@@ -16,7 +16,8 @@ pages:
     - Web Api: webapi.md
     - SignalR : signalr.md
     - Nancy: nancy.md
-    - Microsoft DependencyInjection : microsoft.dependencyinjection.md
+    - AspNetCore: microsoft.aspnetcore.hosting.md
+    - Microsoft DI : microsoft.dependencyinjection.md
 - Blog:
     - Web Api Request Logging: webapirequestlogging.md
     - Transactions and Testing: transactions.md

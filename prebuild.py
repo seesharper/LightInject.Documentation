@@ -20,6 +20,7 @@ download('https://raw.githubusercontent.com/seesharper/LightInject.Wcf/master/re
 download('https://raw.githubusercontent.com/seesharper/LightInject.Mvc/master/readme.md', 'docs/mvc.md')
 download('https://raw.githubusercontent.com/seesharper/LightMock/master/readme.md', 'docs/lightmock.md')
 download('https://raw.githubusercontent.com/seesharper/LightInject.Microsoft.DependencyInjection/master/readme.md', 'docs/microsoft.dependencyinjection.md')
+download('https://raw.githubusercontent.com/seesharper/LightInject.Microsoft.AspNetCore.Hosting/master/README.md', 'docs/microsoft.aspnetcore.hosting.md')
 download('https://raw.githubusercontent.com/seesharper/Blog.WebApiRequestLogging/master/readme.md', 'docs/webapirequestlogging.md')
 download('https://raw.githubusercontent.com/seesharper/Blog.Transactions/master/readme.md', 'docs/transactions.md')
 download('https://raw.githubusercontent.com/seesharper/Blog.AspNetCoreUnitTesting/master/readme.md', 'docs/aspnetcoreunittesting.md')
