@@ -1490,11 +1490,11 @@ container.Register&lt;IFoo, AnotherFoo&gt;("AnotherFoo");
 var instance = container.GetInstance&lt;IFoo&gt;("AnotherFoo");
 Assert.IsInstanceOfType(instance, typeof(AnotherFoo));
 </code></pre>
-<p>If only one named registration exists, <strong>LightInject</strong> is capable of resolving this as the default service.</p>
-<pre><code>container.Register&lt;IFoo, AnotherFoo&gt;("AnotherFoo");
-var instance = container.GetInstance&lt;IFoo&gt;();
-Assert.IsInstanceOfType(instance, typeof(AnotherFoo));
-</code></pre>
+<p>If only one named registration exists, <strong>LightInject</strong> is capable of resolving this as the default service.
+​  <br />
+    container.Register<IFoo, AnotherFoo>("AnotherFoo");
+    var instance = container.GetInstance<IFoo>();
+    Assert.IsInstanceOfType(instance, typeof(AnotherFoo));</p>
 <h3 id="unresolved-services">Unresolved services</h3>
 <p>LightInject can resolve services that are not registered with the container using the <em>RegisterFallback</em> method.</p>
 <pre><code>var container = new ServiceContainer();
@@ -1539,6 +1539,10 @@ container.Register&lt;DerivedFoo&gt;();
 var instances = container.GetAllInstances&lt;Foo&gt;();
 Assert.AreEqual(1, instances.Count());
 </code></pre>
+<p>We can also selectively decide to apply variance only for certain <code>IEnumerable&lt;T&gt;</code> services.</p>
+<pre><code class="C#">options.VarianceFilter = (enumerableType) =&gt; enumerableType.GetGenericArguments()[0] == typeof(IFoo);
+</code></pre>
+
 <h4 id="ordering">Ordering</h4>
 <p>Sometimes the ordering of the resolved services are important and <strong>LightInject</strong> solves this by ordering services by their service name.</p>
 <pre><code class="c#">container.Register&lt;IFoo, Foo1&gt;(&quot;A&quot;);
@@ -1824,12 +1828,12 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 </code></pre>
 <p>This tells the container to inject a new <strong>Bar</strong> instance whenever it sees an <strong>IBar</strong> constructor dependency.</p>
 <h4 id="explicit-service-registration">Explicit service registration</h4>
-<p>Registers a service by providing explicit information about how to create the service instance and how to resolve the constructor dependencies.</p>
-<pre><code>container.Register&lt;IBar, Bar&gt;();
-container.Register&lt;IFoo&gt;(factory =&gt; new Foo(factory.GetInstance&lt;IBar&gt;));
-var foo = (Foo)container.GetInstance&lt;IFoo&gt;();
-Assert.IsNotNull(foo.Bar);
-</code></pre>
+<p>Registers a service by providing explicit information about how to create the service instance and how to resolve the constructor dependencies.
+​  <br />
+    container.Register<IBar, Bar>();
+    container.Register<IFoo>(factory =&gt; new Foo(factory.GetInstance<IBar>));
+    var foo = (Foo)container.GetInstance<IFoo>();
+    Assert.IsNotNull(foo.Bar);            </p>
 <h4 id="parameters">Parameters</h4>
 <p>Parameters are used when we want to supply one or more values when the service is resolved.</p>
 <pre><code>public class Foo : IFoo
@@ -1983,11 +1987,11 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 <pre><code>public interface IFoo&lt;T&gt; {};
 public class Foo&lt;T&gt; : IFoo&lt;T&gt; {};
 </code></pre>
-<p>The container creates the closed generic type based on the service request.</p>
-<pre><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
-var instance = container.GetInstance(typeof(IFoo&lt;int&gt;));
-Assert.IsInstanceOfType(instance, typeof(Foo&lt;int&gt;));
-</code></pre>
+<p>The container creates the closed generic type based on the service request.
+​  <br />
+    container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
+    var instance = container.GetInstance(typeof(IFoo<int>));
+    Assert.IsInstanceOfType(instance, typeof(Foo<int>));</p>
 <h3 id="constraints">Constraints</h3>
 <p><strong>LightInject</strong> enforces generic constrains  </p>
 <h2 id="lazyt">Lazy&lt;T&gt;</h2>
@@ -2061,12 +2065,12 @@ using(IFoo foo = fooFactory())
 </blockquote>
 <h2 id="typed-factories">Typed Factories</h2>
 <p>A typed factory is a class that wraps the function factory that is used to create the underlying service instance.
-As opposed to just function factories, typed factories provides better expressiveness to the consumer of the factory.   </p>
-<pre><code>public interface IFooFactory
-{
-    IFoo GetFoo();
-}
-</code></pre>
+As opposed to just function factories, typed factories provides better expressiveness to the consumer of the factory. <br />
+​  <br />
+    public interface IFooFactory
+    {
+        IFoo GetFoo();
+    }</p>
 <hr />
 <pre><code>public class FooFactory : IFooFactory
 {

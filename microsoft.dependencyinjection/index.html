@@ -463,20 +463,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#controllers" title="Controllers" class="md-nav__link">
-    Controllers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#net-core-20" title=".Net Core 2.0" class="md-nav__link">
-    .Net Core 2.0
-  </a>
-  
-</li>
-      
       
       
       
@@ -659,20 +645,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#controllers" title="Controllers" class="md-nav__link">
-    Controllers
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#net-core-20" title=".Net Core 2.0" class="md-nav__link">
-    .Net Core 2.0
-  </a>
-  
-</li>
-      
       
       
       
@@ -696,47 +668,28 @@
 <p><a href="https://ci.appveyor.com/project/seesharper/lightinject-microsoft-dependencyinjection"><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?maxAge=2592000" /></a>
 <a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.Microsoft.DependencyInjection.svg?maxAge=2592000" /></a>
 <a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/LightInject.Microsoft.DependencyInjection.svg?maxAge=2592000" /></a></p>
-<p>Enables <strong>LightInject</strong> to be used as the service container in ASP.NET Core and Entity Framework 7 applications.</p>
+<p>Implements the <a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection.Abstractions/">Microsoft.Extensions.DependencyInjection.Abstractions</a> and makes it possible to create an <code>IServiceProvider</code> that is 100% compatible with the <a href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection.Specification.Tests">Microsoft.Extensions.DependencyInjection.Specification.Tests</a>. </p>
+<blockquote>
+<p>Note: This package is NOT meant to be used directly with AspNetCore applications. If the target application is an AspNetCore application, use the <a href="https://www.nuget.org/packages/LightInject.Microsoft.AspNetCore.Hosting/">LightInject.Microsoft.AspNetCore.Hosting</a> package instead. </p>
+</blockquote>
 <h2 id="installing">Installing</h2>
-<pre><code>&quot;dependencies&quot;: {
-  &quot;LightInject.Microsoft.DependencyInjection&quot;: &quot;&lt;version&gt;&quot;
-}
+<pre><code class="shell">dotnet add package LightInject.Microsoft.DependencyInjection
 </code></pre>
 
 <h2 id="usage">Usage</h2>
-<pre><code>public class Startup
-{       
-    public IServiceProvider ConfigureServices(IServiceCollection services)
-    {
-        var container = new ServiceContainer();
-        return container.CreateServiceProvider(services);
-    }
-
-    public void Configure(IApplicationBuilder app)
-    {          
-        app.Run(async (context) =&gt;
-        {
-            await context.Response.WriteAsync(&quot;Hello from LightInject&quot;);
-        });
-    }
-}
+<pre><code class="c#">var services = new ServiceCollection();
+services.AddTransient&lt;Foo&gt;();
+var provider = services.CreateLightInjectServiceProvider();
 </code></pre>
 
-<h2 id="controllers">Controllers</h2>
-<p>By default, controllers are not actually created by <em>LightInject</em>. They are created by the ASP.NET infrastructure and uses LightInject to resolve its dependencies. To enable LightInject to create the controller instances, we need to add the following line.</p>
-<pre><code class="csharp">services.AddMvc().AddControllersAsServices();
+<p>It is also possible to create an <code>IServiceProvider</code> directly from an <code>IServiceContainer</code> instance.</p>
+<pre><code class="c#">var container = new ServiceContainer(Options.Default.WithMicrosoftSettings);
+var provider = container.CreateServiceProvider();
 </code></pre>
 
-<h2 id="net-core-20">.Net Core 2.0</h2>
-<p><strong>Requirements:</strong></p>
-<ul>
-<li>&gt;= LightInject 5.1.0</li>
-<li>&gt;= LightInject.Microsoft.DependencyInjection 2.0.3</li>
-</ul>
-<p>In addition we need to turn of propertyinjection</p>
-<pre><code class="c#">var containerOptions = new ContainerOptions { EnablePropertyInjection = false } 
-var container = new ServiceContainer(containerOptions);
-</code></pre>
+<blockquote>
+<p>Note: Make sure that the <code>Options.Default.WithMicrosoftSettings</code> is passed in as <code>options</code> when creating the container. This makes the provider compliant with the default provider from Microsoft. </p>
+</blockquote>
                 
                   
                 
