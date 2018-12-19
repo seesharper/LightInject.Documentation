@@ -22,6 +22,7 @@ pages:
     - Web Api Request Logging: webapirequestlogging.md
     - Transactions and Testing: transactions.md
     - AspNetCore unit testing: aspnetcoreunittesting.md
+    - Making of dotnet-steps: blog-dotnet-steps.md
 - Side Projects:
     - LightMock : lightmock.md
 - About:

@@ -24,4 +24,4 @@ download('https://raw.githubusercontent.com/seesharper/LightInject.Microsoft.Asp
 download('https://raw.githubusercontent.com/seesharper/Blog.WebApiRequestLogging/master/readme.md', 'docs/webapirequestlogging.md')
 download('https://raw.githubusercontent.com/seesharper/Blog.Transactions/master/readme.md', 'docs/transactions.md')
 download('https://raw.githubusercontent.com/seesharper/Blog.AspNetCoreUnitTesting/master/readme.md', 'docs/aspnetcoreunittesting.md')
-
+download('https://raw.githubusercontent.com/seesharper/Blog.DotNet-Steps/master/README.md', 'docs/blog-dotnet-steps.md')
