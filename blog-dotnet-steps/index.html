@@ -36,7 +36,7 @@
     
     
       
-        <title>Making of dotnet-steps - LightInject</title>
+        <title>Reflection in C# scripts - LightInject</title>
       
     
     
@@ -91,7 +91,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#cake" tabindex="1" class="md-skip">
+      <a href="#reflection-in-c-scripts" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -117,7 +117,7 @@
                 LightInject
               </span>
               <span class="md-header-nav__topic">
-                Making of dotnet-steps
+                Reflection in C# scripts
               </span>
             
           
@@ -512,18 +512,22 @@
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Making of dotnet-steps
+        Reflection in C# scripts
       </label>
     
-    <a href="./" title="Making of dotnet-steps" class="md-nav__link md-nav__link--active">
-      Making of dotnet-steps
+    <a href="./" title="Reflection in C# scripts" class="md-nav__link md-nav__link--active">
+      Reflection in C# scripts
     </a>
     
       
 <nav class="md-nav md-nav--secondary">
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">Table of contents</label>
@@ -567,6 +571,13 @@
         <li class="md-nav__item">
   <a href="#decorating-steps" title="Decorating Steps" class="md-nav__link">
     Decorating Steps
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" title="Summary" class="md-nav__link">
+    Summary
   </a>
   
 </li>
@@ -673,6 +684,8 @@
 <nav class="md-nav md-nav--secondary">
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">Table of contents</label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -719,6 +732,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#summary" title="Summary" class="md-nav__link">
+    Summary
+  </a>
+  
+</li>
+      
       
       
       
@@ -738,9 +758,8 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/blog-dotnet-steps.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Making of dotnet-steps</h1>
-                
-                <p>I have been using C# scripting as a tool for writing build scripts for many years now. At first it was <a href="http://scriptcs.net/">ScriptCs</a> using <a href="https://www.sublimetext.com/">Sublime Text</a> as the editor. There was no intellisense or debugging capabilities, but still it was insanely powerful to have all the sweetness of C# available in a simple script file. </p>
+                <h1 id="reflection-in-c-scripts">Reflection in C# scripts</h1>
+<p>I have been using C# scripting as a tool for writing build scripts for many years now. At first it was <a href="http://scriptcs.net/">ScriptCs</a> using <a href="https://www.sublimetext.com/">Sublime Text</a> as the editor. There was no intellisense or debugging capabilities, but still it was insanely powerful to have all the sweetness of C# available in a simple script file. In addition to using C# scripts in a variety of ways, I am also responsible for a handful of pull requests over at the <a href="https://github.com/filipw/dotnet-script">dotnet-script</a> repo. Together,  <a href="https://github.com/filipw">Filip</a>, my self and several other contributors  have created a C# script runner that runs on .Net Core with support for inline NuGet packages, debugging and much more. You should check it out 😀</p>
 <p>This post is not really about the evolution of C# scripting, but rather about how I went about creating <a href="https://github.com/seesharper/dotnet-steps">dotnet-steps</a> which is a super simple way of composing "steps" in a C# script. </p>
 <blockquote>
 <p>"A small step for man kind, but a HUGE leap for build scripts"</p>
@@ -946,13 +965,8 @@ foreach (var stepField in stepFields)
 }
 </code></pre>
 
-<ul>
-<li>Reflection</li>
-<li>CallStack</li>
-<li>Decorating fields</li>
-<li>Testing </li>
-<li>Script packag</li>
-</ul>
+<h3 id="summary">Summary</h3>
+<p>The goal of this post was mainly to show how to do reflection in C# scripts and the technique I've shown here can of course be used in a number of interesting ways. Check out the documentation over at the <a href="https://github.com/seesharper/dotnet-steps/tree/master/src">dotnet-steps</a> for more details. If you have any questions or ideas how to improve, don't hesitate to contact me. </p>
                 
                   
                 
