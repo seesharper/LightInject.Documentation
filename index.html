@@ -2,7 +2,7 @@
 
 
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.1.0">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.2.0">
     
     
       
@@ -40,12 +40,12 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/application.11e41852.css">
+      <link rel="stylesheet" href="assets/stylesheets/application.572ca0f0.css">
       
       
     
     
-      <script src="assets/javascripts/modernizr.20ef595d.js"></script>
+      <script src="assets/javascripts/modernizr.8c900955.js"></script>
     
     
       
@@ -660,6 +660,13 @@
         <li class="md-nav__item">
   <a href="#logging" title="Logging" class="md-nav__link">
     Logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit-testing" title="Unit Testing" class="md-nav__link">
+    Unit Testing
   </a>
   
 </li>
@@ -1449,6 +1456,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#unit-testing" title="Unit Testing" class="md-nav__link">
+    Unit Testing
+  </a>
+  
+</li>
+      
       
       
       
@@ -1516,9 +1530,9 @@ Assert.IsInstanceOfType(instance, typeof(AnotherFoo));
 </code></pre>
 <p>If only one named registration exists, <strong>LightInject</strong> is capable of resolving this as the default service.
 ​  <br />
-    container.Register<IFoo, AnotherFoo>("AnotherFoo");
-    var instance = container.GetInstance<IFoo>();
-    Assert.IsInstanceOfType(instance, typeof(AnotherFoo));</p>
+​    container.Register<IFoo, AnotherFoo>("AnotherFoo");
+​    var instance = container.GetInstance<IFoo>();
+​    Assert.IsInstanceOfType(instance, typeof(AnotherFoo));</p>
 <h3 id="unresolved-services">Unresolved services</h3>
 <p>LightInject can resolve services that are not registered with the container using the <em>RegisterFallback</em> method.</p>
 <pre><code>var container = new ServiceContainer();
@@ -1854,10 +1868,10 @@ Assert.IsInstanceOfType(foo.Bar, typeof(Bar));
 <h4 id="explicit-service-registration">Explicit service registration</h4>
 <p>Registers a service by providing explicit information about how to create the service instance and how to resolve the constructor dependencies.
 ​  <br />
-    container.Register<IBar, Bar>();
-    container.Register<IFoo>(factory =&gt; new Foo(factory.GetInstance<IBar>));
-    var foo = (Foo)container.GetInstance<IFoo>();
-    Assert.IsNotNull(foo.Bar);            </p>
+​    container.Register<IBar, Bar>();
+​    container.Register<IFoo>(factory =&gt; new Foo(factory.GetInstance<IBar>));
+​    var foo = (Foo)container.GetInstance<IFoo>();
+​    Assert.IsNotNull(foo.Bar);            </p>
 <h4 id="parameters">Parameters</h4>
 <p>Parameters are used when we want to supply one or more values when the service is resolved.</p>
 <pre><code>public class Foo : IFoo
@@ -2013,9 +2027,9 @@ public class Foo&lt;T&gt; : IFoo&lt;T&gt; {};
 </code></pre>
 <p>The container creates the closed generic type based on the service request.
 ​  <br />
-    container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
-    var instance = container.GetInstance(typeof(IFoo<int>));
-    Assert.IsInstanceOfType(instance, typeof(Foo<int>));</p>
+​    container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
+​    var instance = container.GetInstance(typeof(IFoo<int>));
+​    Assert.IsInstanceOfType(instance, typeof(Foo<int>));</p>
 <h3 id="constraints">Constraints</h3>
 <p><strong>LightInject</strong> enforces generic constrains  </p>
 <h2 id="lazyt">Lazy&lt;T&gt;</h2>
@@ -2091,10 +2105,10 @@ using(IFoo foo = fooFactory())
 <p>A typed factory is a class that wraps the function factory that is used to create the underlying service instance.
 As opposed to just function factories, typed factories provides better expressiveness to the consumer of the factory. <br />
 ​  <br />
-    public interface IFooFactory
-    {
-        IFoo GetFoo();
-    }</p>
+​    public interface IFooFactory
+​    {
+​        IFoo GetFoo();
+​    }</p>
 <hr />
 <pre><code>public class FooFactory : IFooFactory
 {
@@ -2221,6 +2235,77 @@ and <strong>LightInject</strong> provides a very simple log abstraction that is 
 <pre><code class="csharp">var containerOptions = new ContainerOptions();
 containerOptions.LogFactory = (type) =&gt; logEntry =&gt; Console.WriteLine(logEntry.Message);
 </code></pre>
+
+<h2 id="unit-testing">Unit Testing</h2>
+<p>Sometimes it might be useful to use the service container within our unit tests. LightInject also provides the <a href="https://www.nuget.org/packages/LightInject.xUnit/">LightInject.xUnit</a> extension that enables dependencies to be injected into test methods. One side effect of using that extension is that it is tightly coupled to xUnit and it we have less control with regards to container instances. </p>
+<p>Instead consider this simple base class </p>
+<pre><code class="c#">public class ContainerFixture : IDisposable
+{
+    public ContainerFixture()
+    {
+        var container = CreateContainer();
+        Configure(container);
+        container.RegisterFrom&lt;CompositionRoot&gt;();
+        ServiceFactory = container.BeginScope();
+        InjectPrivateFields();
+    }
+
+    private void InjectPrivateFields()
+    {
+        var privateInstanceFields = this.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        foreach (var privateInstanceField in privateInstanceFields)
+        {
+            privateInstanceField.SetValue(this, GetInstance(ServiceFactory, privateInstanceField));
+        }
+    }
+
+    internal Scope ServiceFactory { get; }
+
+    public void Dispose() =&gt; ServiceFactory.Dispose();
+
+    public TService GetInstance&lt;TService&gt;(string name = &quot;&quot;)
+        =&gt; ServiceFactory.GetInstance&lt;TService&gt;(name);
+
+    private object GetInstance(IServiceFactory factory, FieldInfo field)
+        =&gt; ServiceFactory.TryGetInstance(field.FieldType) ?? ServiceFactory.GetInstance(field.FieldType, field.Name);
+
+    internal virtual IServiceContainer CreateContainer() =&gt; new ServiceContainer();
+
+    internal virtual void Configure(IServiceRegistry serviceRegistry) {}
+}
+</code></pre>
+
+<p>This can be use with any test framework as long as it creates a new instance of the test class for each test method and that it calls <code>Dispose</code> after the test completes. For <code>xUnit</code> this is the default behaviour.</p>
+<p>Injecting services now becomes incredible easy. Just declare the service to test as a private field like this.</p>
+<pre><code class="c#">public class SampleTests : ContainerFixture
+{
+    private ICalculator calculator;
+
+    [Fact]
+    public void ShouldAddNumbers()
+    {
+        calculator.Add(2,2).ShouldBe(2);
+    }
+}
+</code></pre>
+
+<p>If we need to configure the container before executing the test, we can do that by simply overriding the <code>Configure</code> method. This could for instance be used to register mock services into the container.</p>
+<pre><code class="c#">public class SampleTests : ContainerFixture
+{
+    private ICalculator calculator;
+
+    [Fact]
+    public void ShouldAddNumbers()
+    {
+        calculator.Add(2,2).ShouldBe(2);
+    }
+
+    internal override Configure(IServiceRegistry serviceRegistry)
+    {
+        // Add registrations related to testing here
+    }
+}
+</code></pre>
                 
                   
                 
@@ -2278,7 +2363,7 @@ containerOptions.LogFactory = (type) =&gt; logEntry =&gt; Console.WriteLine(logE
       
     </div>
     
-      <script src="assets/javascripts/application.9e1f3b71.js"></script>
+      <script src="assets/javascripts/application.b41f3d20.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
       
