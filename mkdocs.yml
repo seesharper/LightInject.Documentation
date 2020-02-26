@@ -1,29 +1,35 @@
 site_name: LightInject
 repo_url: https://github.com/seesharper/lightinject
 theme: material
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
 pages:
-- Home: index.md
-- Patterns : designpatterns.md
-- Extensions:
-    - Interception: interception.md
-    - AutoFactory: autofactory.md
-    - Annotation: annotation.md
-- Integrations:
-    - xUnit: xunit.md
-    - Web: web.md
-    - Mvc: mvc.md
-    - WCF: wcf.md
-    - Web Api: webapi.md
-    - SignalR : signalr.md
-    - Nancy: nancy.md
-    - AspNetCore: microsoft.aspnetcore.hosting.md
-    - Microsoft DI : microsoft.dependencyinjection.md
-- Blog:
-    - Web Api Request Logging: webapirequestlogging.md
-    - Transactions and Testing: transactions.md
-    - AspNetCore unit testing: aspnetcoreunittesting.md
-    - Reflection in C# scripts: blog-dotnet-steps.md
-- Side Projects:
-    - LightMock : lightmock.md
-- About:
-    - Licence : licence.md
+  - Home: index.md
+  - Patterns: designpatterns.md
+  - Extensions:
+      - Interception: interception.md
+      - AutoFactory: autofactory.md
+      - Annotation: annotation.md
+  - Integrations:
+      - xUnit: xunit.md
+      - Web: web.md
+      - Mvc: mvc.md
+      - WCF: wcf.md
+      - Web Api: webapi.md
+      - SignalR: signalr.md
+      - Nancy: nancy.md
+      - AspNetCore: microsoft.aspnetcore.hosting.md
+      - Microsoft DI: microsoft.dependencyinjection.md
+  - Blog:
+      - Web Api Request Logging: webapirequestlogging.md
+      - Transactions and Testing: transactions.md
+      - AspNetCore unit testing: aspnetcoreunittesting.md
+      - Reflection in C# scripts: blog-dotnet-steps.md
+  - Side Projects:
+      - LightMock: lightmock.md
+  - About:
+      - Licence: licence.md
