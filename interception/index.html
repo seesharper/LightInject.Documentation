@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#interception" tabindex="1" class="md-skip">
+      <a href="#interception" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -877,11 +877,11 @@
                 <p><a href=""><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/seesharper/lightinject-interception.svg?maxAge=2592000" /></a>
 <a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.Interception.svg?maxAge=2592000" /></a>
 <a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/lightinject.interception.svg?maxAge=2592000" /></a></p>
-<h1 id="interception">Interception</h1>
+<h1 id="interception">Interception<a class="headerlink" href="#interception" title="Permanent link">&para;</a></h1>
 <p><strong>LightInject</strong> supports <a href="http://en.wikipedia.org/wiki/Aspect-oriented_programming">Aspect Oriented Programming</a> through proxy-based method interceptors. </p>
-<h2 id="installing">Installing</h2>
+<h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <p><strong>LightInject.Interception</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
+<h3 id="binary">Binary<a class="headerlink" href="#binary" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.Interception </code>
@@ -889,7 +889,7 @@
 </div>
 
 <p>This adds a reference to the LightInject.Interception.dll in the target project.</p>
-<h3 id="source">Source</h3>
+<h3 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.Interception.Source </code>
@@ -897,9 +897,9 @@
 </div>
 
 <p>This will install a single file (LightInject.Interception.cs) into the current project.</p>
-<h2 id="interceptors">Interceptors</h2>
+<h2 id="interceptors">Interceptors<a class="headerlink" href="#interceptors" title="Permanent link">&para;</a></h2>
 <p>An interceptor sits between the call site and the target instance and intercepts method calls.</p>
-<pre><code>public class SampleInterceptor : IInterceptor
+<div class="codehilite"><pre><span></span><code>public class SampleInterceptor : IInterceptor
 {
     public object Invoke(IInvocationInfo invocationInfo)
     {
@@ -909,70 +909,76 @@
         return returnValue;           
     }        
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The <strong>IInvocationInfo</strong> instance passed into the <strong>Invoke</strong> method contains information about the method being intercepted.</p>
 <p>The <strong>Proceed</strong> method calls down the chain of interceptors and ultimately the actual target instance.   </p>
-<h2 id="asynchronous-interceptors">Asynchronous Interceptors</h2>
+<h2 id="asynchronous-interceptors">Asynchronous Interceptors<a class="headerlink" href="#asynchronous-interceptors" title="Permanent link">&para;</a></h2>
 <p>When intercepting asynchronous methods we need to be able to await the target method.
 This can be done by inheriting from the abstract <strong>AsyncInterceptor</strong> class that does the heavy lifting with invoking the asynchronous wrapper methods.
 The <strong>AsyncInterceptor</strong> class is a decorator that wraps around another <strong>IInterceptor</strong>. </p>
-<pre><code class="csharp">public class SampleAsyncInterceptor : AsyncInterceptor
-{    
-    public SampleAsyncInterceptor(IInterceptor targetInterceptor) : base(targetInterceptor)
-    {
-    }
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">SampleAsyncInterceptor</span> <span class="p">:</span> <span class="n">AsyncInterceptor</span>
+<span class="p">{</span>    
+    <span class="k">public</span> <span class="nf">SampleAsyncInterceptor</span><span class="p">(</span><span class="n">IInterceptor</span> <span class="n">targetInterceptor</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">targetInterceptor</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
 
-    protected override async Task InvokeAsync(IInvocationInfo invocationInfo)
-    {
-        InterceptedTaskMethod = true;
-        // Before method invocation
-        await base.InvokeAsync(invocationInfo);
-        // After method invocation
-    }
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">InvokeAsync</span><span class="p">(</span><span class="n">IInvocationInfo</span> <span class="n">invocationInfo</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">InterceptedTaskMethod</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+        <span class="c1">// Before method invocation</span>
+        <span class="k">await</span> <span class="k">base</span><span class="p">.</span><span class="n">InvokeAsync</span><span class="p">(</span><span class="n">invocationInfo</span><span class="p">);</span>
+        <span class="c1">// After method invocation</span>
+    <span class="p">}</span>
 
-    protected override async Task&lt;T&gt; InvokeAsync&lt;T&gt;(IInvocationInfo invocationInfo)
-    {
-        InterceptedTaskOfTMethod = true;
-        // Before method invocation
-        var value = await base.InvokeAsync&lt;T&gt;(invocationInfo);
-        // After method invocation           
-        return value;
-    }
-}
-</code></pre>
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">InvokeAsync</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">IInvocationInfo</span> <span class="n">invocationInfo</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">InterceptedTaskOfTMethod</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+        <span class="c1">// Before method invocation</span>
+        <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="k">await</span> <span class="k">base</span><span class="p">.</span><span class="n">InvokeAsync</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">invocationInfo</span><span class="p">);</span>
+        <span class="c1">// After method invocation           </span>
+        <span class="k">return</span> <span class="k">value</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <blockquote>
 <p>Note: Do not call invocationInfo.Proceed() directly when inheriting from the <strong>AsyncInterceptor</strong> class. </p>
 </blockquote>
 <p>We can now create a new instance of the <strong>SampleAsyncInterceptor</strong> class like this:</p>
-<pre><code class="csharp">var asyncInterceptor = new SampleAsyncInterceptor(new SampleInterceptor());
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kt">var</span> <span class="n">asyncInterceptor</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SampleAsyncInterceptor</span><span class="p">(</span><span class="k">new</span> <span class="n">SampleInterceptor</span><span class="p">());</span>
+</code></pre></div>
+
 
 <p>Another option is to register our <strong>IInterceptor</strong> with the container and use the <strong>Decorate</strong> method 
 to apply the <strong>SampleAsyncInterceptor</strong> as a decorator.</p>
-<pre><code class="csharp">container.Register&lt;IInterceptor, SampleInterceptor&gt;();
-container.Decorate&lt;IInterceptor, SampleAsyncInterceptor&gt;();
-container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), factory =&gt; factory.GetInstance&lt;IInterceptor&gt;()); 
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">container</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">IInterceptor</span><span class="p">,</span> <span class="n">SampleInterceptor</span><span class="p">&gt;();</span>
+<span class="n">container</span><span class="p">.</span><span class="n">Decorate</span><span class="p">&lt;</span><span class="n">IInterceptor</span><span class="p">,</span> <span class="n">SampleAsyncInterceptor</span><span class="p">&gt;();</span>
+<span class="n">container</span><span class="p">.</span><span class="n">Intercept</span><span class="p">(</span><span class="n">sr</span> <span class="p">=&gt;</span> <span class="n">sr</span><span class="p">.</span><span class="n">ServiceType</span> <span class="p">==</span> <span class="k">typeof</span><span class="p">(</span><span class="n">IFoo</span><span class="p">),</span> <span class="n">factory</span> <span class="p">=&gt;</span> <span class="n">factory</span><span class="p">.</span><span class="n">GetInstance</span><span class="p">&lt;</span><span class="n">IInterceptor</span><span class="p">&gt;());</span> 
+</code></pre></div>
+
 
 <blockquote>
 <p>Note: Only synchronous methods are passed down to the decorated <strong>IInterceptor</strong> </p>
 </blockquote>
-<h2 id="single-interceptor">Single Interceptor</h2>
+<h2 id="single-interceptor">Single Interceptor<a class="headerlink" href="#single-interceptor" title="Permanent link">&para;</a></h2>
 <p>This example shows how to configure the service container with a single interceptor to handle all method calls.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();
+<div class="codehilite"><pre><span></span><code>container.Register&lt;IFoo, Foo&gt;();
 container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; new SampleInterceptor());
 
 var instance = container.GetInstance&lt;IFoo&gt;();
-</code></pre>
+</code></pre></div>
+
+
 <p>The instance returned is a proxy object that forwards method calls to the <strong>SampleInterceptor</strong> class.</p>
 <p>The first parameter of the <strong>Intercept</strong> method is a selector function used to select the services that should have this interceptor applied.       <br />
 The second parameter is a function delegate that used to create an <strong>IInterceptor</strong> instance. </p>
 <p><strong>Note:</strong> <em>Proxy types are lazy in the sense that they will not create the target instance or any interceptors until the first method call is made.</em> </p>
-<h2 id="dependencies">Dependencies</h2>
+<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
 <p>Interceptors might also have dependencies and by resolving the interceptor through the container, those dependencies can be injected into the interceptor itself. </p>
-<pre><code>public class SampleInterceptor : IInterceptor
+<div class="codehilite"><pre><span></span><code>public class SampleInterceptor : IInterceptor
 {
     private IBar bar;
 
@@ -988,37 +994,45 @@ The second parameter is a function delegate that used to create an <strong>IInte
         // Perform logic using the injected dependency after invoking the target method
     }        
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>The following example shows how to configure the container so that the <strong>SampleInterceptor</strong> instance is resolved through the container.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;()
+<div class="codehilite"><pre><span></span><code>container.Register&lt;IFoo, Foo&gt;()
 container.Register&lt;IBar, Bar&gt;();
 container.Register&lt;IInterceptor, SampleInterceptor&gt;();
 container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; sf.GetInstance&lt;IInterceptor&gt;());
-</code></pre>
-<p><strong>Note:</strong> <em>When injecting depndencies into an interceptor we must make sure that the injected dependency is NOT intercepted by the same interceptor as this would cause a <strong>StackOverFlowException</strong>.</em>  </p>
-<h2 id="multiple-interceptors">Multiple Interceptors</h2>
+</code></pre></div>
+
+
+<p><strong>Note:</strong> <em>When injecting depndencies into an interceptor we must make sure that the injected dependency is NOT intercepted by the same interceptor as this would cause a </em><em>StackOverFlowException</em><em>.</em>  </p>
+<h2 id="multiple-interceptors">Multiple Interceptors<a class="headerlink" href="#multiple-interceptors" title="Permanent link">&para;</a></h2>
 <p>Interceptors can be set up to handle a lot of cross cutting concerns such as logging, caching, null check and so on.
 According to the <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsibility Principle</a>, we can separate the combined logic into a set of interceptor that each only does "one" thing.</p>
 <p>We can do this by using another overload of the <strong>Intercept</strong> method that allows us to set up a <strong>ProxyDefinition</strong> instance that gives us more control over the proxy type that is being created.</p>
-<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf,pd) =&gt;  DefineProxyType(pd));
+<div class="codehilite"><pre><span></span><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf,pd) =&gt;  DefineProxyType(pd));
 
 private void DefineProxyType(ProxyDefinition proxyDefinition)
 {
     proxyDefinition.Implement(new FirstInterceptor());
     proxyDefinition.Implement(new SecondInterceptor());
 }
-</code></pre>
-<p><strong>Note:</strong> <em>The interceptors are invoked in the same order as they are registered with the <strong>Implement</strong> method.</em></p>
-<h2 id="method-selectors">Method Selectors</h2>
+</code></pre></div>
+
+
+<p><strong>Note:</strong> <em>The interceptors are invoked in the same order as they are registered with the </em><em>Implement</em><em> method.</em></p>
+<h2 id="method-selectors">Method Selectors<a class="headerlink" href="#method-selectors" title="Permanent link">&para;</a></h2>
 <p>Method selectors are used to select the methods that should be intercepted by an interceptor.</p>
 <p>The following example shows how to set up the container so that only calls method <strong>A</strong> is passed to the interceptor.</p>
-<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
+<div class="codehilite"><pre><span></span><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
 
 private void DefineProxyType(ProxyDefinition proxyDefinition)
 {
-    proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.Name == "SomeMethodName");       
+    proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.Name == &quot;SomeMethodName&quot;);       
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>Methods that does not match the method selector predicate will NOT be intercepted and method calls will be passed directly down to the target instance.  </p>
 <p>If we omit the method selector, <strong>LightInject</strong> will intercept all methods from the target type and any additional interface, except methods that are inherited from <a href="http://msdn.microsoft.com/en-us/library/system.object.aspx">System.Object</a>.    </p>
 <ul>
@@ -1028,57 +1042,67 @@ private void DefineProxyType(ProxyDefinition proxyDefinition)
 <li>ToString</li>
 </ul>
 <p>If we choose to use a method selector, these methods will also be intercepted if they match the predicate in the method selector.</p>
-<pre><code>proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.IsDeclaredBy&lt;object&gt;());
-</code></pre>
+<div class="codehilite"><pre><span></span><code>proxyDefinition.Implement(() =&gt; new SampleInterceptor(), m =&gt; m.IsDeclaredBy&lt;object&gt;());
+</code></pre></div>
+
+
 <p>We can also use a method selector with the <strong>Intercept</strong> method that allows easy interception of any method without implementing an <strong>IInterceptor</strong>.</p>
-<pre><code>container.Intercept(m =&gt; m.Name == "SomeMethodName", invocationInfo =&gt; invocationInfo.Proceed());
-</code></pre>
-<h3 id="extension-methods">Extension Methods</h3>
+<div class="codehilite"><pre><span></span><code>container.Intercept(m =&gt; m.Name == &quot;SomeMethodName&quot;, invocationInfo =&gt; invocationInfo.Proceed());
+</code></pre></div>
+
+
+<h3 id="extension-methods">Extension Methods<a class="headerlink" href="#extension-methods" title="Permanent link">&para;</a></h3>
 <p>LightInject provides a set of extension method that simplifies method selector predicates.</p>
 <ul>
 <li>IsPropertySetter - Returns <strong>true</strong> if the method represents a property setter, otherwise <strong>false</strong>. </li>
 <li>IsPropertyGetter - Returns <strong>true</strong> if the method represents a property getter, otherwise <strong>false</strong>.</li>
 <li>GetProperty - Returns the property for which the target method either represents the property getter or the property setter.</li>
 </ul>
-<h2 id="chaining-interceptors">Chaining Interceptors</h2>
+<h2 id="chaining-interceptors">Chaining Interceptors<a class="headerlink" href="#chaining-interceptors" title="Permanent link">&para;</a></h2>
 <p>As already seen in the example with multiple interceptors,  we can chain interceptors together. We can also combine this with method selectors that will affect the call sequence from the call site down to the actual target instance.</p>
 <p>Consider an interface with three methods.</p>
-<pre><code>public interface IFoo 
+<div class="codehilite"><pre><span></span><code>public interface IFoo 
 {
     void A();
     void B();
     void C();
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>The following example shows how we can control the call sequence for each method.</p>
-<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
+<div class="codehilite"><pre><span></span><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), (sf, pd) =&gt;  DefineProxyType(pd));
 
 private void DefineProxyType(ProxyDefinition proxyDefinition)
 {
-    proxyDefinition.Implement(() =&gt; new FirstInterceptor(), m =&gt; m.Name == "A");
-    proxyDefinition.Implement(() =&gt; new SecondInterceptor(), m =&gt; m.Name == "B");   
-    proxyDefinition.Implement(() =&gt; new ThirdInterceptor(), m =&gt; m.Name == "A" || m.Name == "B" || m.Name == "C");
+    proxyDefinition.Implement(() =&gt; new FirstInterceptor(), m =&gt; m.Name == &quot;A&quot;);
+    proxyDefinition.Implement(() =&gt; new SecondInterceptor(), m =&gt; m.Name == &quot;B&quot;);   
+    proxyDefinition.Implement(() =&gt; new ThirdInterceptor(), m =&gt; m.Name == &quot;A&quot; || m.Name == &quot;B&quot; || m.Name == &quot;C&quot;);
 }
-</code></pre>
+</code></pre></div>
+
+
 <p><strong>Method A call sequence</strong></p>
 <p>FirstInterceptor -&gt; ThirdInterceptor -&gt; Target </p>
 <p><strong>Method B call sequence</strong></p>
 <p>SecondInterceptor -&gt; ThirdInterceptor -&gt; Target</p>
 <p><strong>Method C call sequence</strong></p>
 <p>ThirdInterceptor -&gt; Target</p>
-<h2 id="implementing-additional-interfaces">Implementing additional interfaces</h2>
+<h2 id="implementing-additional-interfaces">Implementing additional interfaces<a class="headerlink" href="#implementing-additional-interfaces" title="Permanent link">&para;</a></h2>
 <p>Another powerful feature of proxy objects is the ability to implement additional interfaces that is not implemented by the target type.</p>
 <p>The <strong>Intercept</strong> method has an overload that lets us specify a set of interfaces to be implemented by the proxy type.</p>
-<pre><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), new []{ typeof(IBar) }, (sf, pd) =&gt;  DefineProxyType(pd));
+<div class="codehilite"><pre><span></span><code>container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), new []{ typeof(IBar) }, (sf, pd) =&gt;  DefineProxyType(pd));
 
 private void DefineProxyType(ProxyDefinition proxyDefinition)
 {
     proxyDefinition.Implement(() =&gt; new BarInterceptor(), m =&gt; m.IsDeclaredBy&lt;IBar&gt;());        
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>When implementing additional interfaces we must make sure that all methods are intercepted by either one or a combined set of interceptors. This is because we are now dealing with methods that does not exist in the target type and we must do all implementation through interceptors.  </p>
-<h2 id="iproxy">IProxy</h2>
-<pre><code>/// &lt;summary&gt;
+<h2 id="iproxy">IProxy<a class="headerlink" href="#iproxy" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>/// &lt;summary&gt;
 /// Implemented by all proxy types.
 /// &lt;/summary&gt;
 public interface IProxy
@@ -1088,18 +1112,22 @@ public interface IProxy
     /// &lt;/summary&gt;
     object Target { get; }
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>We can get to the underlying target instance through the <strong>IProxy</strong> interface</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();
+<div class="codehilite"><pre><span></span><code>container.Register&lt;IFoo, Foo&gt;();
 container.Intercept(sr =&gt; sr.ServiceType == typeof(IFoo), sf =&gt; new SampleInterceptor());
 
 var instance = container.GetInstance&lt;IFoo&gt;();
 var actualTarget = ((IProxy)instance).Target;
-</code></pre>
-<h2 id="this">This</h2>
+</code></pre></div>
+
+
+<h2 id="this">This<a class="headerlink" href="#this" title="Permanent link">&para;</a></h2>
 <p>One of the things to be aware of when working with proxy based interception is that it all relies on method calls being made through the proxy.
 Method calls that are made directly to the target instance will NOT be intercepted. </p>
-<pre><code>public interface IFoo
+<div class="codehilite"><pre><span></span><code>public interface IFoo
 {
     void A();
 }
@@ -1114,9 +1142,11 @@ public class Foo : IFoo
         this.A();
     }
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>Another scenario is when the proxy instance itself is leaking its target.</p>
-<pre><code>public interface IFoo
+<div class="codehilite"><pre><span></span><code>public interface IFoo
 {
     IFoo A();
 }
@@ -1128,26 +1158,33 @@ public class Foo
         return this;
     }
 }
-</code></pre>
+</code></pre></div>
+
+
 <p><strong>LightInject</strong> will take care of this scenario and detect that we are about to return <strong>this</strong> from a method and replace the return value with the proxy instance instead. </p>
 <p>Other scenarios such as event handlers or passing "this" to another method is NOT taken care of by <strong>LightInject</strong> as it is not possible without modifying the code in the target type itself. </p>
-<h2 id="class-proxies">Class Proxies</h2>
+<h2 id="class-proxies">Class Proxies<a class="headerlink" href="#class-proxies" title="Permanent link">&para;</a></h2>
 <p>Starting from version 1.0.0.4, <strong>LightInject.Interception</strong> can be used to intercept classes with virtual members.</p>
-<pre><code>public class Foo
+<div class="codehilite"><pre><span></span><code>public class Foo
 {
     public virtual void A()
     {
     }
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>Any member that is marked as virtual can be intercepted.    </p>
-<pre><code>var container = new ServiceContainer();
+<div class="codehilite"><pre><span></span><code>var container = new ServiceContainer();
 container.Register&lt;Foo&gt;();
 container.Intercept(sr =&gt; sr.ServiceType == typeof(Foo), factory =&gt; new SampleInterceptor());
-</code></pre>
+</code></pre></div>
+
+
 <p>Class proxies are implemented internally by subclassing the target type and overriding virtual members to support interception.  </p>
                 
                   
+                
                 
               
               
@@ -1203,9 +1240,9 @@ container.Intercept(sr =&gt; sr.ServiceType == typeof(Foo), factory =&gt; new Sa
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1215,9 +1252,9 @@ container.Intercept(sr =&gt; sr.ServiceType == typeof(Foo), factory =&gt; new Sa
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>

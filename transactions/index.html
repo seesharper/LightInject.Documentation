@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#transaction-management" tabindex="1" class="md-skip">
+      <a href="#transaction-management" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -900,61 +900,66 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/transactions.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="transaction-management">Transaction Management</h1>
+                <h1 id="transaction-management">Transaction Management<a class="headerlink" href="#transaction-management" title="Permanent link">&para;</a></h1>
 <p>In this example we will be looking into how to deal with connections and transactions in a Web application. We will also discuss how to implement automatic rollback for integration tests. Our testing framework will be <strong>xUnit</strong> and together with <strong>LightInject</strong> this will hopefully turn into a very smooth testing experience.</p>
-<h2 id="commands-and-queries">Commands and Queries</h2>
+<h2 id="commands-and-queries">Commands and Queries<a class="headerlink" href="#commands-and-queries" title="Permanent link">&para;</a></h2>
 <p>There are many ways to manage the interaction with the database and in this application we are going to implement something that has come to be known as the Command-Query pattern. The basic idea here is that we have one interface (<strong>IQueryHandler</strong>) for everything that comes out of the database and another interface (<strong>ICommandHandler</strong>)for everything that goes into the database. The fact that we are dealing with the same set of interfaces for all interaction with the database means that we can very easily add features through the use of decorators. </p>
 <p>I am not going to cover everything with regards to command and queries here, but we will look into the interfaces we need to implement in order to shuffle data back and forth to the database.</p>
-<h3 id="queries">Queries</h3>
+<h3 id="queries">Queries<a class="headerlink" href="#queries" title="Permanent link">&para;</a></h3>
 <p>The following interface represents a class that can handle a query and return some kind of result.</p>
-<pre><code>public interface IQueryHandler&lt;in TQuery, TResult&gt; where TQuery : IQuery&lt;TResult&gt;
+<div class="codehilite"><pre><span></span><code>public interface IQueryHandler&lt;in TQuery, TResult&gt; where TQuery : IQuery&lt;TResult&gt;
 {    
     Task&lt;TResult&gt; HandleAsync(TQuery query);
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>You might wonder about the <strong>IQuery&lt;TResult&gt;</strong> generic contraint. This is just an interface to give type inference a helping hand as we move on to the next interface. </p>
 <p>The IQueryExecutor represents a class that can execute any query.</p>
-<pre><code>public interface IQueryExecutor
+<div class="codehilite"><pre><span></span><code>public interface IQueryExecutor
 {     
     Task&lt;TResult&gt; ExecuteAsync&lt;TResult&gt;(IQuery&lt;TResult&gt; query);
 }
+</code></pre></div>
 
-</code></pre>
 
 <p>This is where the <strong>IQuery&lt;TResult&gt;</strong> generic contraint comes into play. Without the contraint we would have to specify the type of result when calling the <strong>ExecuteAsync</strong> method.</p>
-<pre><code>var result = queryExecutor.ExecuteAsync&lt;SomeResultType&gt;(somequery);
-</code></pre>
+<div class="codehilite"><pre><span></span><code>var result = queryExecutor.ExecuteAsync&lt;SomeResultType&gt;(somequery);
+</code></pre></div>
+
 
 <p>With the query class "implementing" the IQuery&lt;TResult&gt; interface we can instead do this</p>
-<pre><code>var result = queryExecutor.ExecuteAsync(somequery);
-</code></pre>
+<div class="codehilite"><pre><span></span><code>var result = queryExecutor.ExecuteAsync(somequery);
+</code></pre></div>
 
-<h3 id="commands">Commands</h3>
+
+<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
 <p>The following interface represents a class that can handle a command where the command can be any class.</p>
-<pre><code>    public interface ICommandHandler&lt;in TCommand&gt;
+<div class="codehilite"><pre><span></span><code>    public interface ICommandHandler&lt;in TCommand&gt;
     {   
         Task HandleAsync(TCommand command);
     }
-</code></pre>
+</code></pre></div>
+
 
 <p>Will be seeing examples of both queries and commands throughout this example.</p>
-<h2 id="why-not-an-orm">Why not an ORM?</h2>
+<h2 id="why-not-an-orm">Why not an ORM?<a class="headerlink" href="#why-not-an-orm" title="Permanent link">&para;</a></h2>
 <p>The best answer I can give you is that I have already been there and felt the pain that eventually comes sneaking upon you. A little at first and then more and more as things gets more complicated. In fact, I have actually written an inhouse ORM back in the days and writing a Linq provider for instance, certainly represents the Mount Everest of programming. Not because Linq is so hard, but because you have to deal with all the mismatches between the relational model and the object model. ORM's tries to free you from understanding SQL and it is such a failed abstraction. Eventually at some point, you find yourself in a situation where you are trying to come up with a Linq expression that generates the SQL you've already written. Bottom line, bite the bullet and learn SQL.</p>
-<h2 id="customers">Customers</h2>
+<h2 id="customers">Customers<a class="headerlink" href="#customers" title="Permanent link">&para;</a></h2>
 <p>The first task is to create a query handler that can retrieve customers from the database based on their origin (country).</p>
 <p>The SQL for ths look like this:</p>
-<pre><code class="SQL">SELECT 
-    CustomerId,
-    CompanyName
-FROM 
-    Customers
-WHERE 
-    Country = @Country;
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">SELECT</span> 
+    <span class="n">CustomerId</span><span class="p">,</span>
+    <span class="n">CompanyName</span>
+<span class="k">FROM</span> 
+    <span class="n">Customers</span>
+<span class="k">WHERE</span> 
+    <span class="n">Country</span> <span class="o">=</span> <span class="o">@</span><span class="n">Country</span><span class="p">;</span>
+</code></pre></div>
+
 
 <p>With the SQL in place, we are ready to implement the query handler.</p>
-<pre><code>public class CustomersQueryHandler : IQueryHandler&lt;CustomersQuery, Customer[]&gt;
+<div class="codehilite"><pre><span></span><code>public class CustomersQueryHandler : IQueryHandler&lt;CustomersQuery, Customer[]&gt;
 {
     private readonly IDbConnection dbConnection;
 
@@ -969,70 +974,75 @@ WHERE
         return result.ToArray();
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <blockquote>
 <p>Note: Query and command handlers does not dictate that the data is stored in a relational database. It might just as well be stored in a file or another type of database such as a document database.</p>
 </blockquote>
 <p>This query handler has just one dependency, the <strong>IDbConnection</strong> off which Dapper provides the <strong>QueryAsync</strong> method used to execute the query.
 The query (<strong>CustomersQuery</strong>) looks like this</p>
-<pre><code>public class CustomersQuery : IQuery&lt;Customer[]&gt;
+<div class="codehilite"><pre><span></span><code>public class CustomersQuery : IQuery&lt;Customer[]&gt;
 {
     public string Country { get; set; }
 }
-</code></pre>
+</code></pre></div>
 
-<h2 id="passing-data-through-layers">Passing data through layers</h2>
+
+<h2 id="passing-data-through-layers">Passing data through layers<a class="headerlink" href="#passing-data-through-layers" title="Permanent link">&para;</a></h2>
 <p>Okay, so we have our application that consists of different layers. </p>
 <ul>
 <li>Data Access Layer (query and command handlers)</li>
 <li>Business Layer (services using the data access layer)</li>
 <li>Public API (typically a REST based API using services from the business layer)</li>
 </ul>
-<h3 id="data-access-layer">Data Access Layer</h3>
+<h3 id="data-access-layer">Data Access Layer<a class="headerlink" href="#data-access-layer" title="Permanent link">&para;</a></h3>
 <p>This is where we actually interact with the underlying data store which for most applications even today means a relational database. These databases store relational data and is not very well suited for storing objects and we should treat the database accordingly. Relational databases does not store objects, they store rows of data. 
 This is why we represent the result from <strong>Dapper</strong> as a set of <strong>CustomerRow</strong> instances. </p>
-<h3 id="business-layer">Business Layer</h3>
+<h3 id="business-layer">Business Layer<a class="headerlink" href="#business-layer" title="Permanent link">&para;</a></h3>
 <p>This layer consists of the services that in turn will be using the data access layer. This is also the place to put any kind of business logic related to our services.  By mocking the data access layer we can test this functionality without hitting the database.</p>
-<h3 id="api-layer">API Layer</h3>
+<h3 id="api-layer">API Layer<a class="headerlink" href="#api-layer" title="Permanent link">&para;</a></h3>
 <p>This is our public API which in this sample application is exposed as a RESTful API using Web Api.  Try to keep this layer as thin as possible. It should not deal with any kind of business logic, but it should for instance deal with making sure that we return the correct status codes according to REST best practices. </p>
 <p>So should each layer have its own representation of the same data? </p>
 <p>My answer is this: Be pragmatic about this. If the representation looks identical throughout the various layers, you might as well reuse the same class for different layers. Once you need to add JsonIgnore attributes to ensure that database-only properties does not get exposed in the Web API, you might consider another representation.  It is also likely that the representations for reading and writing will differ so there is a lot to consider her. There is also a performance penalty involved here since we need to constantly map the "same" data between layers. </p>
 <p>There might also be situations where the service layer just acts as a pass-t through layer and it that case it might be just fine to use the query/command handlers directly in our controllers. </p>
-<h2 id="composition-root">Composition Root</h2>
+<h2 id="composition-root">Composition Root<a class="headerlink" href="#composition-root" title="Permanent link">&para;</a></h2>
 <p>The composition root is where we register services into the container.</p>
-<pre><code>serviceRegistry.Register&lt;IQueryExecutor, QueryExecutor&gt;(new PerContainerLifetime());
+<div class="codehilite"><pre><span></span><code>serviceRegistry.Register&lt;IQueryExecutor, QueryExecutor&gt;(new PerContainerLifetime());
             serviceRegistry.RegisterQueryHandlers();
 
             // We register the connection that it is disposed when the scope ends.
             // The scope here is per web request.
             serviceRegistry.Register(factory =&gt; CreateConnection(), new PerScopeLifetime());
-</code></pre>
+</code></pre></div>
+
 
 <p>We register the <strong>IDbConnection</strong> with the <strong>PerScopeLifetime</strong> which means that we get the same connection within a scope. The scope is usually per web request, but it can also be per test method as we will see in a minute.<br />
 This is actually a nice aspect of the scoping mechanism in LightInject. We tell a service to be per scope without providing any details about how the scope is started or ended.</p>
-<h2 id="testing-query-handlers">Testing query handlers</h2>
+<h2 id="testing-query-handlers">Testing query handlers<a class="headerlink" href="#testing-query-handlers" title="Permanent link">&para;</a></h2>
 <p>Before we dive into how to handle transactions, we are going to look at how to test our new query handler. <strong>LightInject</strong> provides an extension(<strong>LightInject.xUnit</strong>) that makes it possible to inject services into test methods.</p>
-<pre><code>[Theory, Scoped, InjectData]
+<div class="codehilite"><pre><span></span><code>[Theory, Scoped, InjectData]
 public async Task ShouldGetCustomersFromGermany(IQueryExecutor queryExecutor)
 {
     var query = new CustomersQuery {Country = &quot;Germany&quot;};
     var result = await queryExecutor.ExecuteAsync(query);
     Assert.Equal(11, result.Length);
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The <strong>Scoped</strong> attribute tells <strong>LightInject</strong> to wrap a scope around this test method. When the test method ends, the scope will end as well and that will in turn cause the <strong>IDbConnection</strong> to be disposed since that service is registered with the <strong>PerScopeLifetime</strong>. </p>
 <p>The <strong>InjectData</strong> attribute simply tells <strong>LightInject</strong> to inject method arguments and can be thought off as a more sophisticated version of the <strong>InlineData</strong> attribute usually seen in <strong>xUnit</strong> theory based tests.</p>
 <p><strong>LightInject.xUnit</strong> creates a container instance behind the scenes and uses that instance to inject services into the test methods. The default behavior in <strong>LightInject</strong> is to look for composition roots in the same assembly as the requested service. This is part of the fallback mechanism and means that we don't really need to explicitly configure the container in the test class although it is possible to do so by declaring the following static method.</p>
-<pre><code>public static void Configure(IServiceContainer container)
+<div class="codehilite"><pre><span></span><code>public static void Configure(IServiceContainer container)
 {
     container.RegisterFrom&lt;CompositionRoot&gt;();
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>We can also use the <strong>InjectData</strong> attribute so specify inline data in addition to the service being injected.</p>
-<pre><code>[Theory, Scoped]
+<div class="codehilite"><pre><span></span><code>[Theory, Scoped]
 [InjectData(&quot;France&quot;, 11)]
 [InjectData(&quot;Germany&quot;, 11)]
 [InjectData(&quot;Norway&quot;, 1)]
@@ -1041,9 +1051,10 @@ public async Task ShouldGetCustomers(IQueryExecutor queryExecutor, string countr
     var result = await queryExecutor.ExecuteAsync(new CustomersQuery() { Country = country });
     Assert.Equal(expectedCount, result.Length);
 }
-</code></pre>
+</code></pre></div>
 
-<h2 id="transactions">Transactions</h2>
+
+<h2 id="transactions">Transactions<a class="headerlink" href="#transactions" title="Permanent link">&para;</a></h2>
 <p>We are going to build upon the standard <strong>IDbConnection</strong> and <strong>IDbTransaction</strong> interfaces and provide a way to transparently apply transactions to command handlers. </p>
 <p><strong>Requirements:</strong> </p>
 <ul>
@@ -1053,9 +1064,9 @@ public async Task ShouldGetCustomers(IQueryExecutor queryExecutor, string countr
 <li>Allow integration tests to roll back changes when the test ends.</li>
 </ul>
 <p>This might seem like a tall order and the solution might look a bit controversial, but bare with me on this one and you will see that the implementation is actually quite simple. </p>
-<h3 id="inserting-data">Inserting data</h3>
+<h3 id="inserting-data">Inserting data<a class="headerlink" href="#inserting-data" title="Permanent link">&para;</a></h3>
 <p>Before we start to think about transactions, we need something that writes to the database. A simple insert should do the trick.</p>
-<pre><code>public class AddCustomerCommandHandler : ICommandHandler&lt;AddCustomerCommand&gt;
+<div class="codehilite"><pre><span></span><code>public class AddCustomerCommandHandler : ICommandHandler&lt;AddCustomerCommand&gt;
 {
     private readonly IDbConnection dbConnection;
 
@@ -1069,24 +1080,27 @@ public async Task ShouldGetCustomers(IQueryExecutor queryExecutor, string countr
         await dbConnection.ExecuteAsync(SQL.InsertCustomer, command);
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The command handler takes care of executing a simple insert into the <strong>Customers</strong> table using the <strong>ExecuteAsync</strong> extension method provided by <strong>Dapper</strong>. The  <strong>AddCustomerCommand</strong>  is just a simple POCO class that contains the data to be inserted.</p>
-<pre><code>public class AddCustomerCommand
+<div class="codehilite"><pre><span></span><code>public class AddCustomerCommand
 {
     public string CustomerId { get; set; }
 
     public string CompanyName { get; set; }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The SQL looks like this:</p>
-<pre><code class="SQL">INSERT INTO Customers (CustomerId, CompanyName)
-VALUES (@CustomerId, @CompanyName)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Customers</span> <span class="p">(</span><span class="n">CustomerId</span><span class="p">,</span> <span class="n">CompanyName</span><span class="p">)</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="o">@</span><span class="n">CustomerId</span><span class="p">,</span> <span class="o">@</span><span class="n">CompanyName</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p>Wrapping command handlers inside a transaction is just a matter of applying a simple decorator.</p>
-<pre><code>public class TransactionalCommandHandler&lt;TCommand&gt; : ICommandHandler&lt;TCommand&gt;
+<div class="codehilite"><pre><span></span><code>public class TransactionalCommandHandler&lt;TCommand&gt; : ICommandHandler&lt;TCommand&gt;
 {
     private readonly IDbConnection dbConnection;
     private readonly ICommandHandler&lt;TCommand&gt; commandHandler;
@@ -1106,16 +1120,18 @@ VALUES (@CustomerId, @CompanyName)
         }                
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>With a single line of code in the composition root , we can now apply this decorator to all command handlers.</p>
-<pre><code>serviceRegistry.Decorate(typeof(ICommandHandler&lt;&gt;), typeof(TransactionalCommandHandler&lt;&gt;));
-</code></pre>
+<div class="codehilite"><pre><span></span><code>serviceRegistry.Decorate(typeof(ICommandHandler&lt;&gt;), typeof(TransactionalCommandHandler&lt;&gt;));
+</code></pre></div>
 
-<h3 id="multiple-command-handlers">Multiple command handlers</h3>
+
+<h3 id="multiple-command-handlers">Multiple command handlers<a class="headerlink" href="#multiple-command-handlers" title="Permanent link">&para;</a></h3>
 <p>Within a single scope (web request), we might have to execute more than one command handler, either sequentially or nested within each other. Since we now have an all-purpose decorator (<strong>TransactionalCommandHandler</strong>) that starts a new transaction before each underlying command handler, we need to make sure that only one transaction exists within the scope (web request).</p>
 <p>We do this by implementing yet another decorator and this time a decorator for the <strong>IDbConnection</strong> interface.</p>
-<pre><code>public class ConnectionDecorator : IDbConnection
+<div class="codehilite"><pre><span></span><code>public class ConnectionDecorator : IDbConnection
 {
     private readonly IDbConnection dbConnection;
     private readonly Lazy&lt;TransactionDecorator&gt; dbTransaction;        
@@ -1188,11 +1204,12 @@ VALUES (@CustomerId, @CompanyName)
         get { return dbConnection.State; }
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>Most of the methods and properties here just call into the underlying <strong>IDbConnection</strong>, except for the <strong>Dispose</strong> and <strong>BeginTransaction</strong> methods that we will explain in a minute. </p>
 <p>But first the code for the <strong>TransactionDecorator</strong></p>
-<pre><code>public class TransactionDecorator : IDbTransaction
+<div class="codehilite"><pre><span></span><code>public class TransactionDecorator : IDbTransaction
 {
     private readonly IDbTransaction dbTransaction;
     private int transactionCount;
@@ -1234,7 +1251,8 @@ VALUES (@CustomerId, @CompanyName)
 
     public IsolationLevel IsolationLevel =&gt; dbTransaction.IsolationLevel;
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>Okay, it is time to what is going on here. Hang on!</p>
 <p>When the <strong>BeginTransaction</strong> method is executed we create a new <strong>IDbTransaction</strong>  and wraps that transaction inside a <strong>TransactionDecorator</strong>. This transaction is provided through a <strong>Lazy&lt;T&gt;</strong> that makes sure that we only create a single transaction no matter how many times the <strong>BeginTransaction</strong> method is called. 
@@ -1243,13 +1261,14 @@ We also increment the "<strong>transactionCount</strong>"  which basically refle
 <p>The <strong>EndTransaction</strong> method is called from the <strong>Dispose</strong> method inside the the <strong>ConnectionDecorator</strong> that first checks if we actually have a transaction at all. If so, we execute the <strong>EndTransaction</strong> method and finally disposes the underlying connection.</p>
 <p>The connection is as mentioned before disposed when the scope (web request) ends because it is registered with the <strong>PerScopeLifetime</strong>.</p>
 <p>Plugging all this goodness into our code is a simple as </p>
-<pre><code>serviceRegistry.Decorate&lt;IDbConnection, ConnectionDecorator&gt;();
-</code></pre>
+<div class="codehilite"><pre><span></span><code>serviceRegistry.Decorate&lt;IDbConnection, ConnectionDecorator&gt;();
+</code></pre></div>
+
 
 <p>We can now execute nested command handlers as well as command handlers sequentially and still have them operate within the same transaction that either gets committed or rolled back when the connection is disposed.</p>
-<h3 id="automatic-rollback">Automatic rollback</h3>
+<h3 id="automatic-rollback">Automatic rollback<a class="headerlink" href="#automatic-rollback" title="Permanent link">&para;</a></h3>
 <p>Integration tests that writes to the database should perform a rollback when the test ends. This is now just a matter of adding another decorator that simply executes a rollback rather than a commit.</p>
-<pre><code>public class RollbackCommandHandler&lt;TCommand&gt; : ICommandHandler&lt;TCommand&gt;
+<div class="codehilite"><pre><span></span><code>public class RollbackCommandHandler&lt;TCommand&gt; : ICommandHandler&lt;TCommand&gt;
 {
     private readonly IDbConnection dbConnection;
     private readonly ICommandHandler&lt;TCommand&gt; commandHandler;
@@ -1269,31 +1288,34 @@ We also increment the "<strong>transactionCount</strong>"  which basically refle
         }
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>This decorator only lives in the test project and we can apply the decorator by implementing a static <strong>Configure</strong> method in the test class.</p>
-<pre><code>public static void Configure(IServiceContainer container)
+<div class="codehilite"><pre><span></span><code>public static void Configure(IServiceContainer container)
 {
     container.RegisterFrom&lt;CompositionRoot&gt;();
     container.Decorate(typeof(ICommandHandler&lt;&gt;), typeof(RollbackCommandHandler&lt;&gt;));
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>We can now finally write a test that verifies that a new customer has been written to the database.</p>
-<pre><code>[Theory, Scoped, InjectData]
+<div class="codehilite"><pre><span></span><code>[Theory, Scoped, InjectData]
 public async Task ShouldAddCustomer(ICommandExecutor commandExecutor, IQueryExecutor queryExecutor)
 {
     await commandExecutor.ExecuteAsync(new AddCustomerCommand {CustomerId = &quot;AAPL&quot;, CompanyName = &quot;Apple Inc&quot;});
     var newCustomer = await queryExecutor.ExecuteAsync(new CustomerQuery {CustomerId = &quot;AAPL&quot;});
     Assert.Equal(&quot;Apple Inc&quot;, newCustomer.CompanyName);
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>Since the transaction is not ended until the test ends, we can still query the database for the newly inserted customer and verify that is was inserted.</p>
-<h2 id="testing-controllers">Testing Controllers</h2>
+<h2 id="testing-controllers">Testing Controllers<a class="headerlink" href="#testing-controllers" title="Permanent link">&para;</a></h2>
 <p>Testing the public API in a Web API application means testing the controllers and by using the <strong>Microsoft.Owin.Testing</strong> package we can create an in-memory server that lets us test our Owin based web application end to end. </p>
 <p>Lets just quickly take a look at the controller we are going to test.</p>
-<pre><code>public class CustomersController : ApiController
+<div class="codehilite"><pre><span></span><code>public class CustomersController : ApiController
 {
     private readonly IQueryExecutor queryExecutor;        
 
@@ -1308,10 +1330,11 @@ public async Task ShouldAddCustomer(ICommandExecutor commandExecutor, IQueryExec
         return Ok(customers);
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>A typical test for this controller would look like this.</p>
-<pre><code>[Fact]
+<div class="codehilite"><pre><span></span><code>[Fact]
 public async Task ShouldGetCustomersUsingTestServer()
 {
     using (var server = TestServer.Create&lt;Startup&gt;())
@@ -1323,10 +1346,11 @@ public async Task ShouldGetCustomersUsingTestServer()
         Assert.Equal(11, customers.Length);
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>Let's create an extension method to help us shorten this code a bit.</p>
-<pre><code>public static class HttpClientExtensions
+<div class="codehilite"><pre><span></span><code>public static class HttpClientExtensions
 {
     public static async Task&lt;Response&lt;TResult&gt;&gt; GetAsync&lt;TResult&gt;(this HttpClient client, string requestUri)
     {
@@ -1341,10 +1365,11 @@ public async Task ShouldGetCustomersUsingTestServer()
         return response;
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>This extension method returns the response as a Response&lt;T&gt; that contains the <strong>HttpResponseMessage</strong> and the typed result object. This means that we can do asserts on the actual result in addition to data related to the request such as the <strong>HttpStatusCode</strong>.</p>
-<pre><code>[Fact]
+<div class="codehilite"><pre><span></span><code>[Fact]
 public async Task ShouldGetCustomersUsingExtensionMethod()
 {
     using (var server = TestServer.Create&lt;Startup&gt;())
@@ -1354,10 +1379,11 @@ public async Task ShouldGetCustomersUsingExtensionMethod()
         Assert.Equal(11, response.Value.Length);
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The nice thing about the <strong>TestServer</strong> is that it allows us to pass the <strong>Startup</strong> class to be used for the test. This means that we can pass a startup class that might be specific to the test.  The startup class for this application looks like this.</p>
-<pre><code>public class Startup
+<div class="codehilite"><pre><span></span><code>public class Startup
 {
     public Startup()
     {
@@ -1396,11 +1422,12 @@ public async Task ShouldGetCustomersUsingExtensionMethod()
 
     public IServiceContainer Container { get; }         
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>The thing to notice here is that we have a virtual <strong>Configure</strong> method that makes it possible to inherit from this class in a test project and override the way we configure the container.  We also expose the container used by Web Api so that we can get access to it in an inherited startup class.</p>
 <p>The next class is a base class for testing controllers that makes it possible to specify the startup class type as a generic argument to the class itself.</p>
-<pre><code>public abstract class ControllerTestBase&lt;TStartup&gt; where TStartup : Startup, new()
+<div class="codehilite"><pre><span></span><code>public abstract class ControllerTestBase&lt;TStartup&gt; where TStartup : Startup, new()
 {
     public static void Configure(IServiceContainer container)
     {
@@ -1417,10 +1444,11 @@ public async Task ShouldGetCustomersUsingExtensionMethod()
         return httpClient;
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>This base class now makes it possible to specify the startup class and it also allows us to inject the <strong>HttpClient</strong> instance. </p>
-<pre><code>public class ControllerTests : ControllerTestBase&lt;Startup&gt;
+<div class="codehilite"><pre><span></span><code>public class ControllerTests : ControllerTestBase&lt;Startup&gt;
 {
     [Theory, Scoped, InjectData]
     public async Task ShouldGetCustomersUsingInjectedClient(HttpClient client)
@@ -1429,12 +1457,13 @@ public async Task ShouldGetCustomersUsingExtensionMethod()
         Assert.Equal(11, response.Value.Length);
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>Being good REST citizens, we should also make sure that we return the correct status code along with the content. Say now that we want to test that the service returns 204-NoContent if no customers are found for the given country. 
 We could do this by making sure that we have the appropriate  test data in the database or we could mock the <strong>IQueryExecutor</strong> and have it return an empty list without even touching the database.</p>
 <p>By extending the <strong>HttpClient</strong> we can really simplify the way to mock services used in the test.</p>
-<pre><code>public class TestClient : HttpClient
+<div class="codehilite"><pre><span></span><code>public class TestClient : HttpClient
 {
     private readonly IServiceRegistry serviceRegistry;
 
@@ -1458,10 +1487,11 @@ We could do this by making sure that we have the appropriate  test data in the d
         return new ServiceRegistration() {ServiceType = typeof(TService), Value = mock.Object };
     }
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>This class basically replaces the existing <strong>IQueryExecutor</strong> registration with a mock instance and makes it possible to mock services very easily.</p>
-<pre><code>[Theory, Scoped, InjectData]
+<div class="codehilite"><pre><span></span><code>[Theory, Scoped, InjectData]
 public async Task ShouldReturnNoContent(TestClient client)
 {
     var mock = client.Mock&lt;IQueryExecutor&gt;();
@@ -1471,9 +1501,10 @@ public async Task ShouldReturnNoContent(TestClient client)
 
     Assert.Equal(HttpStatusCode.NoContent, response.Message.StatusCode);
 }
-</code></pre>
+</code></pre></div>
                 
                   
+                
                 
               
               
@@ -1529,9 +1560,9 @@ public async Task ShouldReturnNoContent(TestClient client)
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1541,9 +1572,9 @@ public async Task ShouldReturnNoContent(TestClient client)
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>

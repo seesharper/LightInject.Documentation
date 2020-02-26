@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#web-api" tabindex="1" class="md-skip">
+      <a href="#web-api" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -832,14 +832,14 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/webapi.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="web-api">Web API</h1>
+                <h1 id="web-api">Web API<a class="headerlink" href="#web-api" title="Permanent link">&para;</a></h1>
 <p><a href="https://ci.appveyor.com/project/seesharper/lightinject-webapi"><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?maxAge=2592000" /></a>
 <a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.WebApi.svg?maxAge=2592000" /></a>
 <a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/LightInject.WebApi.svg?maxAge=2592000" /></a></p>
 <p><strong>LightInject.WebApi</strong> provides an integration that enables dependency injection in Web API applications.</p>
-<h2 id="installing">Installing</h2>
+<h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <p><strong>LightInject.WebApi</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
+<h3 id="binary">Binary<a class="headerlink" href="#binary" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.WebApi </code>
@@ -847,7 +847,7 @@
 </div>
 
 <p>This adds a reference to the <strong>LightInject.WebApi.dll</strong> in the target project.</p>
-<h3 id="source">Source</h3>
+<h3 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.WebApi.Source </code>
@@ -855,30 +855,33 @@
 </div>
 
 <p>This will install a single file, <strong>LightInject.WebApi.cs</strong> in the target project.</p>
-<h2 id="initializing">Initializing</h2>
-<pre><code class="csharp">protected void Application_Start()
-{
-    var container = new ServiceContainer();
-    container.RegisterApiControllers();        
-    //register other services
-    container.EnablePerWebRequestScope();
-    container.EnableWebApi(GlobalConfiguration.Configuration)              
-}
-</code></pre>
+<h2 id="initializing">Initializing<a class="headerlink" href="#initializing" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="k">protected</span> <span class="k">void</span> <span class="nf">Application_Start</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">container</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ServiceContainer</span><span class="p">();</span>
+    <span class="n">container</span><span class="p">.</span><span class="n">RegisterApiControllers</span><span class="p">();</span>        
+    <span class="c1">//register other services</span>
+    <span class="n">container</span><span class="p">.</span><span class="n">EnablePerWebRequestScope</span><span class="p">();</span>
+    <span class="n">container</span><span class="p">.</span><span class="n">EnableWebApi</span><span class="p">(</span><span class="n">GlobalConfiguration</span><span class="p">.</span><span class="n">Configuration</span><span class="p">)</span>              
+<span class="p">}</span>
+</code></pre></div>
+
 
 <blockquote>
 <p><strong>Note:</strong> EnablePerWebRequestScope is only required for hosting within ASP.Net </p>
 </blockquote>
-<h2 id="filterattribute">FilterAttribute</h2>
+<h2 id="filterattribute">FilterAttribute<a class="headerlink" href="#filterattribute" title="Permanent link">&para;</a></h2>
 <p>Although filter attributes are instantiated by the MFC infrastructure, <strong>LightInject</strong> is still able to inject dependencies into properties.</p>
-<pre><code>public class FooFilterAttribute : ActionFilterAttribute
+<div class="codehilite"><pre><span></span><code>public class FooFilterAttribute : ActionFilterAttribute
 {
     public IFoo Foo { get; set; }
 }
-</code></pre>
-<h2 id="owin-selfhosting">Owin Selfhosting</h2>
+</code></pre></div>
+
+
+<h2 id="owin-selfhosting">Owin Selfhosting<a class="headerlink" href="#owin-selfhosting" title="Permanent link">&para;</a></h2>
 <p>This example shows how to do Web API self hosting using OWIN.</p>
-<h3 id="step-1">Step 1</h3>
+<h3 id="step-1">Step 1<a class="headerlink" href="#step-1" title="Permanent link">&para;</a></h3>
 <p>Create a standard console application and run the following command from the package manager console.</p>
 <div class="nuget-badge" >
    <p>
@@ -886,56 +889,58 @@
    </p>
 </div>
 
-<h3 id="step-2">Step 2</h3>
+<h3 id="step-2">Step 2<a class="headerlink" href="#step-2" title="Permanent link">&para;</a></h3>
 <p>Add a OWIN startup class.</p>
-<pre><code class="csharp">public class Startup
-{
-    public void Configuration(IAppBuilder app)
-    {                        
-        // Configure Web API for self-host. 
-        var config = new HttpConfiguration();          
-        config.Routes.MapHttpRoute(
-            name: &quot;DefaultApi&quot;,
-            routeTemplate: &quot;api/{controller}/{id}&quot;,
-            defaults: new { id = RouteParameter.Optional });
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Startup</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Configuration</span><span class="p">(</span><span class="n">IAppBuilder</span> <span class="n">app</span><span class="p">)</span>
+    <span class="p">{</span>                        
+        <span class="c1">// Configure Web API for self-host. </span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpConfiguration</span><span class="p">();</span>          
+        <span class="n">config</span><span class="p">.</span><span class="n">Routes</span><span class="p">.</span><span class="n">MapHttpRoute</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">:</span> <span class="s">&quot;DefaultApi&quot;</span><span class="p">,</span>
+            <span class="n">routeTemplate</span><span class="p">:</span> <span class="s">&quot;api/{controller}/{id}&quot;</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="p">:</span> <span class="k">new</span> <span class="p">{</span> <span class="n">id</span> <span class="p">=</span> <span class="n">RouteParameter</span><span class="p">.</span><span class="n">Optional</span> <span class="p">});</span>
 
-        app.UseWebApi(config); 
-    }
-}
- ```
+        <span class="n">app</span><span class="p">.</span><span class="n">UseWebApi</span><span class="p">(</span><span class="n">config</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+ <span class="err">```</span>
 
-### Step 3 ###
+<span class="err">###</span> <span class="n">Step</span> <span class="m">3</span> <span class="err">###</span>
 
-Add a controller
-```csharp
-public class ValuesController : ApiController
-{        
-    public IEnumerable&lt;string&gt; Get()
-    {
-        return new string[] { &quot;value1&quot;, &quot;value2&quot; };
-    }        
-} 
-</code></pre>
+<span class="n">Add</span> <span class="n">a</span> <span class="n">controller</span>
+<span class="err">```</span><span class="n">csharp</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ValuesController</span> <span class="p">:</span> <span class="n">ApiController</span>
+<span class="p">{</span>        
+    <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">Get</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;value1&quot;</span><span class="p">,</span> <span class="s">&quot;value2&quot;</span> <span class="p">};</span>
+    <span class="p">}</span>        
+<span class="p">}</span> 
+</code></pre></div>
 
-<h3 id="step-4">Step 4</h3>
+
+<h3 id="step-4">Step 4<a class="headerlink" href="#step-4" title="Permanent link">&para;</a></h3>
 <p>Modify the <em>Main</em> method to start the OWIN host.</p>
-<pre><code class="csharp">class Program
-{
-    static void Main(string[] args)
-    {            
-        // Start OWIN host 
-        using (WebApp.Start&lt;Startup&gt;(&quot;http://localhost:9000/&quot;))
-        {
-            Console.ReadLine(); 
-        }
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>            
+        <span class="c1">// Start OWIN host </span>
+        <span class="k">using</span> <span class="p">(</span><span class="n">WebApp</span><span class="p">.</span><span class="n">Start</span><span class="p">&lt;</span><span class="n">Startup</span><span class="p">&gt;(</span><span class="s">&quot;http://localhost:9000/&quot;</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span> 
+        <span class="p">}</span>
 
-        Console.ReadLine(); 
-    }
-}  
-</code></pre>
+        <span class="n">Console</span><span class="p">.</span><span class="n">ReadLine</span><span class="p">();</span> 
+    <span class="p">}</span>
+<span class="p">}</span>  
+</code></pre></div>
+
 
 <p>Press <strong>F5</strong> to run the application and browse to <a href="http://localhost:9000/api/values">http://localhost:9000/api/values</a>.</p>
-<h3 id="step-5">Step 5</h3>
+<h3 id="step-5">Step 5<a class="headerlink" href="#step-5" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.WebApi </code>
@@ -943,89 +948,93 @@ public class ValuesController : ApiController
 </div>
 
 <p>Modify the <em>Startup</em> class to enable LightInject to be used as the dependency resolver.</p>
-<pre><code class="csharp">public class Startup
-{
-    public void Configuration(IAppBuilder app)
-    {                        
-        // Configure Web API for self-host. 
-        var config = new HttpConfiguration();
-        var container = new ServiceContainer();
-        container.RegisterApiControllers();
-        container.EnableWebApi(config);
-        config.Routes.MapHttpRoute(
-            name: &quot;DefaultApi&quot;,
-            routeTemplate: &quot;api/{controller}/{id}&quot;,
-            defaults: new { id = RouteParameter.Optional });
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Startup</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Configuration</span><span class="p">(</span><span class="n">IAppBuilder</span> <span class="n">app</span><span class="p">)</span>
+    <span class="p">{</span>                        
+        <span class="c1">// Configure Web API for self-host. </span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpConfiguration</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">container</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ServiceContainer</span><span class="p">();</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">RegisterApiControllers</span><span class="p">();</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">EnableWebApi</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+        <span class="n">config</span><span class="p">.</span><span class="n">Routes</span><span class="p">.</span><span class="n">MapHttpRoute</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">:</span> <span class="s">&quot;DefaultApi&quot;</span><span class="p">,</span>
+            <span class="n">routeTemplate</span><span class="p">:</span> <span class="s">&quot;api/{controller}/{id}&quot;</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="p">:</span> <span class="k">new</span> <span class="p">{</span> <span class="n">id</span> <span class="p">=</span> <span class="n">RouteParameter</span><span class="p">.</span><span class="n">Optional</span> <span class="p">});</span>
 
-        app.UseWebApi(config); 
-    }
-}   
-</code></pre>
+        <span class="n">app</span><span class="p">.</span><span class="n">UseWebApi</span><span class="p">(</span><span class="n">config</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>   
+</code></pre></div>
+
 
 <blockquote>
 <p>Note: LightInject.Web can be uninstalled as it is not used in the self host scenario. </p>
 </blockquote>
-<h3 id="scoping">Scoping</h3>
+<h3 id="scoping">Scoping<a class="headerlink" href="#scoping" title="Permanent link">&para;</a></h3>
 <p>Scopes are handled by Web API itself and services registered with the PerScopeLifetime or PerRequestLifetime are disposed when the web request ends.</p>
-<h3 id="httprequestmessage">HttpRequestMessage</h3>
+<h3 id="httprequestmessage">HttpRequestMessage<a class="headerlink" href="#httprequestmessage" title="Permanent link">&para;</a></h3>
 <p>The current <em>HttpRequestMessage</em> is available to us in the controllers as it is exposed through the <em>Request</em> property.
 To make the <em>HttpRequestMessage</em> available to other services we need to make some minor changes</p>
 <blockquote>
 <p>The following code will be included as part of the next version of LightInject.WebApi.</p>
 </blockquote>
 <p>The first thing we need is a handler that can keep track of the current <em>HttpRequestMessage</em>.</p>
-<pre><code class="csharp">internal class HttpRequestMessageHandler : DelegatingHandler
-{
-    private LogicalThreadStorage&lt;HttpRequestMessageStorage&gt; messageStorage =
-        new LogicalThreadStorage&lt;HttpRequestMessageStorage&gt;(() =&gt; new HttpRequestMessageStorage());
+<div class="codehilite"><pre><span></span><code><span class="k">internal</span> <span class="k">class</span> <span class="nc">HttpRequestMessageHandler</span> <span class="p">:</span> <span class="n">DelegatingHandler</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">LogicalThreadStorage</span><span class="p">&lt;</span><span class="n">HttpRequestMessageStorage</span><span class="p">&gt;</span> <span class="n">messageStorage</span> <span class="p">=</span>
+        <span class="k">new</span> <span class="n">LogicalThreadStorage</span><span class="p">&lt;</span><span class="n">HttpRequestMessageStorage</span><span class="p">&gt;(()</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">HttpRequestMessageStorage</span><span class="p">());</span>
 
-    protected override Task&lt;HttpResponseMessage&gt; SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        messageStorage.Value.Message = request;            
-        return base.SendAsync(request, cancellationToken);
-    }
+    <span class="k">protected</span> <span class="k">override</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">HttpResponseMessage</span><span class="p">&gt;</span> <span class="n">SendAsync</span><span class="p">(</span><span class="n">HttpRequestMessage</span> <span class="n">request</span><span class="p">,</span> <span class="n">CancellationToken</span> <span class="n">cancellationToken</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">messageStorage</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="n">Message</span> <span class="p">=</span> <span class="n">request</span><span class="p">;</span>            
+        <span class="k">return</span> <span class="k">base</span><span class="p">.</span><span class="n">SendAsync</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">cancellationToken</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public HttpRequestMessage GetCurrentMessage()
-    {
-        return messageStorage.Value.Message;
-    }
-}
-</code></pre>
+    <span class="k">public</span> <span class="n">HttpRequestMessage</span> <span class="nf">GetCurrentMessage</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">messageStorage</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="n">Message</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>The <em>HttpRequestMessageStorage</em> class is simply a "holder" class for the actual <em>HttpRequestMessage</em>.</p>
-<pre><code class="csharp">public class HttpRequestMessageStorage
-{
-    public HttpRequestMessage Message { get; set; }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HttpRequestMessageStorage</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">HttpRequestMessage</span> <span class="n">Message</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Next we modify the Startup class to support injection of a <em>Func&lt;HttpRequestMessage&gt;</em>.</p>
-<pre><code class="csharp">public class Startup
-{
-    public void Configuration(IAppBuilder app)
-    {                                                
-        // Configure Web API for self-host. 
-        var config = new HttpConfiguration();
-        var container = new ServiceContainer();
-        container.RegisterApiControllers();
-        container.EnableWebApi(config);
-        container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();
-        var handler = new HttpRequestMessageHandler();
-        config.MessageHandlers.Insert(0, handler);
-        container.Register&lt;Func&lt;HttpRequestMessage&gt;&gt;(factory =&gt; () =&gt; handler.GetCurrentMessage());
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Startup</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Configuration</span><span class="p">(</span><span class="n">IAppBuilder</span> <span class="n">app</span><span class="p">)</span>
+    <span class="p">{</span>                                                
+        <span class="c1">// Configure Web API for self-host. </span>
+        <span class="kt">var</span> <span class="n">config</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpConfiguration</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">container</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ServiceContainer</span><span class="p">();</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">RegisterApiControllers</span><span class="p">();</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">EnableWebApi</span><span class="p">(</span><span class="n">config</span><span class="p">);</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">ScopeManagerProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PerLogicalCallContextScopeManagerProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">handler</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HttpRequestMessageHandler</span><span class="p">();</span>
+        <span class="n">config</span><span class="p">.</span><span class="n">MessageHandlers</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">handler</span><span class="p">);</span>
+        <span class="n">container</span><span class="p">.</span><span class="n">Register</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">HttpRequestMessage</span><span class="p">&gt;&gt;(</span><span class="n">factory</span> <span class="p">=&gt;</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="n">handler</span><span class="p">.</span><span class="n">GetCurrentMessage</span><span class="p">());</span>
 
-        config.Routes.MapHttpRoute(
-            name: &quot;DefaultApi&quot;,
-            routeTemplate: &quot;api/{controller}/{id}&quot;,
-            defaults: new { id = RouteParameter.Optional });
+        <span class="n">config</span><span class="p">.</span><span class="n">Routes</span><span class="p">.</span><span class="n">MapHttpRoute</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">:</span> <span class="s">&quot;DefaultApi&quot;</span><span class="p">,</span>
+            <span class="n">routeTemplate</span><span class="p">:</span> <span class="s">&quot;api/{controller}/{id}&quot;</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="p">:</span> <span class="k">new</span> <span class="p">{</span> <span class="n">id</span> <span class="p">=</span> <span class="n">RouteParameter</span><span class="p">.</span><span class="n">Optional</span> <span class="p">});</span>
 
-        app.UseWebApi(config); 
-    }
-}
-</code></pre>
+        <span class="n">app</span><span class="p">.</span><span class="n">UseWebApi</span><span class="p">(</span><span class="n">config</span><span class="p">);</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Now, if we need access to the current <em>HttpRequestMessage</em>, we can just inject a function delegate.</p>
-<pre><code>public class Foo
+<div class="codehilite"><pre><span></span><code>public class Foo
 {
     public Foo(Func&lt;HttpRequestMessage&gt; getCurrentRequestMessage)
     {
@@ -1033,9 +1042,10 @@ To make the <em>HttpRequestMessage</em> available to other services we need to m
     }
 
 }
-</code></pre>
+</code></pre></div>
                 
                   
+                
                 
               
               
@@ -1091,9 +1101,9 @@ To make the <em>HttpRequestMessage</em> available to other services we need to m
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -1103,9 +1113,9 @@ To make the <em>HttpRequestMessage</em> available to other services we need to m
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>

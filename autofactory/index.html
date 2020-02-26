@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#autofactory" tabindex="1" class="md-skip">
+      <a href="#autofactory" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -750,14 +750,14 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/autofactory.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="autofactory">AutoFactory</h1>
+                <h1 id="autofactory">AutoFactory<a class="headerlink" href="#autofactory" title="Permanent link">&para;</a></h1>
 <p><a href="https://ci.appveyor.com/project/seesharper/lightinject-autofactory"><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?maxAge=2592000" /></a>
 <a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.AutoFactory.svg?maxAge=2592000" /></a>
 <a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/LightInject.AutoFactory.svg?maxAge=2592000" /></a></p>
 <p><strong>LightInject.AutoFactory</strong> enables automatic implementation of factory interfaces.</p>
-<h2 id="installing">Installing</h2>
+<h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <p><strong>LightInject.AutoFactory</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
+<h3 id="binary">Binary<a class="headerlink" href="#binary" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.AutoFactory </code>
@@ -765,7 +765,7 @@
 </div>
 
 <p>This adds a reference to the <strong>LightInject.AutoFactory.dll</strong> in the target project.</p>
-<h3 id="source">Source</h3>
+<h3 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.AutoFactory.Source </code>
@@ -773,9 +773,9 @@
 </div>
 
 <p>This will install a single file, <strong>LightInject.AutoFactory.cs</strong> in the target project.</p>
-<h2 id="factory">Factory</h2>
+<h2 id="factory">Factory<a class="headerlink" href="#factory" title="Permanent link">&para;</a></h2>
 <p>The following interface represents a factory class used to resolve <strong>IFoo</strong> instances. </p>
-<pre><code>public interface IFoo {}
+<div class="codehilite"><pre><span></span><code>public interface IFoo {}
 
 public class Foo : IFoo {}
 
@@ -783,16 +783,20 @@ public interface IFooFactory
 {
     IFoo GetFoo();
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>Instead of having to manually implement the <strong>IFooFactory</strong> interface, we can just register the factory and resolve the instance through a factory that has been automatically implemented.  You can enable this functionality by calling <strong>EnableAutoFactories</strong> on the container.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();
+<div class="codehilite"><pre><span></span><code>container.Register&lt;IFoo, Foo&gt;();
 container.EnableAutoFactories();
 container.RegisterAutoFactory&lt;IFooFactory&gt;(); 
 var factory = container.GetInstance&lt;IFooFactory&gt;();
 var foo = factory.GetFoo();
-</code></pre>
-<h2 id="parameters">Parameters</h2>
-<pre><code>public interface IFoo {}
+</code></pre></div>
+
+
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>public interface IFoo {}
 
 public class Foo : IFoo 
 {
@@ -803,16 +807,20 @@ public interface IFooFactory
 {
     IFoo GetFoo(int value);
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>Runtime arguments can now be passed to the factory method.</p>
-<pre><code>container.Register&lt;int, IFoo&gt;((factory, value) =&gt; new Foo(value));  
+<div class="codehilite"><pre><span></span><code>container.Register&lt;int, IFoo&gt;((factory, value) =&gt; new Foo(value));  
 container.EnableAutoFactories();
 container.RegisterAutoFactory&lt;IFooFactory&gt;();
 var factory = container.GetInstance&lt;IFooFactory&gt;();
 var foo = factory.GetFoo(42);
-</code></pre>
-<h2 id="named-services">Named Services</h2>
-<pre><code>public interface IFoo {}
+</code></pre></div>
+
+
+<h2 id="named-services">Named Services<a class="headerlink" href="#named-services" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>public interface IFoo {}
 
 public class Foo : IFoo {}
 
@@ -823,18 +831,22 @@ public interface IFooFactory
     IFoo GetFoo();
     IFoo GetAnotherFoo();
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>The name of the factory method is used to identify named services.</p>
-<pre><code>container.Register&lt;IFoo, Foo&gt;();    
-container.Register&lt;IFoo, Foo&gt;("AnotherFoo");    
+<div class="codehilite"><pre><span></span><code>container.Register&lt;IFoo, Foo&gt;();    
+container.Register&lt;IFoo, Foo&gt;(&quot;AnotherFoo&quot;);    
 container.EnableAutoFactories();
 container.RegisterAutoFactory&lt;IFooFactory&gt;();
 var factory = container.GetInstance&lt;IFooFactory&gt;();
 var foo = factory.GetFoo();
 var anotherFoo = factory.GetAnotherFoo();
-</code></pre>
-<h2 id="open-generics">Open Generics</h2>
-<pre><code>public interface IFoo&lt;T&gt; {}
+</code></pre></div>
+
+
+<h2 id="open-generics">Open Generics<a class="headerlink" href="#open-generics" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>public interface IFoo&lt;T&gt; {}
 
 public class Foo&lt;T&gt; : IFoo&lt;T&gt; {}
 
@@ -842,16 +854,19 @@ public interface IFooFactory
 {
     IFoo&lt;T&gt; GetFoo&lt;T&gt;();    
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>The generic type arguments from the factory method are used to create the service instance.</p>
-<pre><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
+<div class="codehilite"><pre><span></span><code>container.Register(typeof(IFoo&lt;&gt;), typeof(Foo&lt;&gt;));
 container.EnableAutoFactories();
 container.RegisterAutoFactory&lt;IFooFactory&gt;();
 var factory = container.GetInstance&lt;IFooFactory&gt;();
 var foo = factory.GetFoo&lt;int&gt;();
-</code></pre>
+</code></pre></div>
                 
                   
+                
                 
               
               
@@ -907,9 +922,9 @@ var foo = factory.GetFoo&lt;int&gt;();
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -919,9 +934,9 @@ var foo = factory.GetFoo&lt;int&gt;();
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>

@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#aspnetcore-unit-testing" tabindex="1" class="md-skip">
+      <a href="#aspnetcore-unit-testing" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -682,172 +682,185 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/aspnetcoreunittesting.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="aspnetcore-unit-testing">AspNetCore Unit Testing</h1>
+                <h1 id="aspnetcore-unit-testing">AspNetCore Unit Testing<a class="headerlink" href="#aspnetcore-unit-testing" title="Permanent link">&para;</a></h1>
 <blockquote>
 <p>Disclaimer: No Visual Studio 2017 was ever started during the writing of this post.</p>
 </blockquote>
 <p>This post is going to show how to unit test controllers in AspNetCore.</p>
 <p>We are going to do everything using nothing but the dotnet cli and VS Code.</p>
 <p>Let's start off by creating a new Web API application.</p>
-<pre><code class="shell">dotnet new webapi
-</code></pre>
+<div class="codehilite"><pre><span></span><code>dotnet new webapi
+</code></pre></div>
+
 
 <p>That's going to set up a minimal Web API application containing a <code>ValuesController</code></p>
 <blockquote>
 <p>To simplify the example we just return a single string value</p>
 </blockquote>
 <p>Next we are going to implement a service that we will inject into the <code>ValuesController</code></p>
-<pre><code class="c#">public interface IService
-{
-    string GetValue();    
-}
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">interface</span> <span class="n">IService</span>
+<span class="p">{</span>
+    <span class="kt">string</span> <span class="nf">GetValue</span><span class="p">();</span>    
+<span class="p">}</span>
 
-public class Service : IService
-{
-    public string GetValue()
-    {
-        return &quot;Hello world&quot;;
-    }
-}
-</code></pre>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Service</span> <span class="p">:</span> <span class="n">IService</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="nf">GetValue</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;Hello world&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Next step is to inject our service into the <code>ValueController</code></p>
-<pre><code class="c#">[Route(&quot;api/[controller]&quot;)]
-public class ValueController : Controller
-{
-    private readonly IService _service;
+<div class="codehilite"><pre><span></span><code><span class="na">[Route(&quot;api/[controller]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ValueController</span> <span class="p">:</span> <span class="n">Controller</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IService</span> <span class="n">_service</span><span class="p">;</span>
 
-    public ValueController(IService service) =&gt; _service = service;
+    <span class="k">public</span> <span class="nf">ValueController</span><span class="p">(</span><span class="n">IService</span> <span class="n">service</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="n">_service</span> <span class="p">=</span> <span class="n">service</span><span class="p">;</span>
 
-    // GET api/values
-    [HttpGet]
-    public string Get()
-    {
-        return _service.GetValue();
-    }        
-}
-</code></pre>
+    <span class="c1">// GET api/values</span>
+<span class="na">    [HttpGet]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="nf">Get</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">_service</span><span class="p">.</span><span class="n">GetValue</span><span class="p">();</span>
+    <span class="p">}</span>        
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Finally we need to register our service in the <code>Startup</code> class.</p>
-<pre><code>public void ConfigureServices(IServiceCollection services)
+<div class="codehilite"><pre><span></span><code>public void ConfigureServices(IServiceCollection services)
 {
     services.AddSingleton&lt;IService,Service&gt;();
     services.AddMvc();
 }
-</code></pre>
+</code></pre></div>
+
 
 <p>We are now all set and ready for some unit testing. </p>
-<h2 id="unit-testing">Unit Testing</h2>
+<h2 id="unit-testing">Unit Testing<a class="headerlink" href="#unit-testing" title="Permanent link">&para;</a></h2>
 <p>To test our controller we will create a test project </p>
-<pre><code class="shell">dotnet new xunit
-</code></pre>
+<div class="codehilite"><pre><span></span><code>dotnet new xunit
+</code></pre></div>
+
 
 <p>We will test our controller using the <code>TestServer</code> from the <code>Microsoft.AspNetCore.TestHost</code> package</p>
-<pre><code>dotnet add package Microsoft.AspNetCore.TestHost
-</code></pre>
+<div class="codehilite"><pre><span></span><code>dotnet add package Microsoft.AspNetCore.TestHost
+</code></pre></div>
+
 
 <p>Let's create our first test</p>
-<pre><code class="c#">public class ControllerTests
-{
-    [Fact]
-    public async Task ShouldGetValue()
-    {            
-        using (var testServer = CreateTestServer())
-        {
-            var client = testServer.CreateClient();
-            var value = await client.GetStringAsync(&quot;api/value&quot;);
-            Assert.Equal(&quot;Hello world&quot;, value);
-        }
-    }
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">ControllerTests</span>
+<span class="p">{</span>
+<span class="na">    [Fact]</span>
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">ShouldGetValue</span><span class="p">()</span>
+    <span class="p">{</span>            
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">testServer</span> <span class="p">=</span> <span class="n">CreateTestServer</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="n">testServer</span><span class="p">.</span><span class="n">CreateClient</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">GetStringAsync</span><span class="p">(</span><span class="s">&quot;api/value&quot;</span><span class="p">);</span>
+            <span class="n">Assert</span><span class="p">.</span><span class="n">Equal</span><span class="p">(</span><span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="k">value</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    private TestServer CreateTestServer()
-    {
-            var builder = new WebHostBuilder()                
-            .UseStartup&lt;Startup&gt;();                                    
-        return new TestServer(builder);                
-    }
-}
-</code></pre>
+    <span class="k">private</span> <span class="n">TestServer</span> <span class="nf">CreateTestServer</span><span class="p">()</span>
+    <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WebHostBuilder</span><span class="p">()</span>                
+            <span class="p">.</span><span class="n">UseStartup</span><span class="p">&lt;</span><span class="n">Startup</span><span class="p">&gt;();</span>                                    
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">TestServer</span><span class="p">(</span><span class="n">builder</span><span class="p">);</span>                
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
-<h2 id="configurable-server">Configurable Server</h2>
+
+<h2 id="configurable-server">Configurable Server<a class="headerlink" href="#configurable-server" title="Permanent link">&para;</a></h2>
 <p>Let's imagine that we want to test our controller using a mock implementation of <code>IService</code>. </p>
 <p>We need to provide a way to override the default container registration before the server is started.</p>
 <p>The first step here is to add the <code>ConfigureAdditionalServices</code> method to the <code>Startup</code> class.</p>
-<pre><code class="C#">public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSingleton&lt;IService,Service&gt;();
-    services.AddMvc();
-    ConfigureAdditionalServices(services);
-}
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">services</span><span class="p">.</span><span class="n">AddSingleton</span><span class="p">&lt;</span><span class="n">IService</span><span class="p">,</span><span class="n">Service</span><span class="p">&gt;();</span>
+    <span class="n">services</span><span class="p">.</span><span class="n">AddMvc</span><span class="p">();</span>
+    <span class="n">ConfigureAdditionalServices</span><span class="p">(</span><span class="n">services</span><span class="p">);</span>
+<span class="p">}</span>
 
-protected virtual void ConfigureAdditionalServices(IServiceCollection services)
-{
-}           
-</code></pre>
+<span class="k">protected</span> <span class="k">virtual</span> <span class="k">void</span> <span class="nf">ConfigureAdditionalServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>           
+</code></pre></div>
+
 
 <p>The <code>ConfigureAdditionalServices</code> method gets called after all other services are registered giving us a chance to modify the configuration.</p>
 <p>We can now simply inherit from the <code>Startup</code> class and make it configurable.</p>
-<pre><code class="c#">public class ConfigurableStartup : Startup
-{
-    private readonly Action&lt;IServiceCollection&gt; configureAction;
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">ConfigurableStartup</span> <span class="p">:</span> <span class="n">Startup</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IServiceCollection</span><span class="p">&gt;</span> <span class="n">configureAction</span><span class="p">;</span>
 
-    public ConfigurableStartup(IConfiguration configuration, Action&lt;IServiceCollection&gt; configureAction)
-        : base(configuration) =&gt; this.configureAction = configureAction;
+    <span class="k">public</span> <span class="nf">ConfigurableStartup</span><span class="p">(</span><span class="n">IConfiguration</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">Action</span><span class="p">&lt;</span><span class="n">IServiceCollection</span><span class="p">&gt;</span> <span class="n">configureAction</span><span class="p">)</span>
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="n">configureAction</span> <span class="p">=</span> <span class="n">configureAction</span><span class="p">;</span>
 
-    protected override void ConfigureAdditionalServices(IServiceCollection services)
-    {
-        configureAction(services);
-    }
-}
-</code></pre>
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">ConfigureAdditionalServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">configureAction</span><span class="p">(</span><span class="n">services</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>While we could mock services right here in this class, we will make it more versatile by just injecting the <code>configureAtion</code> delegate allowing this class to be used in different scenarios.</p>
-<pre><code class="c#">public class ConfigurableServer : TestServer
-{
-    public ConfigurableServer(Action&lt;IServiceCollection&gt; configureAction = null) : base(CreateBuilder(configureAction))
-    {
-    }
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">class</span> <span class="nc">ConfigurableServer</span> <span class="p">:</span> <span class="n">TestServer</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">ConfigurableServer</span><span class="p">(</span><span class="n">Action</span><span class="p">&lt;</span><span class="n">IServiceCollection</span><span class="p">&gt;</span> <span class="n">configureAction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">CreateBuilder</span><span class="p">(</span><span class="n">configureAction</span><span class="p">))</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
 
-    private static IWebHostBuilder CreateBuilder(Action&lt;IServiceCollection&gt; configureAction)
-    {
-        if (configureAction == null)
-        {
-            configureAction = (sc) =&gt; {};
-        }
-        var builder = new WebHostBuilder()
-            .ConfigureServices(sc =&gt; sc.AddSingleton&lt;Action&lt;IServiceCollection&gt;&gt;(configureAction))
-            .UseStartup&lt;ConfigurableStartup&gt;();
-        return builder;    
-    }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">static</span> <span class="n">IWebHostBuilder</span> <span class="nf">CreateBuilder</span><span class="p">(</span><span class="n">Action</span><span class="p">&lt;</span><span class="n">IServiceCollection</span><span class="p">&gt;</span> <span class="n">configureAction</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">configureAction</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">configureAction</span> <span class="p">=</span> <span class="p">(</span><span class="n">sc</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{};</span>
+        <span class="p">}</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="k">new</span> <span class="n">WebHostBuilder</span><span class="p">()</span>
+            <span class="p">.</span><span class="n">ConfigureServices</span><span class="p">(</span><span class="n">sc</span> <span class="p">=&gt;</span> <span class="n">sc</span><span class="p">.</span><span class="n">AddSingleton</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&lt;</span><span class="n">IServiceCollection</span><span class="p">&gt;&gt;(</span><span class="n">configureAction</span><span class="p">))</span>
+            <span class="p">.</span><span class="n">UseStartup</span><span class="p">&lt;</span><span class="n">ConfigurableStartup</span><span class="p">&gt;();</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="p">;</span>    
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Now this might need a little explanation. First we optionally pass inn the <code>configureAction</code> delegate and passes that delegate to the <code>CreateBuilder</code> method that creates the <code>IWebHostBuilder</code> instance that is again passed to the base constructor. The <code>IWebHostBuilder</code> has this <code>ConfigureServices</code> method that can be used to register services that is required by the startup class itself. In this case the <code>ConfigurableStartup</code> class takes the <code>configureAction</code> delegate as a constructor argument and we simply register the delegate as a singleton.</p>
-<h2 id="mocking">Mocking</h2>
+<h2 id="mocking">Mocking<a class="headerlink" href="#mocking" title="Permanent link">&para;</a></h2>
 <p>With our new <code>ConfigurableServer</code> in place we can start to do some pretty interesting things with regards to mocking services inside our server. </p>
 <p>But first, let's install Moq</p>
-<pre><code class="shell">dotnet add package moq
-</code></pre>
+<div class="codehilite"><pre><span></span><code>dotnet add package moq
+</code></pre></div>
+
 
 <p>We can now use the <code>configureAction</code> passed to the <code>ConfigurableServer</code> to replace the originally registered service.</p>
-<pre><code class="c#">public async Task ShouldGetMockValue()
-{
-    var serviceMock = new Mock&lt;IService&gt;();
-    serviceMock.Setup(m =&gt; m.GetValue()).Returns(&quot;Hello mockworld&quot;);
-    var serviceDescriptor = new ServiceDescriptor(typeof(IService), serviceMock.Object);
+<div class="codehilite"><pre><span></span><code><span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">ShouldGetMockValue</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">serviceMock</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Mock</span><span class="p">&lt;</span><span class="n">IService</span><span class="p">&gt;();</span>
+    <span class="n">serviceMock</span><span class="p">.</span><span class="n">Setup</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">GetValue</span><span class="p">()).</span><span class="n">Returns</span><span class="p">(</span><span class="s">&quot;Hello mockworld&quot;</span><span class="p">);</span>
+    <span class="kt">var</span> <span class="n">serviceDescriptor</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ServiceDescriptor</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">IService</span><span class="p">),</span> <span class="n">serviceMock</span><span class="p">.</span><span class="n">Object</span><span class="p">);</span>
 
-    using (var testServer = new ConfigurableServer(sc =&gt; sc.Replace(serviceDescriptor)))
-    {
-        var client = testServer.CreateClient();
-        var value = await client.GetStringAsync(&quot;api/value&quot;);
-        Assert.Equal(&quot;Hello mockworld&quot;, value);
-    }
-}
-</code></pre>
+    <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">testServer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ConfigurableServer</span><span class="p">(</span><span class="n">sc</span> <span class="p">=&gt;</span> <span class="n">sc</span><span class="p">.</span><span class="n">Replace</span><span class="p">(</span><span class="n">serviceDescriptor</span><span class="p">)))</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="n">testServer</span><span class="p">.</span><span class="n">CreateClient</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">GetStringAsync</span><span class="p">(</span><span class="s">&quot;api/value&quot;</span><span class="p">);</span>
+        <span class="n">Assert</span><span class="p">.</span><span class="n">Equal</span><span class="p">(</span><span class="s">&quot;Hello mockworld&quot;</span><span class="p">,</span> <span class="k">value</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
 
 <p>Want to comment? File an issue <a href="https://github.com/seesharper/Blog.AspNetCoreUnitTesting/issues">here</a> :)</p>
                 
                   
+                
                 
               
               
@@ -903,9 +916,9 @@ protected virtual void ConfigureAdditionalServices(IServiceCollection services)
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -915,9 +928,9 @@ protected virtual void ConfigureAdditionalServices(IServiceCollection services)
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>

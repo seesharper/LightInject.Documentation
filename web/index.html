@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.2">
+      <meta name="generator" content="mkdocs-1.1, mkdocs-material-4.6.3">
     
     
       
@@ -40,17 +40,17 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.30686662.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.adb8469c.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../assets/javascripts/modernizr.86422ebf.js"></script>
     
     
       
         <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
@@ -77,7 +77,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#web" tabindex="1" class="md-skip">
+      <a href="#web" tabindex="0" class="md-skip">
         Skip to content
       </a>
     
@@ -86,7 +86,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href=".." title="LightInject" class="md-header-nav__button md-logo">
+        <a href=".." title="LightInject" aria-label="LightInject" class="md-header-nav__button md-logo">
           
             <i class="md-icon"></i>
           
@@ -117,7 +117,7 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <input type="text" class="md-search__input" aria-label="search" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
       <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
         &#xE5CD;
@@ -694,14 +694,14 @@
                   <a href="https://github.com/seesharper/lightinject/edit/master/docs/web.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                <h1 id="web">Web</h1>
+                <h1 id="web">Web<a class="headerlink" href="#web" title="Permanent link">&para;</a></h1>
 <p><a href="https://ci.appveyor.com/project/seesharper/lightinject-web"><img alt="AppVeyor" src="https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?maxAge=2592000" /></a>
 <a href=""><img alt="NuGet" src="https://img.shields.io/nuget/v/LightInject.Web.svg?maxAge=2592000" /></a>
 <a href=""><img alt="GitHub tag" src="https://img.shields.io/github/tag/seesharper/LightInject.Web.svg?maxAge=2592000" /></a></p>
 <p>Enables <strong>LightInject</strong> to be used in a web application and provides support for <strong>PerWebRequest</strong> scoped service instances.</p>
-<h2 id="installing">Installing</h2>
+<h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <p><strong>LightInject.Web</strong> provides two distribution models via NuGet</p>
-<h3 id="binary">Binary</h3>
+<h3 id="binary">Binary<a class="headerlink" href="#binary" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.Web </code>
@@ -709,7 +709,7 @@
 </div>
 
 <p>This adds a reference to the LightInject.Web.dll in the target project.</p>
-<h3 id="source">Source</h3>
+<h3 id="source">Source<a class="headerlink" href="#source" title="Permanent link">&para;</a></h3>
 <div class="nuget-badge" >
    <p>
          <code>PM&gt; Install-Package LightInject.Web.Source </code>
@@ -718,16 +718,19 @@
 
 <p>This will install a single file (LightInject.Web.cs) into the current project.</p>
 <p>The following example shows how to enable <strong>LightInject</strong> in the <strong>Application_Start</strong> event.</p>
-<pre><code>protected void Application_Start()
+<div class="codehilite"><pre><span></span><code>protected void Application_Start()
 {
     var container = new ServiceContainer();
     container.EnablePerWebRequestScope();                   
     container.Register&lt;IFoo, Foo&gt;(new PerScopeLifetime());      
 }
-</code></pre>
+</code></pre></div>
+
+
 <p>A service    registered with <strong>PerScopeLifetime</strong> is scoped per web request and is disposed at the end of the request if it implements <strong>IDisposable</strong>.</p>
                 
                   
+                
                 
               
               
@@ -783,9 +786,9 @@
       <div class="md-footer-copyright">
         
         powered by
-        <a href="https://www.mkdocs.org">MkDocs</a>
+        <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
         and
-        <a href="https://squidfunk.github.io/mkdocs-material/">
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
           Material for MkDocs</a>
       </div>
       
@@ -795,9 +798,9 @@
       
     </div>
     
-      <script src="../assets/javascripts/application.c648116f.js"></script>
+      <script src="../assets/javascripts/application.c33a9706.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      <script>app.initialize({version:"1.1",url:{base:".."}})</script>
       
     
   </body>
